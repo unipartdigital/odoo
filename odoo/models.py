@@ -1762,6 +1762,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
                 # such as 2006-01-01 being formatted as "January 2005" in some locales.
                 # Cfr: http://babel.pocoo.org/docs/dates/#date-fields
+                'hour': 'dd MMM yyyy HH:mm',
                 'day': 'dd MMM yyyy', # yyyy = normal year
                 'week': "'W'w YYYY",  # w YYYY = ISO week-year
                 'month': 'MMMM yyyy',
@@ -1769,6 +1770,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'year': 'yyyy',
             }
             time_intervals = {
+                'hour': dateutil.relativedelta.relativedelta(hours=1),
                 'day': dateutil.relativedelta.relativedelta(days=1),
                 'week': datetime.timedelta(days=7),
                 'month': dateutil.relativedelta.relativedelta(months=1),
@@ -1885,8 +1887,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param list groupby: list of groupby descriptions by which the records will be grouped.  
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string 'field:groupby_function'.  Right now, the only functions supported
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
-                date/datetime fields.
+                are 'hour', 'day', 'week', 'month', 'quarter' or 'year', and they only make sense
+                for date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
         :param list orderby: optional ``order by`` specification, for
