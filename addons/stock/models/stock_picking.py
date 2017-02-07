@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
 from odoo.addons.procurement.models import procurement
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class PickingType(models.Model):
@@ -776,6 +776,11 @@ class Picking(models.Model):
 
     @api.multi
     def do_new_transfer(self):
+
+        finished_picks = self.filtered(lambda pick: pick.state in ['done', 'cancel'])
+        if finished_picks:
+            raise ValidationError(_("Transfer has already been validated: {}".format(', '.join([x.name for x in finished_picks]))))
+
         for pick in self:
             pack_operations_delete = self.env['stock.pack.operation']
             if not pick.move_lines and not pick.pack_operation_ids:
@@ -845,6 +850,11 @@ class Picking(models.Model):
         """ If no pack operation, we do simple action_done of the picking.
         Otherwise, do the pack operations. """
         # TDE CLEAN ME: reclean me, please
+
+        finished_picks = self.filtered(lambda pick: pick.state in ['done', 'cancel'])
+        if finished_picks:
+            raise ValidationError(_("Cannot validate completed or cancelled transfer: {}".format(', '.join([x.name for x in finished_picks]))))
+
         self._create_lots_for_picking()
 
         no_pack_op_pickings = self.filtered(lambda picking: not picking.pack_operation_ids)
