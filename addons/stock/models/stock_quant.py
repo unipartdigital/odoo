@@ -627,7 +627,7 @@ class QuantPackage(models.Model):
                 parent = parent.parent_id
             locations = parent.get_content().filtered(lambda quant: quant.qty > 0.0).mapped('location_id')
             if len(locations) != 1:
-                raise UserError(_('Everything inside a package should be in the same location'))
+                raise UserError(_('Everything inside a package should be in the same location: %s') % parent.name)
         return True
 
     @api.multi
