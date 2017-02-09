@@ -621,12 +621,11 @@ class StockMove(models.Model):
                             lot_qty[lot] -= qty
                             move_qty -= qty
 
-        for move in moves_to_do:
-            # then if the move isn't totally assigned, try to find quants without any specific domain
-            if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
-                qty_already_assigned = move.reserved_availability
-                qty = move.product_qty - qty_already_assigned
-                
+        # then if the move isn't totally assigned, try to find quants without any specific domain
+        if not self.env.context.get('reserve_only_ops'):
+            move_qtys = [(x, x.product_qty - x.reserved_availability)
+                         for x in moves_to_do if x.state != 'assigned']
+            for move, qty in move_qtys:
                 quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
                 Quant.quants_reserve(quants, move)
 
