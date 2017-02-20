@@ -5253,8 +5253,8 @@ class BaseModel(object):
             for f, ids in spec:
                 if ids is None and f in self.env.thrashing:
                     tb = self.env.thrashing.pop(f)
-                    _logger.warning("cache thrashing %s via invalidate_cache(%s, %s)\n" +
-                                    "%s\nLast fetched via:\n%s", f, str(fnames), str(ids),
+                    _logger.warning("cache thrashing %s via %s.invalidate_cache(%s, %s)\n" +
+                                    "%s\nLast fetched via:\n%s", f, self, str(fnames), str(ids),
                                     "\n".join(traceback.format_stack()),
                                     "\n".join(traceback.format_list(tb)))
 
@@ -5279,8 +5279,8 @@ class BaseModel(object):
             for f, ids in spec:
                 if ids is None and f in self.env.thrashing:
                     tb = self.env.thrashing.pop(f)
-                    _logger.warning("cache thrashing %s via modified(%s)\n" +
-                                    "%s\nLast fetched via:\n%s", f, str(fnames),
+                    _logger.warning("cache thrashing %s via %s.modified(%s)\n" +
+                                    "%s\nLast fetched via:\n%s", f, self, str(fnames),
                                     "\n".join(traceback.format_stack()),
                                     "\n".join(traceback.format_list(tb)))
 
