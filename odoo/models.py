@@ -66,8 +66,11 @@ onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
 CACHE_THRASH_THRESHOLD = 50
-CACHE_THRASH_IGNORE = set(['ir.module.module.dependency.state',
-                           'ir.ui.menu.complete_name'])
+CACHE_THRASH_IGNORE = set([
+    'ir.module.module.dependency.state',
+    'ir.ui.menu.complete_name',
+    'stock.move.picking_id',
+    ])
 
 def check_object_name(name):
     """ Check if the given name is a valid model name.
