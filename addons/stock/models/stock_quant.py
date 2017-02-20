@@ -121,7 +121,7 @@ class Quant(models.Model):
         # TDE CLEANME: use ids + quantities dict
         # TDE CLEANME: check use of sudo
         quants_to_reserve_sudo = self.env['stock.quant'].sudo()
-        reserved_availability = move.reserved_availability
+        reserved_availability = move.with_prefetch().reserved_availability
         # split quants if needed
         for quant, qty in quants:
             if qty <= 0.0 or (quant and quant.qty <= 0.0):
