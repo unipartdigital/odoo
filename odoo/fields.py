@@ -1840,6 +1840,7 @@ class Many2one(_Relational):
         'ondelete': 'set null',         # what to do when value is deleted
         'auto_join': False,             # whether joins are generated upon search
         'delegate': False,              # whether self implements delegation
+        'index': True,                  # udes/1166 m2o index by default
     }
 
     def __init__(self, comodel_name=Default, string=Default, **kwargs):
