@@ -17,9 +17,17 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
+    var start_time = Math.floor(Date.now());
     var xhr = fct(data);
     var result = xhr.pipe(function(result) {
-        core.bus.trigger('rpc:result', data, result);
+        var end_time = Math.floor(Date.now());
+        var timings = {
+            'method': settings.url || params['method'],
+            'request_time': (end_time-start_time) / 1000,
+            'server_time': parseFloat(xhr.getResponseHeader('x-server-time'))
+        };
+        core.bus.trigger('rpc:result', data, result, timings);    
+        
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
                 console.error("Server application error", JSON.stringify(result.error));
