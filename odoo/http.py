@@ -616,7 +616,7 @@ class JsonRequest(WebRequest):
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
-    def _json_response(self, result=None, error=None):
+    def _json_response(self, result=None, error=None, duration=None):
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
@@ -637,11 +637,16 @@ class JsonRequest(WebRequest):
             mime = 'application/json'
             body = json.dumps(response, default=ustr)
 
+        headers = [('Content-Type', mime),
+                   ('Content-Length', len(body))]
+        if duration is not None:
+            headers.append(('X-Server-Time', str(duration)))
+
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
-            headers=[('Content-Type', mime), ('Content-Length', len(body))]
+            headers=headers
         )
-
+  
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to arbitrary responses. Anything returned (except None) will
@@ -681,7 +686,6 @@ class JsonRequest(WebRequest):
                 method = self.params.get('method')
                 args = self.params.get('args', [])
 
-                start_time = time.time()
                 _, start_vms = 0, 0
                 if psutil:
                     _, start_vms = memory_info(psutil.Process(os.getpid()))
@@ -689,7 +693,9 @@ class JsonRequest(WebRequest):
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
 
+            start_time = time.time()
             result = self._call_function(**self.params)
+            end_time = time.time()
 
             if rpc_request_flag or rpc_response_flag:
                 end_time = time.time()
@@ -703,7 +709,7 @@ class JsonRequest(WebRequest):
                 else:
                     rpc_request.debug(logline)
 
-            return self._json_response(result)
+            return self._json_response(result, duration=end_time-start_time)
         except Exception as e:
             return self._handle_exception(e)
 
