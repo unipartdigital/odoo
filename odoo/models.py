@@ -4971,7 +4971,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         onchange = onchange.strip()
 
         def process(res):
-            if not res:
+            if type(res) == bool:
                 return
             if res.get('value'):
                 res['value'].pop('id', None)
