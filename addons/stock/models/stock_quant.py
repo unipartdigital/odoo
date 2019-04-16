@@ -138,7 +138,7 @@ class Quant(models.Model):
         # TDE CLEANME: should be moved as a move model method IMO
         rounding = move.product_id.uom_id.rounding
         if float_compare(reserved_availability, move.product_qty, precision_rounding=rounding) == 0 and move.state in ('confirmed', 'waiting'):
-            move.write({'state': 'assigned'})
+            move.write({'state': 'assigned', 'partially_available': False})
         elif float_compare(reserved_availability, 0, precision_rounding=rounding) > 0 and not move.partially_available:
             move.write({'partially_available': True})
 
