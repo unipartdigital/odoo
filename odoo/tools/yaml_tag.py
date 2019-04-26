@@ -149,16 +149,24 @@ def ref_constructor(loader, tag_suffix, node):
 # Constructors are actually defined globally: do not redefined them in another
 # class/file/package.  This means that module recorder need import this file.
 def add_constructors():
-    yaml.add_constructor(u"!assert", assert_constructor)
-    yaml.add_constructor(u"!record", record_constructor)
-    yaml.add_constructor(u"!python", python_constructor)
-    yaml.add_constructor(u"!menuitem", menuitem_constructor)
-    yaml.add_constructor(u"!act_window", act_window_constructor)
-    yaml.add_constructor(u"!function", function_constructor)
-    yaml.add_constructor(u"!report", report_constructor)
-    yaml.add_constructor(u"!context", context_constructor)
-    yaml.add_constructor(u"!delete", delete_constructor)
-    yaml.add_constructor(u"!url", url_constructor)
-    yaml.add_constructor(u"!eval", eval_constructor)
-    yaml.add_multi_constructor(u"!ref", ref_constructor)
+    constructors = [
+        ("!assert", assert_constructor),
+        ("!record", record_constructor),
+        ("!python", python_constructor),
+        ("!menuitem", menuitem_constructor),
+        ("!act_window", act_window_constructor),
+        ("!function", function_constructor),
+        ("!report", report_constructor),
+        ("!context", context_constructor),
+        ("!delete", delete_constructor),
+        ("!url", url_constructor),
+        ("!eval", eval_constructor),
+        ("!ref", ref_constructor),
+    ]
+    try:
+        loader = yaml.FullLoader  # default for pyYAML>=5.1. Does not exist in earlier versions.
+    except AttributeError:
+        loader = yaml.Loader  # default for pyYAML<5.1
+    for tag, constructor in constructors:
+        yaml.add_constructor(tag, constructor, Loader=loader)
 add_constructors()
