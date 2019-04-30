@@ -661,6 +661,19 @@ class Picking(models.Model):
     def do_transfer(self):
         return self.action_done()
 
+    @staticmethod
+    def _get_key_ids(keys):
+        _itemgetter = itemgetter(*keys)
+        def _get_key(x):
+            key_parts = []
+            for part in _itemgetter(x):
+                try:
+                    key_parts.append(part.id or False)
+                except AttributeError:
+                    key_parts.append(part)
+            return tuple(key_parts)
+        return _get_key
+
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
@@ -668,12 +681,14 @@ class Picking(models.Model):
         keys = ['product_id', 'lot_id']
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
+        _getter = self._get_key_ids(keys)
+
         grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=itemgetter(*keys)), key=itemgetter(*keys)):
+        for k, g in groupby(sorted(package.quant_ids, key=_getter), key=_getter):
             grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
 
         grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=itemgetter(*keys)), key=itemgetter(*keys)):
+        for k, g in groupby(sorted(pack_move_lines, key=_getter), key=_getter):
             grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
         if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
                 or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
