@@ -353,7 +353,8 @@ class StockMoveLine(models.Model):
                         raise
         moves = self.mapped('move_id')
         res = super(StockMoveLine, self).unlink()
-        if moves:
+        recompute_state = self.env.context.get('recompute_state', True)
+        if moves and recompute_state:
             moves._recompute_state()
         return res
 

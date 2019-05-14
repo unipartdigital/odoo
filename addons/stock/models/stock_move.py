@@ -1073,7 +1073,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'cancel':
                 continue
-            move._do_unreserve()
+            move.with_context(recompute_state=False)._do_unreserve()
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
             if move.propagate:
                 # only cancel the next move if all my siblings are also cancelled
