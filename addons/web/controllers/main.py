@@ -3,6 +3,7 @@
 
 import babel.messages.pofile
 import base64
+import cgi
 import csv
 import datetime
 import functools
@@ -1032,15 +1033,16 @@ class Binary(http.Controller):
                     win.jQuery(win).trigger(%s, %s);
                 </script>"""
         try:
+            filename = cgi.escape(ufile.filename, quote=True)
             attachment = Model.create({
-                'name': ufile.filename,
+                'name': filename,
                 'datas': base64.encodestring(ufile.read()),
-                'datas_fname': ufile.filename,
+                'datas_fname': filename,
                 'res_model': model,
                 'res_id': int(id)
             })
             args = {
-                'filename': ufile.filename,
+                'filename': filename,
                 'mimetype': ufile.content_type,
                 'id':  attachment.id
             }
