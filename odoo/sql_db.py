@@ -462,6 +462,29 @@ class TestCursor(Cursor):
         self.execute("ROLLBACK TO SAVEPOINT test_cursor")
         self.execute("SAVEPOINT test_cursor")
 
+    @contextmanager
+    def savepoint(self):
+        """context manager entering in a new savepoint.
+
+        We override the superclass implementation to insert a "test_cursor"
+        savepoint after the named savepoint.  This is to protect the named
+        savepoint in the case when a new cursor is opened and committed within
+        this savepoint.  Without the additional savepoint, the commit (or
+        rollback) would destroy the named savepoint when it released or rolled
+        back to the previous "test_cursor" savepoint.
+        """
+        name = uuid.uuid1().hex
+        self.execute('SAVEPOINT "%s"' % name)
+        self.execute("SAVEPOINT test_cursor")
+        try:
+            yield
+        except Exception:
+            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
+            raise
+        else:
+            self.execute('RELEASE SAVEPOINT "%s"' % name)
+
+
 class LazyCursor(object):
     """ A proxy object to a cursor. The cursor itself is allocated only if it is
         needed. This class is useful for cached methods, that use the cursor
