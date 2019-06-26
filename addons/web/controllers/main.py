@@ -1446,7 +1446,12 @@ class CSVExport(ExportFormat, http.Controller):
             for d in data:
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
                 if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
-                    d = "'" + d
+                    try:
+                        # If the value of d is a formula, it is handled as intended,
+                        # otherwise do not add ' to the beginning.
+                        d = str(float(d))
+                    except ValueError:
+                        d = "'" + d
 
                 row.append(pycompat.to_text(d))
             writer.writerow(row)
