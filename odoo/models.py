@@ -2972,6 +2972,52 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return True
 
+    @api.multi
+    def write_modified(self, vals):
+        """
+        Iterate self calling write() only on values that have changed
+        If many2many or one2many fields are written, write normally
+        If a many2one field is written and different, write normally
+        """
+
+        fields = {key: self._fields.get(key) for key in vals}
+        records_with_changes = defaultdict(set)
+
+        # Loop records and values to find out what we expect to be modified
+        for record in self:
+            for key, val in vals.items():
+                if fields[key] and val:
+                    # If a many2many or one2many field is being written,
+                    # just write normally.
+                    if fields[key].type in ('many2many', 'one2many'):
+                        return self.write(vals)
+                    # Get current value of field
+                    current_value = getattr(record, key)
+                    # If current value is relational and different
+                    # just write normally
+                    if isinstance(current_value, BaseModel):
+                        current_value = current_value.id
+                        if current_value != val:
+                            return self.write(vals)
+                    # If different, store record with set of value keys
+                    if current_value != val:
+                        records_with_changes[record].add(key)
+                else:
+                    # If the field doesn't exist, we write anyway
+                    records_with_changes[record].add(key)
+
+        # Group the recordsets by their modified field keys
+        grouped_by_fields = defaultdict(lambda: self.browse())
+        for record, valuekey in records_with_changes.items():
+            grouped_by_fields[frozenset(valuekey)] |= record
+
+        # Call write() on each recordset passing only vals that have changed
+        for valuekeys, recordset in grouped_by_fields.items():
+            values = {key: vals[key] for key in valuekeys}
+            recordset.write(values)
+
+        return True
+
     #
     # TODO: Validate
     #
