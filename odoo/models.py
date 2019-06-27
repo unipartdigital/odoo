@@ -3060,6 +3060,28 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._check_concurrency()
         self.check_access_rights('write')
 
+        # Remove values that already match all in self, they do not need updates
+        no_change = []
+        for key, val in vals.items():
+            field = self._fields.get(key)
+            if field and val:
+                if not field.force_write:
+                    if field.type in ('many2one',  'many2many'):
+                        continue
+                    if field.type == 'one2many':
+                        current_values = self.mapped(key).ids
+                    else:
+                        current_values = self.mapped(key)
+                    if all(value == val for value in current_values):
+                        no_change.append(key)
+
+        if no_change:
+            for key in no_change:
+                vals.pop(key, None)
+            # If there are no values after removal, there is nothing to do
+            if not vals:
+                return True
+
         # No user-driven update of these columns
         pop_fields = ['parent_left', 'parent_right']
         if self._log_access:

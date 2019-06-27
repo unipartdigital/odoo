@@ -284,6 +284,7 @@ class Field(MetaField('DummyField', (object,), {})):
         'comodel_name': None,           # name of the model of values (if relational)
 
         'store': True,                  # whether the field is stored in database
+        'force_write': False,           # whether we should write to this record even if nothing changes
         'index': False,                 # whether the field is indexed in database
         'manual': False,                # whether the field is a custom field
         'copy': True,                   # whether the field is copied over by BaseModel.copy()
