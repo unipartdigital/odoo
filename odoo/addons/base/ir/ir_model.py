@@ -1445,11 +1445,11 @@ class IrModelData(models.Model):
                     record = record.browse(imd_res_id)
 
         if action and record:
-            record.write(values)
+            record.write_modified(values)
             action.sudo().write({'date_update': fields.Datetime.now()})
 
         elif record:
-            record.write(values)
+            record.write_modified(values)
             if xml_id:
                 for parent_model, parent_field in record._inherits.items():
                     self.sudo().create({
