@@ -1654,10 +1654,12 @@ class Binary(Field):
         # unicode in some circumstances, hence the str() cast here.
         # This str() coercion will only work for pure ASCII unicode strings,
         # on purpose - non base64 data must be passed as a 8bit byte strings.
-        if not value:
-            return None
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
+        if isinstance(value, pycompat.text_type):
+            return psycopg2.Binary(value.encode('ascii'))
+        if not value:
+            return None
         return psycopg2.Binary(pycompat.text_type(value).encode('ascii'))
 
     def convert_to_cache(self, value, record, validate=True):
