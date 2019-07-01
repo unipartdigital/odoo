@@ -618,7 +618,7 @@ class Warehouse(models.Model):
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
-            self.mapped('lot_stock_id').mapped('location_id').write({'name': new_code})
+            self.mapped('lot_stock_id').mapped('location_id').write_modified({'name': new_code})
         if new_name:
             # TDE FIXME: replacing the route name ? not better to re-generate the route naming ?
             for warehouse in self:
