@@ -274,11 +274,25 @@ class ThreadedServer(CommonServer):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
+        if config['dump_types']:
+            _logger.warning("Dumping types enabled")
+
+            from pyannotate_runtime import collect_types
+            collect_types.init_types_collection()
+            collect_types.start()
+
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
         """
         _logger.info("Initiating shutdown")
         _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+
+        if config['dump_types']:
+            _logger.info("Dumping types to pyannotate.dat")
+
+            from pyannotate_runtime import collect_types
+            collect_types.stop()
+            collect_types.dump_stats("pyannotate.dat")
 
         if self.httpd:
             self.httpd.shutdown()
