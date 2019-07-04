@@ -2986,7 +2986,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # Loop records and values to find out what we expect to be modified
         for record in self:
             for key, val in vals.items():
-                if fields[key] and val:
+                if fields[key]:
                     # If a many2many or one2many field is being written,
                     # just write normally.
                     if fields[key].type in ('many2many', 'one2many'):
@@ -2997,10 +2997,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # just write normally
                     if isinstance(current_value, BaseModel):
                         current_value = current_value.id
-                        if current_value != val:
+                        if (val or current_value) and current_value != val:
                             return self.write(vals)
                     # If different, store record with set of value keys
-                    if current_value != val:
+                    if (val or current_value) and current_value != val:
                         records_with_changes[record].add(key)
                 else:
                     # If the field doesn't exist, we write anyway
