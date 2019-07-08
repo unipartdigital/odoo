@@ -285,6 +285,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         'store': True,                  # whether the field is stored in database
         'index': False,                 # whether the field is indexed in database
+        'force_write': False,           # Whether the field should be written in write_modified regardless of whether there are changes
         'manual': False,                # whether the field is a custom field
         'copy': True,                   # whether the field is copied over by BaseModel.copy()
         'depends': (),                  # collection of field dependencies
