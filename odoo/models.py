@@ -2986,7 +2986,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # Loop records and values to find out what we expect to be modified
         for record in self:
             for key, val in vals.items():
-                if fields[key]:
+                if fields[key] and not fields[key].force_write:
                     # If a many2many or one2many field is being written,
                     # just write normally.
                     if fields[key].type in ('many2many', 'one2many'):
