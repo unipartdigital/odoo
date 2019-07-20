@@ -247,7 +247,8 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                     <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                    <filter string="To Do" name="todo" domain="[('state','in',('confirmed', 'planned','progress'))]"
+                    <filter string="To Do" name="todo" domain="[('state','in',('confirmed', 'planned','progress')),
+                                                                ('availability','&lt;&gt;','waiting')]"
                         help="Manufacturing Orders which are in confirmed state."/>
                     <separator/>
                     <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
