@@ -143,8 +143,12 @@ function HistoryBack (parent) {
 }
 core.action_registry.add("history_back", HistoryBack);
 
-function login() {
-    redirect('/web/login');
+function login(redirectUrl) {
+    if (redirectUrl) {
+        redirect('/web/login?redirect=' + encodeURIComponent(redirectUrl));
+    } else {
+        redirect('/web/login');
+    }
 }
 core.action_registry.add("login", login);
 
