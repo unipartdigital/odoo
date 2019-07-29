@@ -56,7 +56,10 @@ var CrashManager = core.Class.extend({
             return;
         }
         if (error.data.name === "odoo.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
-            this.show_warning({type: _t("Odoo Session Expired"), data: {message: _t("Your Odoo session expired. Please refresh the current web page.")}});
+            var login = core.action_registry.get("login");
+            login(window.location.pathname +
+                  window.location.search +
+                  window.location.hash);
             return;
         }
         if (_.has(map_title, error.data.exception_type)) {

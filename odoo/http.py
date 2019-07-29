@@ -780,7 +780,7 @@ class HttpRequest(WebRequest):
                 request.session.save_request_data()
                 redirect = '/web/proxy/post{r.full_path}'.format(r=req)
             elif not request.params.get('noredirect'):
-                redirect = req.url
+                redirect = req.path
             if redirect:
                 query = werkzeug.urls.url_encode({
                     'redirect': redirect,
