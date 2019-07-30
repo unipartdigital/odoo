@@ -575,6 +575,11 @@ class QuantPackage(models.Model):
         'res.partner', 'Owner', compute='_compute_package_info',
         index=True, readonly=True)
 
+    @api.constrains("parent_id")
+    def _check_package_recursion(self):
+        if not self._check_recursion("parent_id"):
+            raise ValidationError("A package cannot be its own parent.")
+
     @api.one
     @api.depends('parent_id', 'children_ids')
     def _compute_ancestor_ids(self):
