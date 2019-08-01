@@ -204,7 +204,7 @@ class Partner(models.Model, FormatAddress):
         compute='_compute_company_type', readonly=False)
     company_id = fields.Many2one('res.company', 'Company', index=True, default=_default_company)
     color = fields.Integer(string='Color Index', default=0)
-    user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
+    user_ids = fields.One2many('res.users', 'partner_id', string='Users')
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (no user), either shared user. Indicated the current partner is a customer without "
