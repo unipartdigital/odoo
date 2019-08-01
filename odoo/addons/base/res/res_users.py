@@ -306,6 +306,16 @@ class Users(models.Model):
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
 
+    def _check_qorder(self, order):
+        if self._uid != SUPERUSER_ID:
+            order_fields = [order.strip().split(' ')[0].split(':')[0]
+                            for order in order.split(',')]
+            order_fields = set(order_fields)
+            if order_fields.intersection(USER_PRIVATE_FIELDS):
+                raise AccessError(_("Invalid 'order' parameter"))
+
+        return super(Users, self)._check_qorder(order)
+
     @api.multi
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
