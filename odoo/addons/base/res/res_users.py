@@ -296,6 +296,16 @@ class Users(models.Model):
         if any(user.company_ids and user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
+    def _check_qorder(self, order):
+        if self._uid != SUPERUSER_ID:
+            order_fields = [order.strip().split(' ')[0].split(':')[0]
+                            for order in order.split(',')]
+            order_fields = set(order_fields)
+            if order_fields.intersection(USER_PRIVATE_FIELDS):
+                raise AccessError(_("Invalid 'order' parameter"))
+
+        return super(Users, self)._check_qorder(order)
+
     @api.multi
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
