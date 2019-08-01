@@ -205,3 +205,57 @@ class TestIrSequenceInit(common.TransactionCase):
         # Read the value of the current sequence
         n = seq.next_by_id()
         self.assertEqual(n, "0001", 'The actual sequence value must be 1. reading : %s' % n)
+
+
+class TestIrSequenceCacheClearing(common.TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.company_id = 1
+
+        self.IrSequence = self.env['ir.sequence']
+
+        # Testing invalidates caches randomly, so clear them before doing anything. In particular this means
+        # that calling reset_changes again does nothing unless the cache is invalidated by something we do.
+        self.IrSequence.pool.reset_changes()
+
+        self.seq = self.IrSequence.create({
+            'company_id': self.company_id,
+            'name': 'Test Sequence',
+            'code': 'test.sequence',
+        })
+
+    def test_create_ir_sequence_clears_cache(self):
+        """Check that creating a sequence then rolling back the transaction does not result in stale
+        cache entries, as long as the registry is reset."""
+        try:
+            with self.cr.savepoint():
+                self.IrSequence.create({
+                    'company_id': self.company_id,
+                    'name': 'Test Sequence 2',
+                    'code': 'test.sequence.2',
+                })
+                _ = self.IrSequence.seq_by_code('test.sequence.2', self.company_id)
+                raise Exception()
+        except Exception:
+            pass
+        # When the sequence was created, caches were cleared, but they have not been cleared since the call to
+        # seq_by_code. However in "normal circumstances", a rollback will be triggered by an exception which will cause
+        # the following to happen.
+        self.IrSequence.pool.reset_changes()
+        id = self.IrSequence.seq_by_code('test.sequence.2', self.company_id)
+        self.assertEqual(id, False, 'seq_by_code returned an id when the id is invalid due to a '
+                                    'rollback since creation')
+
+    def test_delete_ir_sequence_clears_cache(self):
+        """Check that deleting a sequence removes stale cache entries"""
+        _ = self.IrSequence.seq_by_code('test.sequence', self.company_id)
+        self.seq.unlink()
+        id = self.IrSequence.seq_by_code('test.sequence', self.company_id)
+        self.assertEqual(id, False, 'seq_by_code returned an id when the record has been deleted')
+
+    def test_write_ir_sequence_clears_cache(self):
+        """Check that altering a sequence removes stale cache entries."""
+        _ = self.IrSequence.seq_by_code('test.sequence', self.company_id)
+        self.seq.write({'code': 'test.sequence.changed'})
+        id = self.IrSequence.seq_by_code('test.sequence', self.company_id)
+        self.assertEqual(id, False, "seq_by_code returned an id for a code which doesn't exist")
