@@ -579,6 +579,27 @@ class Users(models.Model):
     def get_company_currency_id(self):
         return self.env.user.company_id.currency_id.id
 
+class UsersAutoJoinCheck(models.TransientModel):
+    """Remove auto_join from relations linking to res.users for security.
+
+       This lives in its own model since some third-party modules
+       override _register_hook for res.users and do not call super()."""
+
+    _name = 'res.users.auto_join_check'
+
+    @api.model_cr
+    def _register_hook(self):
+        super(UsersAutoJoinCheck, self)._register_hook()
+
+        for model_name, model in self.env.items():
+            for field_name, field in model._fields.items():
+                if (field.comodel_name == 'res.users' and
+                    field.auto_join):
+                    _logger.error('%s %s had auto_join onto res.users, '
+                                  'which bypasses security for private fields.',
+                                  model_name, field_name)
+                    field.auto_join = False
+
 #
 # Implied groups
 #
