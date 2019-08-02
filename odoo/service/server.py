@@ -914,6 +914,19 @@ def load_test_file_py(registry, test_file):
                 if not success:
                     _logger.error('%s: at least one error occurred in a test', test_file)
 
+
+def load_test_spec(registry, test_spec):
+    suite = unittest.TestLoader().loadTestsFromName(test_spec)
+    _logger.log(logging.INFO, 'running tests %s.', test_spec)
+    stream = odoo.modules.module.TestStream()
+    result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
+    success = result.wasSuccessful()
+    if hasattr(registry._assertion_report,'report_result'):
+        registry._assertion_report.report_result(success)
+    if not success:
+        _logger.error('at least one error occurred in a test')
+
+
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
@@ -933,6 +946,11 @@ def preload_registries(dbnames):
                         load_test_file_yml(registry, test_file)
                     elif test_file.endswith('py'):
                         load_test_file_py(registry, test_file)
+
+            if config['test_only']:
+                test_spec = config['test_only']
+                with odoo.api.Environment.manage():
+                    load_test_spec(registry, test_spec)
 
             # run post-install tests
             if config['test_enable']:
