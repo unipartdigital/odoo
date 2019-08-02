@@ -316,13 +316,13 @@ class Users(models.Model):
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        if self._uid != SUPERUSER_ID and args:
-            domain_fields = {term[0] for term in args if isinstance(term, (tuple, list))}
+    def _where_calc(self, domain, *args, **kwargs):
+        if self._uid != SUPERUSER_ID:
+            domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
             if domain_fields.intersection(USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))
-        return super(Users, self)._search(args, offset=offset, limit=limit, order=order, count=count,
-                                          access_rights_uid=access_rights_uid)
+
+        return super(Users, self)._where_calc(domain, *args, **kwargs)
 
     @api.model
     def create(self, vals):
