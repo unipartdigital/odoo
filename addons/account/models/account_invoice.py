@@ -447,6 +447,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        vals = self._add_missing_default_values(vals)
         onchanges = {
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
