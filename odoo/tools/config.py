@@ -155,6 +155,8 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
                          help="Launch a python or YML test file.")
+        group.add_option("-T", "--test-only", dest="test_only", my_default=False,
+                         help="Run a named test, test module or testcase.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
         group.add_option("--test-enable", action="store_true", dest="test_enable",
@@ -427,7 +429,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_commit', 'test_report_directory', 'test_xml_file',
+            'test_file', 'test_only', 'test_enable', 'test_commit', 'test_report_directory', 'test_xml_file',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
