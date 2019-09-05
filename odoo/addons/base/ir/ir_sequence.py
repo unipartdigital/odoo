@@ -144,6 +144,10 @@ class IrSequence(models.Model):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
         seq = super(IrSequence, self).create(values)
+
+        # Due to caching on seq_by_code, changing sequences needs to clear caches, hence this line in
+        # this and the next two methods.
+        self.clear_caches()
         if values.get('implementation', 'standard') == 'standard':
             _create_sequence(self._cr, "ir_sequence_%03d" % seq.id, values.get('number_increment', 1), values.get('number_next', 1))
         return seq
@@ -151,7 +155,9 @@ class IrSequence(models.Model):
     @api.multi
     def unlink(self):
         _drop_sequences(self._cr, ["ir_sequence_%03d" % x.id for x in self])
-        return super(IrSequence, self).unlink()
+        result = super(IrSequence, self).unlink()
+        self.clear_caches()
+        return result
 
     @api.multi
     def write(self, values):
@@ -180,7 +186,9 @@ class IrSequence(models.Model):
                     _create_sequence(self._cr, "ir_sequence_%03d" % seq.id, i, n)
                     for sub_seq in seq.date_range_ids:
                         _create_sequence(self._cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, n)
-        return super(IrSequence, self).write(values)
+        result = super(IrSequence, self).write(values)
+        self.clear_caches()
+        return result
 
     def _next_do(self):
         if self.implementation == 'standard':
