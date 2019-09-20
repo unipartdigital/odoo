@@ -43,8 +43,8 @@
     <t t-jquery="h1:last, .progress, .o_automatic_reconciliation" t-operation="replace"></t>
     <t t-jquery=".o_view_nocontent p" t-operation="replace"></t>
     <t t-jquery=".o_view_nocontent" t-operation="append">
-        <p><b>Good Job!</b> There is nothing to reconcile.</p>
-        <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
+        <p>There is nothing to reconcile as there are no invoices to pay at present.</p>
+        <p>If this is not what you expected, check that the account of the payment and invoice matches.</p>
     </t>
 </t>
 
