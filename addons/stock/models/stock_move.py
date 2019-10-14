@@ -1076,11 +1076,13 @@ class StockMove(models.Model):
             move._do_unreserve()
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
             if move.propagate:
+                not_done_moves = move.move_dest_ids.filtered(
+                        lambda m: m.state != 'done')
                 # only cancel the next move if all my siblings are done or cancelled
-                if all(state in ['cancel', 'done'] for state in siblings_states):
-                    # only cancel not done moves
-                    move.move_dest_ids.filtered(
-                        lambda m: m.state != 'done')._action_cancel()
+                if all(state in ['cancel', 'done'] for state in siblings_states) \
+                    and move.product_uom_qty == sum(not_done_moves.mapped("product_uom_qty")):
+                    # only cancel not done moves with identical quantities
+                    not_done_moves._action_cancel()
                 else:
                     # but at least update quantities
                     move._propagate_qty_to_next_move((0 - move.product_uom_qty))
