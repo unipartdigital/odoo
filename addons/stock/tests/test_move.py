@@ -3874,3 +3874,105 @@ class StockMove(TransactionCase):
         picking.button_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 2)
+
+    def test_action_cancel_1(self):
+        """Check that when a move is cancelled and its siblings are all cancelled/done
+        and the move contains all of the qty the remaining moves are cancelled.
+        """
+        self.stock_location1 = self.env["stock.location"].create(
+            {"name": "Location A", "location_id": self.stock_location.id}
+        )
+        self.stock_location2 = self.env["stock.location"].create(
+            {"name": "Location B", "location_id": self.stock_location.id}
+        )
+        self.stock_location3 = self.env["stock.location"].create(
+            {"name": "Location C", "location_id": self.stock_location.id}
+        )
+
+        # Make some stock.
+        self.env["stock.quant"]._update_available_quantity(
+            self.product1, self.stock_location1, 150.0
+        )
+
+        self.move1 = self.env["stock.move"].create(
+            {
+                "name": "test_move_1",
+                "location_id": self.stock_location1.id,
+                "location_dest_id": self.stock_location2.id,
+                "product_id": self.product1.id,
+                "product_uom": self.uom_unit.id,
+                "product_uom_qty": 10.0,
+                "picking_type_id": self.env.ref("stock.picking_type_internal").id,
+            }
+        )
+        self.move2 = self.env["stock.move"].create(
+            {
+                "name": "test_move_2",
+                "location_id": self.stock_location2.id,
+                "location_dest_id": self.stock_location3.id,
+                "product_id": self.product1.id,
+                "product_uom": self.uom_unit.id,
+                "product_uom_qty": 10.0,
+                "picking_type_id": self.env.ref("stock.picking_type_internal").id,
+            }
+        )
+
+        self.move1.write({"move_dest_ids": [(4, self.move2.id, False)]})
+        self.move1._action_confirm()
+        self.move2._action_confirm()
+        self.move1._action_assign()
+        self.move1._set_quantity_done(5)
+        self.move1._action_done()
+        new_move = self.move2.move_orig_ids - self.move1
+        new_move._action_cancel()
+        self.assertEqual(self.move2.state, "assigned")
+
+    def test_action_cancel_2(self):
+        """Check that when a move is cancelled and its siblings are all cancelled/done
+        but the move does not contain all of the qty, the remaining moves are not cancelled.
+        """
+        self.stock_location1 = self.env["stock.location"].create(
+            {"name": "Location A", "location_id": self.stock_location.id}
+        )
+        self.stock_location2 = self.env["stock.location"].create(
+            {"name": "Location B", "location_id": self.stock_location.id}
+        )
+        self.stock_location3 = self.env["stock.location"].create(
+            {"name": "Location C", "location_id": self.stock_location.id}
+        )
+
+        # Make some stock.
+        self.env["stock.quant"]._update_available_quantity(
+            self.product1, self.stock_location1, 150.0
+        )
+
+        self.move1 = self.env["stock.move"].create(
+            {
+                "name": "test_move_1",
+                "location_id": self.stock_location1.id,
+                "location_dest_id": self.stock_location2.id,
+                "product_id": self.product1.id,
+                "product_uom": self.uom_unit.id,
+                "product_uom_qty": 10.0,
+                "picking_type_id": self.env.ref("stock.picking_type_internal").id,
+            }
+        )
+        self.move2 = self.env["stock.move"].create(
+            {
+                "name": "test_move_2",
+                "location_id": self.stock_location2.id,
+                "location_dest_id": self.stock_location3.id,
+                "product_id": self.product1.id,
+                "product_uom": self.uom_unit.id,
+                "product_uom_qty": 10.0,
+                "picking_type_id": self.env.ref("stock.picking_type_internal").id,
+                "move_orig_ids": [self.move1.id],
+            }
+        )
+
+        self.move1.write({"move_dest_ids": [(4, self.move2.id, False)]})
+        self.move1._action_confirm()
+        self.move2._action_confirm()
+        self.move1._action_assign()
+        self.move1._action_cancel()
+        self.assertEqual(self.move2.state, "cancel")
