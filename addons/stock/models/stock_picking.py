@@ -702,7 +702,9 @@ class Picking(models.Model):
             origin_packages = picking.move_line_ids.mapped("package_id")
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
-                    picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({'result_package_id': pack.id})
+                    picking.move_line_ids.filtered(
+                        lambda ml: ml.package_id == pack).with_context(
+                        bypass_reservation_update=True).write({'result_package_id': pack.id})
 
     @api.multi
     def do_unreserve(self):
