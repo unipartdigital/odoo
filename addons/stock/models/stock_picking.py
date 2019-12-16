@@ -699,13 +699,16 @@ class Picking(models.Model):
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
-            origin_packages = picking.move_line_ids.mapped("package_id")
+            mls = picking.move_line_ids.filtered(
+                lambda ml: ml.package_id and not ml.result_package_id)
+            origin_packages = mls.mapped("package_id")
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
-                    picking.move_line_ids\
-                        .filtered(lambda ml: ml.package_id == pack)\
-                        .with_context(bypass_reservation_update=True)\
+                    pack_mls = picking.move_line_ids\
+                        .filtered(lambda ml: ml.package_id == pack)
+                    pack_mls.with_context(bypass_reservation_update=True)\
                         .write({'result_package_id': pack.id})
+                    mls -= pack_mls
 
     @api.multi
     def do_unreserve(self):
