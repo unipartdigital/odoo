@@ -2895,6 +2895,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
 
     @api.multi
+    def _check_write_validity(self, vals):
+        """ _check_write_validity(vals)
+
+        Runs custom validation for a write.
+
+        :raise ValidationError: if the write is not allowed for any records
+        """
+        if 'state' in self._fields:
+            locked_records = self.filtered(lambda x: x.state in ('done', 'cancel'))
+            if locked_records:
+                # TODO: Does this break any monkey patched code?
+                raise ValidationError(_("One or more records cannot be updated because they are already Done or Cancelled.\n\nRecord(s): %s") % str(locked_records))
+
+    @api.multi
     def unlink(self):
         """ unlink()
 
@@ -3105,6 +3119,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._check_concurrency()
         self.check_access_rights('write')
+
+        self._check_write_validity(vals)
 
         # No user-driven update of these columns
         pop_fields = ['parent_left', 'parent_right']
