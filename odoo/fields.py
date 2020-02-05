@@ -1193,7 +1193,13 @@ class Float(Field):
         # with all significant digits.
         # FLOAT8 type is still the default when there is no precision because it
         # is faster for most operations (sums, etc.)
-        return ('numeric', 'numeric') if self.digits is not None else \
+        _logger.critical("This branch has untested changes, DO NOT USE")
+        if self.digits:
+            num_type = 'numeric({},{})'.format(self.digits[0], self.digits[1])
+            _logger.debug("Setting {} to {}".format(self.name, num_type))
+        else:
+            num_type = 'numeric(100,20)'
+        return ('numeric', num_type) if self.digits is not None else \
                ('float8', 'double precision')
 
     @property
@@ -1237,7 +1243,7 @@ class Monetary(Field):
                            field is expressed in (default: `currency_id`)
     """
     type = 'monetary'
-    column_type = ('numeric', 'numeric')
+    column_type = ('numeric', 'numeric(100,3)')
     column_cast_from = ('float8',)
     _slots = {
         'currency_field': None,
