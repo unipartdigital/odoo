@@ -1243,7 +1243,7 @@ class Monetary(Field):
                            field is expressed in (default: `currency_id`)
     """
     type = 'monetary'
-    column_type = ('numeric', 'numeric(100,3)')
+    column_type = ('numeric', 'numeric(100,20)')
     column_cast_from = ('float8',)
     _slots = {
         'currency_field': None,
