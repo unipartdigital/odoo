@@ -28,15 +28,17 @@ import babel.core
 import passlib.utils
 import psycopg2
 import json
-import werkzeug.contrib.sessions
 import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.local
 import werkzeug.routing
 import werkzeug.wrappers
-import werkzeug.wsgi
 from werkzeug import urls
 from werkzeug.wsgi import wrap_file
+try:
+    from werkzeug.middleware.shared_data import SharedDataMiddleware
+except ImportError:
+    from werkzeug.wsgi import SharedDataMiddleware
 
 try:
     import psutil
@@ -48,7 +50,8 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique
-
+from .tools.mimetypes import guess_mimetype
+from .tools._vendor import sessions
 from .modules.module import module_manifest
 
 _logger = logging.getLogger(__name__)
@@ -300,7 +303,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -584,7 +587,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -1005,7 +1008,7 @@ class AuthenticationError(Exception):
 class SessionExpiredException(Exception):
     pass
 
-class OpenERPSession(werkzeug.contrib.sessions.Session):
+class OpenERPSession(sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
         self.modified = False
@@ -1323,7 +1326,8 @@ class Root(object):
         # Setup http sessions
         path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        return sessions.FilesystemSessionStore(
+            path, session_class=OpenERPSession, renew_missing=True)
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1374,7 +1378,7 @@ class Root(object):
 
         if statics:
             _logger.info("HTTP Configuring static files")
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
+        app = SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
         self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
