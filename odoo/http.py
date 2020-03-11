@@ -601,6 +601,10 @@ class JsonRequest(WebRequest):
         elif jsonp and request_id:
             # jsonp 2 steps step2 GET: run and return result
             request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
+        elif self.httprequest.method == 'GET':
+            get_args = dict(args)
+            get_args['params'] = json.loads(args.get('params'))
+            request = json.dumps(get_args)
         else:
             # regular jsonrpc2
             request = self.httprequest.get_data().decode(self.httprequest.charset)
