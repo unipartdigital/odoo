@@ -5,49 +5,45 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-from functools import wraps
-import babel
-from contextlib import contextmanager
-import datetime
-import subprocess
-import io
-import os
-
+import cProfile
 import collections
-import passlib.utils
+import datetime
+import io
+import logging
+import os
 import pickle as pickle_
 import re
 import socket
+import subprocess
 import sys
 import threading
 import time
-import types
-import werkzeug.utils
-import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
-from itertools import islice, groupby, repeat
-from lxml import etree
-
-from .which import which
 import traceback
+import types
+import zipfile
+from collections import defaultdict, OrderedDict
+from collections.abc import Iterable, Mapping, MutableSet
+from contextlib import contextmanager
+from functools import wraps
+from itertools import islice, groupby
 from operator import itemgetter
 
-try:
-    # pylint: disable=bad-python3-import
-    import cProfile
-except ImportError:
-    import profile as cProfile
-
-
-from .config import config
-from .cache import *
-from .parse_version import parse_version 
-from . import pycompat
+import babel
+import babel.dates
+import passlib.utils
+import werkzeug.utils
+from lxml import etree
 
 import odoo
+import odoo.addons
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from . import pycompat
+from .cache import *
+from .config import config
+from .parse_version import parse_version
+from .which import which
 
 _logger = logging.getLogger(__name__)
 
@@ -142,7 +138,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
-    
+
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
 
@@ -288,7 +284,7 @@ def flatten(list):
 
 def reverse_enumerate(l):
     """Like enumerate but in the other direction
-    
+
     Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
@@ -688,10 +684,10 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       
+
        :param int n: maximum size of each generated chunk
        :param Iterable iterable: iterable to chunk into pieces
-       :param piece_maker: callable taking an iterable and collecting each 
+       :param piece_maker: callable taking an iterable and collecting each
                            chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
@@ -753,7 +749,7 @@ class unquote(str):
         return self
 
 class UnquoteEvalContext(defaultdict):
-    """Defaultdict-based evaluation context that returns 
+    """Defaultdict-based evaluation context that returns
        an ``unquote`` string for any missing name used during
        the evaluation.
        Mostly useful for evaluating OpenERP domains/contexts that
