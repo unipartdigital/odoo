@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
-import dateutil
+import itertools
 import logging
 import time
+from ast import literal_eval
 from collections import defaultdict
+from collections.abc import Mapping
+from operator import itemgetter
 
-from odoo import api, fields, models, SUPERUSER_ID, tools,  _
+import dateutil
+
+from odoo import SUPERUSER_ID, api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
@@ -930,7 +934,7 @@ class IrModelConstraint(models.Model):
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
             if data.model.model in self.env:
-                table = self.env[data.model.model]._table    
+                table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
             typ = data.type
@@ -1344,7 +1348,7 @@ class IrModelData(models.Model):
 
     @api.model
     def xmlid_to_object(self, xmlid, raise_if_not_found=False):
-        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
+        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is
         set
         """
         t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
@@ -1528,11 +1532,11 @@ class IrModelData(models.Model):
         ``ids`` along with their corresponding database backed (including
         dropping tables, columns, FKs, etc, as long as there is no other
         ir.model.data entry holding a reference to them (which indicates that
-        they are still owned by another module). 
+        they are still owned by another module).
         Attempts to perform the deletion in an appropriate order to maximize
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
-        """ 
+        """
         if not (self._uid == SUPERUSER_ID or self.env.user.has_group('base.group_system')):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
