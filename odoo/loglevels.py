@@ -96,7 +96,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
 def exception_to_unicode(e):
     if getattr(e, 'args', ()):
-        return "\n".join((ustr(a) for a in e.args))
+        return "\n".join((ustr(a) for a in e.args if a))
     try:
         return text_type(e)
     except Exception:
