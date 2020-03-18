@@ -1627,6 +1627,62 @@ class Datetime(Field):
         assert record, 'Record expected'
         return Datetime.to_string(Datetime.context_timestamp(record, Datetime.from_string(value)))
 
+
+# PreciseDatetime-specific constants.  Note that we are depending on
+# `DATETIME_FORMAT` not changing from its current hh:mm:ss value.
+PRECISE_DATETIME_FORMAT = DATETIME_FORMAT + ".%f"
+PRECISE_DATETIME_LENGTH = len(datetime.now().strftime(PRECISE_DATETIME_FORMAT))
+
+
+class PreciseDatetime(Datetime):
+    """Timestamps to microsecond precision."""
+
+    type = 'precise_datetime'
+    column_type = ('timestamp', 'timestamp')
+    column_cast_from = ('date',)
+
+    @staticmethod
+    def now(*args):
+        """ Return the current day and time in the format expected by the ORM.
+            This function may be used to compute default values.
+        """
+        return datetime.now().strftime(PRECISE_DATETIME_FORMAT)
+
+    @staticmethod
+    def from_string(value):
+        """ Convert an ORM ``value`` into a :class:`datetime` value. """
+        if not value:
+            return None
+        value = value[:PRECISE_DATETIME_LENGTH]
+        if len(value) == DATE_LENGTH:
+            value += " 00:00:00.000000"
+        return datetime.strptime(value, PRECISE_DATETIME_FORMAT)
+
+    @staticmethod
+    def to_string(value):
+        """ Convert a :class:`datetime` value into the format expected by the ORM. """
+        return value.strftime(PRECISE_DATETIME_FORMAT) if value else False
+
+    def convert_to_column(self, value, record, values=None):
+        return super(PreciseDatetime, self).convert_to_column(value or None, record, values)
+
+    def convert_to_cache(self, value, record, validate=True):
+        if not value:
+            return False
+        if isinstance(value, pycompat.string_types):
+            if validate:
+                # force parsing for validation
+                self.from_string(value)
+            value = value[:PRECISE_DATETIME_LENGTH]
+            if len(value) == DATE_LENGTH:
+                value += " 00:00:00.000000"
+            return value
+        return self.to_string(value)
+
+    def convert_to_display_name(self, value, record):
+        assert record, 'Record expected'
+        return PreciseDatetime.to_string(PreciseDatetime.context_timestamp(record, PreciseDatetime.from_string(value)))
+
 # http://initd.org/psycopg/docs/usage.html#binary-adaptation
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
 _BINARY = memoryview
