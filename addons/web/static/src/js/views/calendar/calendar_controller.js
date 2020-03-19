@@ -274,12 +274,13 @@ var CalendarController = AbstractController.extend({
         }
 
         var open_dialog = function (readonly) {
+            var view_title = self.displayName || 'Calendar Entry';
             var options = {
                 res_model: self.modelName,
                 res_id: id || null,
                 context: event.context || self.context,
                 readonly: readonly,
-                title: _t("Open: ") + event.data.title,
+                title: _t("Open: ") + view_title,
                 on_saved: function () {
                     if (event.data.on_save) {
                         event.data.on_save();
