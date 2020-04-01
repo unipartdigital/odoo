@@ -4,6 +4,7 @@
 import ast
 import functools
 import imp
+import collections.abc
 import importlib
 import inspect
 import itertools
