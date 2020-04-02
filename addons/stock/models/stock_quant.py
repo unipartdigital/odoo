@@ -215,10 +215,18 @@ class StockQuant(models.Model):
             try:
                 with self._cr.savepoint():
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
-                    quant.write({
-                        'quantity': quant.quantity + quantity,
+                    new_quantity = quant.quantity + quantity
+                    vals = {
+                        'quantity': new_quantity,
                         'in_date': in_date,
-                    })
+                    }
+                    if new_quantity == 0:
+                        # quants with quantity = 0 can be removed from any package and lot
+                        vals.update({
+                            'package_id': False,
+                            'lot_id': False
+                        })
+                    quant.write(vals)
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
@@ -301,7 +309,9 @@ class StockQuant(models.Model):
                             SELECT min(id) as to_update_quant_id,
                                 (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
                                 SUM(reserved_quantity) as reserved_quantity,
-                                SUM(quantity) as quantity
+                                SUM(quantity) as quantity,
+                                package_id,
+                                lot_id
                             FROM stock_quant
                             GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id, in_date
                             HAVING count(id) > 1
@@ -309,7 +319,9 @@ class StockQuant(models.Model):
                         _up AS (
                             UPDATE stock_quant q
                                 SET quantity = d.quantity,
-                                    reserved_quantity = d.reserved_quantity
+                                    reserved_quantity = d.reserved_quantity,
+                                    package_id = CASE WHEN d.quantity = 0 THEN NULL ELSE d.package_id END,
+                                    lot_id = CASE WHEN d.quantity = 0 THEN NULL ELSE d.lot_id END
                             FROM dupes d
                             WHERE d.to_update_quant_id = q.id
                         )
