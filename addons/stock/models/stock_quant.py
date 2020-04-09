@@ -3,7 +3,7 @@
 
 from psycopg2 import OperationalError, Error
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -52,6 +52,20 @@ class StockQuant(models.Model):
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
+
+    @api.model_cr
+    def init(self):
+        """Add indexes to improve query performance."""
+        res = super().init()
+        # This index improves the performance of the query in
+        # delete_empty_quants.
+        tools.create_index(
+            self._cr,
+            'stock_quant_quantities_index',
+            self._table,
+            ['quantity', 'reserved_quantity']
+        )
+        return res
 
     def action_view_stock_moves(self):
         self.ensure_one()
