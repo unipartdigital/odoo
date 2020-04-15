@@ -196,7 +196,7 @@ class StockQuant(models.Model):
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
-        """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
+        """ Increase or decrease `quantity` of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
         :param product_id:
@@ -257,7 +257,7 @@ class StockQuant(models.Model):
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
             })
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), fields.Datetime.from_string(in_date)
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), fields.Datetime.from_string(in_date)
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
