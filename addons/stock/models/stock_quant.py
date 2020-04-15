@@ -195,7 +195,7 @@ class StockQuant(models.Model):
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
     @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False):
         """ Increase or decrease `quantity` of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
@@ -257,6 +257,10 @@ class StockQuant(models.Model):
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
             })
+
+        if just_update:
+            return True
+
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), fields.Datetime.from_string(in_date)
 
     @api.model
