@@ -65,6 +65,14 @@ class StockQuant(models.Model):
             self._table,
             ['quantity', 'reserved_quantity']
         )
+        # This index improves the performance of a few queries done by
+        # _get_available_quantity.
+        tools.create_index(
+            self._cr,
+            'stock_quant_product_id_location_id_index',
+            self._table,
+            ['product_id', 'location_id']
+        )
         return res
 
     def action_view_stock_moves(self):
