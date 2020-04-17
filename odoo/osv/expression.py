@@ -117,13 +117,11 @@ import collections
 
 import logging
 import traceback
-from functools import partial
 from zlib import crc32
 
 import odoo.modules
 from odoo.tools import pycompat
-from ..models import MAGIC_COLUMNS, BaseModel
-import odoo.tools as tools
+from ..models import BaseModel
 
 
 # Domain operators.
@@ -450,6 +448,25 @@ def select_from_where(cr, select_field, from_table, where_field, where_ids, wher
 def select_distinct_from_where_not_null(cr, select_field, from_table):
     cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (select_field, from_table, select_field))
     return [r[0] for r in cr.fetchall()]
+
+
+def select_where_exists(cr, from_table, select_field, fk_table, fk_field):
+    """Execute an EXISTS subquery to identify rows with children.
+
+    This is (theoretically) faster than SELECT DISTINCT for large datasets.
+    """
+    # The apparently redundant OFFSET 0 stops Postgres from inlining the
+    # subquery, which may result in a sub-optimal query plan.
+    # https://stackoverflow.com/questions/14897816/how-can-i-prevent-postgres-from-inlining-a-subquery
+    stmt = """SELECT "%s"."%s" FROM "%s"
+                WHERE EXISTS (SELECT 1 FROM "%s"
+                                WHERE "%s"."%s" = "%s"."%s" OFFSET 0)
+    """
+    cr.execute(stmt %
+               (from_table, select_field, from_table, fk_table,
+                from_table, select_field, fk_table, fk_field))
+    return [r[0] for r in cr.fetchall()]
+
 
 def get_unaccent_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
@@ -977,7 +994,7 @@ class expression(object):
                 else:
                     # determine ids1 = records with lines
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
-                        ids1 = select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)
+                        ids1 = select_where_exists(cr, model._table, "id", comodel._table, field.inverse_name)
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
                         if inverse_is_int and domain:
