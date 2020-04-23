@@ -489,6 +489,10 @@ class TestExpression(SavepointCaseWithUserDemo):
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
         self.assertFalse(partners)
 
+        # Test aliasing in subquery does not result in invalid query.
+        partners = self.env['res.users'].search([('partner_id.child_ids', '=', False)]).mapped('partner_id')
+        self.assertEqual(len(partners), 2)
+
     def test_15_equivalent_one2many_1(self):
         Company = self.env['res.company']
         company3 = Company.create({'name': 'Acme 3'})
@@ -624,7 +628,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # Test2: inheritance + relational fields
         users = self._search(Users, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
-        
+
         # Special =? operator mean "is equal if right is set, otherwise always True"
         users = self._search(Users, [('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
