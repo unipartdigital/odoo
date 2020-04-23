@@ -141,13 +141,13 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of')
+                  'child_of', 'parent_of', 'exists')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
-NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
+NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in', 'not_exists')
 
 # Negation of domain expressions
 DOMAIN_OPERATORS_NEGATION = {
@@ -164,9 +164,11 @@ TERM_OPERATORS_NEGATION = {
     'in': 'not in',
     'like': 'not like',
     'ilike': 'not ilike',
+    'exists': 'not exists',
     'not in': 'in',
     'not like': 'like',
     'not ilike': 'ilike',
+    'not exists': 'exists',
 }
 
 TRUE_LEAF = (1, '=', 1)
@@ -418,7 +420,7 @@ def is_leaf(element, internal=False):
     """
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
     if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
+        INTERNAL_OPS += ('inselect', 'not inselect', 'exists', 'not exists')
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -978,8 +980,8 @@ class expression(object):
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
                         # rewrite condition to match records with/without lines
-                        op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'not exists'
+                        subquery = 'SELECT 1 FROM "%s" where "%s"."%s" = "%s"."%s"' % (comodel._table, comodel._table, field.inverse_name, model._table, 'id')
                         push(create_substitution_leaf(leaf, ('id', op1, (subquery, [])), internal=True))
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
@@ -1158,7 +1160,7 @@ class expression(object):
         left, operator, right = leaf
 
         # final sanity checks - should never fail
-        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
+        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect', 'not exists')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
             "Invalid field %r in domain term %r" % (left, leaf)
@@ -1181,6 +1183,15 @@ class expression(object):
 
         elif operator == 'not inselect':
             query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
+            params = right[1]
+
+        # EXISTS hack for one2many
+        elif operator == 'exists':
+            query = '(EXISTS (%s))' % (right[0])
+            params = right[1]
+
+        elif operator == 'not exists':
+            query = '(NOT EXISTS (%s))' % (right[0])
             params = right[1]
 
         elif operator in ['in', 'not in']:
