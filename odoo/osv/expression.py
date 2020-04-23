@@ -137,8 +137,9 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # for consistency. This list doesn't contain '<>' as it is simpified to '!='
 # by the normalize_operator() function (so later part of the code deals with
 # only one representation).
-# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
-# operators are also used. In this case its right operand has the form (subselect, params).
+# Internals (i.e. not available to the user) 'inselect', 'not inselect',
+# 'exists' and 'not exists' operators are also used. In this case its right operand
+# has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of', 'parent_of')
@@ -411,14 +412,14 @@ def is_leaf(element, internal=False):
         - second element if a valid op
 
         :param tuple element: a leaf in form (left, operator, right)
-        :param boolean internal: allow or not the 'inselect' internal operator
-            in the term. This should be always left to False.
+        :param boolean internal: allow or not the 'inselect' or 'exists'
+            internal operator in the term. This should be always left to False.
 
         Note: OLD TODO change the share wizard to use this function.
     """
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
     if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
+        INTERNAL_OPS += ('inselect', 'not inselect', 'exists', 'not exists')
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -978,8 +979,13 @@ class expression(object):
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
                         # rewrite condition to match records with/without lines
-                        op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'not exists'
+                        # Alias the table in the subquery to handle the case
+                        # where the table has a foreign key on itself (model == comodel)
+                        alias = comodel._table + '__ALIAS'
+                        # Double-escape the FROM TABLE placeholder so that it
+                        # can be replaced by an alias when SQL is generated.
+                        subquery = 'SELECT 1 FROM "%s" "%s" where "%s"."%s" = %%s."%s"' % (comodel._table, alias, alias, field.inverse_name, 'id')
                         push(create_substitution_leaf(leaf, ('id', op1, (subquery, [])), internal=True))
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
@@ -1158,7 +1164,7 @@ class expression(object):
         left, operator, right = leaf
 
         # final sanity checks - should never fail
-        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
+        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect', 'exists', 'not exists')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
             "Invalid field %r in domain term %r" % (left, leaf)
@@ -1181,6 +1187,14 @@ class expression(object):
 
         elif operator == 'not inselect':
             query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
+            params = right[1]
+
+        elif operator == 'exists':
+            query = '(EXISTS (%s))' % (right[0] % table_alias)
+            params = right[1]
+
+        elif operator == 'not exists':
+            query = '(NOT EXISTS (%s))' % (right[0] % table_alias)
             params = right[1]
 
         elif operator in ['in', 'not in']:

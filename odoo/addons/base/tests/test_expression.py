@@ -370,6 +370,10 @@ class TestExpression(TransactionCase):
         partners = Partner.search([('child_ids.city', '=', 'foo')])
         self.assertFalse(partners)
 
+        # Test aliasing in subquery does not result in invalid query.
+        partners = self.env['res.users'].search([('partner_id.child_ids', '=', False)]).mapped('partner_id')
+        self.assertEqual(len(partners), 3)
+
     def test_15_equivalent_one2many_1(self):
         Company = self.env['res.company']
         company3 = Company.create({'name': 'Acme 3'})
@@ -481,7 +485,7 @@ class TestExpression(TransactionCase):
         # Test2: inheritance + relational fields
         users = Users.search([('child_ids.name', 'like', 'test_B')])
         self.assertEqual(users, b1, 'searching through inheritance failed')
-        
+
         # Special =? operator mean "is equal if right is set, otherwise always True"
         users = Users.search([('name', 'like', 'test'), ('parent_id', '=?', False)])
         self.assertEqual(users, a + b1 + b2, '(x =? False) failed')
@@ -731,7 +735,7 @@ class TestAutoJoin(TransactionCase):
         expected = "%s like %s" % (unaccent('"res_partner__bank_ids"."sanitized_acc_number"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect where condition")
-        
+
         self.assertIn('"res_partner"."id"="res_partner__bank_ids"."partner_id"', sql_query[1],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join condition")
         self.assertIn('%' + name_test + '%', sql_query[2],
@@ -848,7 +852,7 @@ class TestAutoJoin(TransactionCase):
         expected = "%s like %s" % (unaccent('"res_country_state__country_id"."code"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
-        
+
         self.assertIn('"res_country_state"."country_id"="res_country_state__country_id"."id"', sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join condition")
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
@@ -882,7 +886,7 @@ class TestAutoJoin(TransactionCase):
         expected = "%s like %s" % (unaccent('"res_partner__state_id__country_id"."code"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect where condition")
-        
+
         self.assertIn('"res_partner"."state_id"="res_partner__state_id"."id"', sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
         self.assertIn('"res_partner__state_id"."country_id"="res_partner__state_id__country_id"."id"', sql_query[1],
