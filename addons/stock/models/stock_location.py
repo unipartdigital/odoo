@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 from odoo.exceptions import UserError
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -69,6 +69,19 @@ class Location(models.Model):
     quant_ids = fields.One2many('stock.quant', 'location_id')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
+
+    @api.model_cr
+    def init(self):
+        """Add indexes to improve query performance."""
+        super(Location, self).init()
+        # This index improves the performance of queries for active child
+        # locations, which happen when using the child_of operator.
+        tools.create_index(
+            self._cr,
+            'stock_location_active_parent_left_index',
+            self._table,
+            ['active', 'parent_left']
+        )
 
     @api.one
     @api.depends('name', 'location_id.complete_name')
