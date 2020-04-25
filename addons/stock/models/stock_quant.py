@@ -379,8 +379,8 @@ class QuantPackage(models.Model):
         'product.packaging', 'Package Type', index=True,
         help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.")
     location_id = fields.Many2one(
-        'stock.location', 'Location', compute='_compute_package_info', search=False,
-        index=True, readonly=True, store=True)
+        'stock.location', 'Location', compute='_compute_package_info', search='_search_location',
+        index=True, readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', compute='_compute_package_info', search='_search_company',
         index=True, readonly=True)
@@ -450,6 +450,17 @@ class QuantPackage(models.Model):
             else:
                 for ml in move_lines:
                     ml.qty_done = 0
+
+
+    def _search_location(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.location_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'in', packs.ids)]
+        else:
+            return [('id', '=', False)]
 
     def _search_company(self, operator, value):
         if value:
