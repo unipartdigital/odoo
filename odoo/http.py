@@ -603,7 +603,7 @@ class JsonRequest(WebRequest):
             request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         elif self.httprequest.method == 'GET':
             get_args = dict(args)
-            get_args['params'] = json.loads(args.get('params'))
+            get_args['params'] = json.loads(args.get('params', '{}'))
             request = json.dumps(get_args)
         else:
             # regular jsonrpc2
