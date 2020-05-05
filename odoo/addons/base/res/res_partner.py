@@ -269,11 +269,17 @@ class Partner(models.Model):
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
+        # Compute commercial partners in one pass, then set them separately in
+        # another to avoid cache thrashing.
+        commercial_partners = {}
         for partner in self:
             if partner.is_company or not partner.parent_id:
-                partner.commercial_partner_id = partner
+                commercial_partners[partner] = partner
             else:
-                partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+                commercial_partners[partner] = partner.parent_id.commercial_partner_id
+
+        for partner, commercial_partner in commercial_partners.items():
+            partner.commercial_partner_id = commercial_partner
 
     @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
     def _compute_commercial_company_name(self):
