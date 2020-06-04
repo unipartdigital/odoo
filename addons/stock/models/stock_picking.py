@@ -6,7 +6,7 @@ import json
 import time
 
 from itertools import groupby
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
@@ -305,6 +305,24 @@ class Picking(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.model_cr
+    def init(self):
+        """Add required indexes."""
+        res = super(Picking, self).init()
+        tools.create_gin_index(
+            self._cr,
+            'stock_picking_trigram_name',
+            self._table,
+            ['name']
+        )
+        tools.create_gin_index(
+            self._cr,
+            'stock_picking_trigram_origin',
+            self._table,
+            ['origin']
+        )
+        return res
 
     def _compute_has_tracking(self):
         for picking in self:

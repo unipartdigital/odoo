@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.exceptions import UserError
 
 
@@ -27,6 +27,18 @@ class StockPickingBatch(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
         copy=False, track_visibility='onchange', required=True)
+
+    @api.model_cr
+    def init(self):
+        """Add required indexes."""
+        res = super(StockPickingBatch, self).init()
+        tools.create_gin_index(
+            self._cr,
+            'stock_picking_batch_trigram_name',
+            self._table,
+            ['name']
+        )
+        return res
 
     @api.model
     def create(self, vals):
