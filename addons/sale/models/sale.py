@@ -7,7 +7,7 @@ from itertools import groupby
 from datetime import datetime, timedelta
 from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
@@ -185,6 +185,26 @@ class SaleOrder(models.Model):
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
         return False
+
+    @api.model_cr
+    def init(self):
+        """Add indexes to improve search performance on the desktop UI."""
+        res = super(SaleOrder, self).init()
+
+        tools.create_gin_index(
+            self._cr,
+            'sale_order_name_trgm_index',
+            self._table,
+            ['name gin_trgm_ops'],
+        )
+        tools.create_gin_index(
+            self._cr,
+            'sale_order_trigram_client_order_ref',
+            self._table,
+            ['client_order_ref'],
+        )
+
+        return res
 
     @api.multi
     def unlink(self):
