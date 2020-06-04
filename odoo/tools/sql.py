@@ -189,6 +189,15 @@ def create_index(cr, indexname, tablename, expressions):
     cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
+
+def create_partial_index(cr, indexname, tablename, expressions, predicate):
+    """ Create the given partial index unless it exists. """
+    if index_exists(cr, indexname):
+        return
+    args = ', '.join(expressions)
+    cr.execute('CREATE INDEX "{}" ON "{}" ({}) WHERE {}'.format(indexname, tablename, args, predicate))
+    _schema.debug("Table %r: created partial index %r (%s) %s", tablename, indexname, args, predicate)
+
 def create_unique_index(cr, indexname, tablename, expressions):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
