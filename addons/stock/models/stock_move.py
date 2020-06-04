@@ -6,7 +6,7 @@ from dateutil import relativedelta
 from itertools import groupby
 from operator import itemgetter
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -346,6 +346,13 @@ class StockMove(models.Model):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_move_product_location_index',))
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX stock_move_product_location_index ON stock_move (product_id, location_id, location_dest_id, company_id, state)')
+        tools.create_partial_index(
+            self._cr,
+            'stock_move_partial_state',
+            self._table,
+            ['state'],
+            "state NOT IN ('done', 'draft', 'cancel') AND state IS NOT NULL"
+        )
 
     @api.model
     def default_get(self, fields_list):

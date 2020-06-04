@@ -394,6 +394,18 @@ class QuantPackage(models.Model):
     current_destination_location_id = fields.Many2one('stock.location', compute="_compute_current_picking_info")
     is_processed = fields.Boolean(compute="_compute_current_picking_info")
 
+    @api.model_cr
+    def init(self):
+        """Add indexes to improve query performance."""
+        res = super().init()
+        tools.create_gin_index(
+            self._cr,
+            'stock_quant_package_trigram_name',
+            self._table,
+            ['name']
+        )
+        return res
+
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id')
     def _compute_package_info(self):
         for package in self:
