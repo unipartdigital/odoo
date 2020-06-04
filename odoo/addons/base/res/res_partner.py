@@ -287,6 +287,21 @@ class Partner(models.Model):
             p = partner.commercial_partner_id
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
 
+    @api.model_cr
+    def init(self):
+        """Add indexes to improve search performance on the desktop UI."""
+        res = super(Partner, self).init()
+
+        for field in ['email', 'display_name', 'ref', 'vat']:
+            tools.create_gin_index(
+                self._cr,
+                'res_partner_trigram_%s' % (field,),
+                self._table,
+                [field],
+        )
+
+        return res
+
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
         if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
