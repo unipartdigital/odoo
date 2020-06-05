@@ -195,7 +195,7 @@ class SaleOrder(models.Model):
             self._cr,
             'sale_order_name_trgm_index',
             self._table,
-            ['name gin_trgm_ops'],
+            ['name'],
         )
         tools.create_gin_index(
             self._cr,
