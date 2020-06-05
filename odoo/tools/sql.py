@@ -205,6 +205,13 @@ def create_partial_index(cr, indexname, tablename, expressions, predicate):
     cr.execute('CREATE INDEX "{}" ON "{}" ({}) WHERE {}'.format(indexname, tablename, args, predicate))
     _schema.debug("Table %r: created partial index %r (%s) %s", tablename, indexname, args, predicate)
 
+def create_extension(cr, extname):
+    """Create an extension, assuming that it is not already present."""
+    if extension_exists(cr, extname):
+        return
+    cr.execute("""CREATE EXTENSION {}""".format(extname))
+    _schema.debug("Created extension %s", extname)
+
 def extension_exists(cr, extname):
     """ Return whether the given extension is installed. """
     cr.execute("SELECT 1 FROM pg_extension WHERE extname=%s", (extname,))
@@ -212,9 +219,7 @@ def extension_exists(cr, extname):
 
 def create_gin_index(cr, indexname, tablename, colnames):
     """Create a trigram index using GIN unless it exists."""
-    if not extension_exists(cr, 'pg_trgm'):
-        _schema.warning('Failed to create index because pg_trgm extension is not enabled.')
-        return
+    create_extension(cr, 'pg_trgm')
     if index_exists(cr, indexname):
         return
     stmt = """CREATE INDEX {} ON {} USING GIN ({})"""
