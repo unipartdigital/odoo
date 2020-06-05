@@ -193,7 +193,7 @@ class SaleOrder(models.Model):
 
         tools.create_gin_index(
             self._cr,
-            'sale_order_name_trgm_index',
+            'sale_order_trigram_name',
             self._table,
             ['name'],
         )
