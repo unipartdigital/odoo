@@ -529,13 +529,15 @@ class StockMoveLine(models.Model):
                     else:
                         candidate.unlink()
                 else:
+                    # At this point: candidate.product_qty > quantity to adjust
                     # split this move line and assign the new part to our extra move
-                    quantity_split = float_round(
+                    remaining_quantity = float_round(
                         candidate.product_qty - quantity,
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
-                    candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
-                    quantity -= quantity_split
+                    candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(remaining_quantity, candidate.product_uom_id, rounding_method='HALF-UP')
+                    # There is no quantity left to adjust
+                    quantity = 0
                     move_to_recompute_state |= candidate.move_id
                 if quantity == 0.0:
                     break
