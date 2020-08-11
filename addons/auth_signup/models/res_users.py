@@ -38,8 +38,8 @@ class ResUsers(models.Model):
         if token:
             # signup with a token: find the corresponding partner id
             partner = self.env['res.partner']._signup_retrieve_partner(token, check_validity=True, raise_exception=True)
-            # invalidate signup token
-            partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
+            # invalidate signup token and check password validity
+            partner.with_context(password=values.get('password')).write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
             partner_user = partner.user_ids and partner.user_ids[0] or False
 
