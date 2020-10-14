@@ -544,3 +544,18 @@ class StockMoveLine(models.Model):
                 if quantity == 0.0:
                     break
             move_to_recompute_state._recompute_state()
+
+    def _can_merge_quant_reservation(self, quant):
+        """ Returns True if the reserved quantity for the given quant can be merged into this move
+        line.
+        """
+        self.ensure_one()
+        quant.ensure_one()
+
+        return (
+            self.product_id.tracking != 'serial' and
+            self.location_id.id == quant.location_id.id and
+            self.lot_id.id == quant.lot_id.id and
+            self.package_id.id == quant.package_id.id and
+            self.owner_id.id == quant.owner_id.id
+        )
