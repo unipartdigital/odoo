@@ -130,7 +130,7 @@ class StockQuant(models.Model):
             return 'in_date DESC NULLS LAST, id desc'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, **kwargs):
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
         domain = [
@@ -149,6 +149,8 @@ class StockQuant(models.Model):
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+        for attr, value in kwargs.items():
+            domain = expression.AND([[(attr, '=', value)], domain])
 
         # Copy code of _search for special NULLS FIRST/LAST order
         self.sudo(self._uid).check_access_rights('read')
@@ -203,7 +205,7 @@ class StockQuant(models.Model):
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
     @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False):
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False, **kwargs):
         """ Increase or decrease `quantity` of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
@@ -219,7 +221,7 @@ class StockQuant(models.Model):
         :return: tuple (available_quantity, in_date as a datetime)
         """
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, **kwargs)
         rounding = product_id.uom_id.rounding
 
         incoming_dates = [d for d in quants.mapped('in_date') if d]
@@ -256,7 +258,7 @@ class StockQuant(models.Model):
                 else:
                     raise
         else:
-            self.create({
+            vals = {
                 'product_id': product_id.id,
                 'location_id': location_id.id,
                 'quantity': quantity,
@@ -264,7 +266,9 @@ class StockQuant(models.Model):
                 'package_id': package_id and package_id.id,
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
-            })
+            }
+            vals.update(kwargs)
+            self.create(vals)
 
         if just_update:
             return True
