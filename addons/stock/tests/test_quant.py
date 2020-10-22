@@ -2,8 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from unittest import mock
 
+from odoo import fields
 from odoo.exceptions import ValidationError
+from odoo.models import Model
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
@@ -299,6 +302,49 @@ class StockQuant(TransactionCase):
         self.assertTrue(len(stock_location.quant_ids.ids) > 0)
         with self.assertRaises(UserError):
             stock_location.usage = 'view'
+
+    def test_increase_available_quantity_8(self):
+        """ Increase the available quantity when no quants are already in a location.
+            Passing arbitrary extra arguments to Quant.create
+        """
+        Quant = self.env['stock.quant']
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        in_date = datetime.now()
+        odoo_in_date = fields.Datetime.to_string(in_date)
+        expected_vals = (Quant.browse(), {
+            'product_id': product1.id,
+            'location_id': stock_location.id,
+            'quantity': 1.0,
+            'lot_id': None,
+            'package_id': None,
+            'owner_id': None,
+            'in_date': odoo_in_date,
+            'a': 1,
+            'b': 2,
+        })
+        self.assertEqual(Quant._get_available_quantity(product1, stock_location), 0.0)
+        with mock.patch.object(Model, 'create', autospec=True, create=True) as mock_create:
+            with mock.patch.object(Quant.__class__, '_gather', autospec=True, wraps=True, return_value=Quant.browse()):
+                Quant._update_available_quantity(product1, stock_location, 1.0, in_date=in_date, a=1, b=2)
+        mock_create.assert_called_once_with(*expected_vals)
+
+    def test_increase_available_quantity_9(self):
+        """ Increase the available quantity when no quants are already in a location.
+            Passing arbitrary extra keyword arguments to Quant._gather
+        """
+        Quant = self.env['stock.quant']
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        with mock.patch.object(Quant.__class__, '_gather', autospec=True, wraps=True) as mock_gather:
+            Quant._update_available_quantity(product1, stock_location, 1.0, just_update=True, a=1, b=2)
+        mock_gather.assert_called_once_with(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=True, a=1, b=2)
 
     def test_decrease_available_quantity_1(self):
         """ Decrease the available quantity when no quants are already in a location.
