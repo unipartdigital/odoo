@@ -300,6 +300,39 @@ class StockQuant(TransactionCase):
         with self.assertRaises(UserError):
             stock_location.usage = 'view'
 
+    def test_increase_available_quantity_8(self):
+        """ Increase the available quantity when no quants are already in a location.
+            Passing arbitrary extra arguments to Quant.create
+        """
+        import datetime
+        from unittest import mock
+        from odoo import fields
+        from odoo.models import Model
+        from ..models.stock_quant import StockQuant
+        Quant = self.env['stock.quant']
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        in_date = datetime.datetime.now()
+        odoo_in_date = fields.Datetime.to_string(in_date)
+        expected_vals = (Quant.browse(), {
+            'product_id': product1.id,
+            'location_id': stock_location.id,
+            'quantity': 1.0,
+            'lot_id': None,
+            'package_id': None,
+            'owner_id': None,
+            'in_date': odoo_in_date,
+            'a': 1,
+            'b': 2,
+        })
+        self.assertEqual(Quant._get_available_quantity(product1, stock_location), 0.0)
+        with mock.patch.object(Model, 'create', autospec=True, create=True) as mock_create:
+            Quant._update_available_quantity(product1, stock_location, 1.0, in_date=in_date, a=1, b=2)
+        mock_create.assert_called_once_with(*expected_vals)
+
     def test_decrease_available_quantity_1(self):
         """ Decrease the available quantity when no quants are already in a location.
         """
