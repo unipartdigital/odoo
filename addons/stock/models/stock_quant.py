@@ -327,13 +327,7 @@ class StockQuant(models.Model):
                 break
         return reserved_quants
 
-    @api.model
-    def _merge_quants(self):
-        """ In a situation where one transaction is updating a quant via
-        `_update_available_quantity` and another concurrent one calls this function with the same
-        argument, we’ll create a new quant in order for these transactions to not rollback. This
-        method will find and deduplicate these quants.
-        """
+    def _get_merge_query(self):
         query = """WITH
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
@@ -357,6 +351,16 @@ class StockQuant(models.Model):
                         )
                    DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
         """
+        return query
+
+    @api.model
+    def _merge_quants(self):
+        """ In a situation where one transaction is updating a quant via
+        `_update_available_quantity` and another concurrent one calls this function with the same
+        argument, we’ll create a new quant in order for these transactions to not rollback. This
+        method will find and deduplicate these quants.
+        """
+        query = self._get_merge_query()
         try:
             with self.env.cr.savepoint():
                 self.env.cr.execute(query)
