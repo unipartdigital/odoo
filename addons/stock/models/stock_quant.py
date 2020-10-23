@@ -13,6 +13,16 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+def update_dict(d1, d2):
+    """
+    Update the first dict with the second dict.
+
+    Returns the modified first dict.
+    """
+    d1.update(d2)
+    return d1
+
+
 class StockQuant(models.Model):
     _name = 'stock.quant'
     _description = 'Quants'
@@ -203,7 +213,7 @@ class StockQuant(models.Model):
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
     @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False):
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False, **kwargs):
         """ Increase or decrease `quantity` of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
@@ -256,7 +266,7 @@ class StockQuant(models.Model):
                 else:
                     raise
         else:
-            self.create({
+            self.create(update_dict({
                 'product_id': product_id.id,
                 'location_id': location_id.id,
                 'quantity': quantity,
@@ -264,7 +274,7 @@ class StockQuant(models.Model):
                 'package_id': package_id and package_id.id,
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
-            })
+            }, kwargs))
 
         if just_update:
             return True
