@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import functools
+
 from psycopg2 import OperationalError, Error
 
 from odoo import api, fields, models, tools, _
@@ -203,7 +205,17 @@ class StockQuant(models.Model):
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
     @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False):
+    def create(self, vals, **kwargs):
+        """Override core create."""
+        # Define create here so that create_func=create in
+        # _update_available_quantity's signature compiles.
+        # We could pass a string instead of an object: that would be cleaner,
+        # though getattr-ing strings is a bit magical.
+        vals.update(kwargs)
+        return super().create(vals)
+
+    @api.model
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False, create_func=create):
         """ Increase or decrease `quantity` of a set of quants for a given set of
         product_id/location_id/lot_id/package_id/owner_id.
 
@@ -256,7 +268,7 @@ class StockQuant(models.Model):
                 else:
                     raise
         else:
-            self.create({
+            create_func(self, {
                 'product_id': product_id.id,
                 'location_id': location_id.id,
                 'quantity': quantity,
@@ -363,6 +375,20 @@ class StockQuant(models.Model):
     def delete_empty_quants(self):
         self.sudo().search([('quantity', '=', 0),
                             ('reserved_quantity', '=', 0)]).unlink()
+
+
+def _bake_kwargs(func):
+    """Bake kwargs into create function."""
+    functools.wraps(func)
+    def wrapper(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False, create_func=StockQuant.create, **kwargs):
+        if kwargs:
+            create_func = functools.partial(create_func, **kwargs)
+        res = func(self, product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, in_date=in_date, just_update=just_update, create_func=create_func)
+        return res
+    return wrapper
+
+
+StockQuant._update_available_quantity = _bake_kwargs(StockQuant._update_available_quantity)
 
 
 class QuantPackage(models.Model):
