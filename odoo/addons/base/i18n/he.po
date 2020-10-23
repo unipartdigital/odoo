@@ -11,11 +11,11 @@
 # Mor Kir <morki@013.net.il>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
 # Martin Trigaux, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
 # yacov mosbacher <ymosba@gmail.com>, 2019
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# דודי מלכה <Dudimalka6@gmail.com>, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +98,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"אפשר לקופאי להדפיס קבלות\n"
+"אפשר לקופאי להדפיס קבלות מחדש\n"
 "\n"
 
 #. module: base
@@ -220,7 +220,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"התוסף הזה כבר מותקן במערכת"
+"תוסף זה כבר מותקן במערכת"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -229,6 +229,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"מודול זה מוסיף צוות מכירות מותאם אישית עבור הקופה. זה מאפשר לך להציג ולנהל את מכירות הקופה שלך בקלות רבה יותר.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -251,6 +254,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"מודול זה מאפשר לקופאי לתת הנחה על בסיס אחוזים במהירות \n"
+"ללקוח.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -313,6 +321,10 @@ msgid ""
 "        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
+"\n"
+"        - מאפשר להגדיר פרויקט לצוות תמיכה טכנית\n"
+"        - עקוב אחר גיליון זמנים למשימה מקריאת שירות\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -419,7 +431,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        יישומון כדי להעלות ולנהל את המסמכים שלך.\n"
+"        יישום להעלאת וניהול המסמכים שלך.\n"
 "    "
 
 #. module: base
@@ -450,7 +462,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"      מודול גשר בין מכירה, סטטיסטיקה של מדינות האיחוד האירופי\n"
+"      מודול מגשר בין מכירה וסטטיסטיקה של מדינות האיחוד האירופי\n"
 "    "
 
 #. module: base
@@ -490,6 +502,9 @@ msgid ""
 "        Convert helpdesk tickets to field service tasks.\n"
 "    "
 msgstr ""
+"\n"
+"        המר קריאות שירות של תמיכה טכנית למשימות שירות שטח.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -506,6 +521,8 @@ msgid ""
 "\n"
 "        Define default purchase journal on the warehouse"
 msgstr ""
+"\n"
+"        הגדר יומן רכש ברירת מחדל במחסן"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -524,6 +541,8 @@ msgid ""
 "\n"
 "        Define default sales journal on the warehouse"
 msgstr ""
+"\n"
+"        הגדר יומן מכירות ברירת מחדל במחסן"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -583,7 +602,7 @@ msgid ""
 "        Make calls using a VOIP system"
 msgstr ""
 "\n"
-"       ביצוע שיחות באמצעות מערכת VOIP"
+"       נהל שיחות באמצעות מערכת VOIP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_check
@@ -754,7 +773,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        מודול זה מספק את הליבה של אפליקציה Odoo לנייד.\n"
+"        מודול זה מספק את הליבה של יישום Odoo לנייד.\n"
 "        "
 
 #. module: base
@@ -764,7 +783,7 @@ msgid ""
 "        Track equipments and maintenance requests"
 msgstr ""
 "\n"
-"        עקוב אחר ציוד ובקשות תחזוקה"
+"        עקוב אחר בקשות ציוד ותחזוקה"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -773,7 +792,7 @@ msgid ""
 "        Use Plaid.com to retrieve bank statements"
 msgstr ""
 "\n"
-"        השתמש ב Plaid.com כדי לאחזר הצהרות הבנק"
+"        השתמש ב Plaid.com כדי לאחזר דפי בנק"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_plaid
@@ -783,7 +802,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        השתמש ב Plaid.com כדי לאחזר הצהרות הבנק.\n"
+"        השתמש ב Plaid.com כדי לאחזר דפי בנק.\n"
 "    "
 
 #. module: base
@@ -881,7 +900,7 @@ msgid ""
 "    Adds Quality Control to workorders.\n"
 msgstr ""
 "\n"
-"    הוספת בקרת איכות לעבודה.\n"
+"    מוסיף בקרת איכות להוראות עבודה.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -890,7 +909,7 @@ msgid ""
 "    Adds workcenters to Quality Control\n"
 msgstr ""
 "\n"
-"הוספת מרכזי עבודה לבקרת איכות\n"
+"מווסיף תחנותעבודה לבקרת איכות\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
@@ -977,7 +996,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"תזמן את הצוותים שלך בפרויקטים ואמוד מועדים מדויקים יותר.\n"
+"תזמן את הצוותים שלך דרך פרויקטים ואמוד תאריכי יעד באופן מדויק יותר.\n"
 "    "
 
 #. module: base
@@ -1005,7 +1024,7 @@ msgid ""
 "  Publish your products on eBay"
 msgstr ""
 "\n"
-"  לפרסם את המוצרים שלך ב- eBay"
+"  פרסם את המוצרים שלך ב- eBay"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -4227,7 +4246,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"למכור כרטיסים לאירוע באמצעות יישום המסחר האלקטרוני.\n"
+"מכור כרטיסים לאירוע באמצעות יישום המסחר האלקטרוני.\n"
 "    "
 
 #. module: base
@@ -4238,7 +4257,7 @@ msgid ""
 "=============================\n"
 msgstr ""
 "\n"
-"שלח תקציר מדדי KPI מעת לעת\n"
+"שלח תקצירי מדדים מעת לעת\n"
 "=============================\n"
 
 #. module: base
@@ -4299,7 +4318,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"צג את כתובת החברה / כתובת השותף שלך בגוגל מפות. הגדר מפתח API ב הגדרות אתר.\n"
+"הצג את כתובת החברה / כתובת הלקוח/ספק שלך בגוגל מפות. הגדר מפתח API ב הגדרות אתר.\n"
 "    "
 
 #. module: base
@@ -5191,7 +5210,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"מודול זה מכיל את כל התכונות הנפוצות של ניהול מכירות ו מסחר אלקטרוני.\n"
+"מודול זה מכיל את כל התכונות הנפוצות של ניהול מכירות ומסחר אלקטרוני.\n"
 "    "
 
 #. module: base
@@ -5784,7 +5803,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__groups_count
 msgid "# Groups"
-msgstr ""
+msgstr "מס' קבוצות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -5818,7 +5837,7 @@ msgstr "%A - יום בשבוע בשמו מלא."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr "%B - שם החודש המלא.\""
+msgstr "%B - שם חודש מלא.\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5944,12 +5963,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "+1 (650) 691-3277"
-msgstr ""
+msgstr "+1 (650) 691-3277"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ", or your preferred text editor"
-msgstr ", או העורך טקסט המועדף עליך"
+msgstr ", או עורך הטקסט המועדף עליך"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -6007,22 +6026,22 @@ msgstr "- גודל ="
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create menu."
-msgstr "-התוסף הזה אינו מייצר תפריט"
+msgstr "-המודול הזה לא יוצר תפריט"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create report."
-msgstr "-התוסף הזה אינו מייצר דו\"ח"
+msgstr "-המודול הזה לא מייצר דוח"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create views."
-msgstr "-התוסף הזה אינו מייצר דפים"
+msgstr "-המודול הזה לא מייצר תצוגות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not depends on any other module."
-msgstr "-התוסף הזה אינו מבוסס על אף תוסף אחר"
+msgstr "-המודול הזה אינו תלוי במודול אחר"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -6032,7 +6051,7 @@ msgstr "-מודול זה אינו כולל כל מודול אחר."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "02/05/2019"
-msgstr ""
+msgstr "02/05/2019"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6042,17 +6061,17 @@ msgstr "1. %b, %B         ==&gt; Dec, דצמפר"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "1.000"
-msgstr ""
+msgstr "1.000"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "1250.00"
-msgstr ""
+msgstr "1250.00"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "190.00"
-msgstr ""
+msgstr "190.00"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6062,7 +6081,7 @@ msgstr "2.  %a ,%A         ==>ו', שישי"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "2.000"
-msgstr ""
+msgstr "2.000"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6109,6 +6128,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">כתובת חברה</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">כתובת לחיוב</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">כתובת לאספקה</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">כתובת אחרת</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">כתובת פרטית</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">כתובת</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -6183,7 +6208,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>time</code> (Python module)"
-msgstr ""
+msgstr "<code>זמן</code> (מודול פייתון)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -6197,22 +6222,24 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
 "title=\"Enterprise\"/>"
-msgstr "תואר"
+msgstr ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -6220,11 +6247,13 @@ msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
+"<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -6283,11 +6312,13 @@ msgid ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
-msgstr ""
+msgstr "<span class=\"text-white text-uppercase\">אזור סכנה</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -6318,12 +6349,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "<span>$ 1630.00</span>"
-msgstr ""
+msgstr "<span>$ 1630.00</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Directory</span>"
-msgstr ""
+msgstr "<span>ספרייה</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -6408,7 +6439,7 @@ msgstr "<strong>שם</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr ""
+msgstr "<strong>טלפון:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -6467,7 +6498,7 @@ msgstr "<strong>סוג: </strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View :</strong>"
-msgstr "<strong>View :</strong>"
+msgstr "<strong>תצוגה :</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6487,7 +6518,7 @@ msgstr "<u><strong>אבטחה</strong></u>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr "<u><strong>צפיות</strong></u>"
+msgstr "<u><strong>תצוגות</strong></u>"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -6933,7 +6964,7 @@ msgstr "הנהלת חשבונות"
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 #: model:ir.module.module,shortdesc:base.module_mrp_account_enterprise
 msgid "Accounting - MRP"
-msgstr "חשבון - MRP"
+msgstr "הנהלת חשבונות - MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
@@ -7072,12 +7103,12 @@ msgstr "פעולות"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Activate Language and Update Translations"
-msgstr ""
+msgstr "הפעל שפות ועדכן תרגומים"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "Activate and Translate"
-msgstr ""
+msgstr "הפעל ותרגם"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__active
@@ -7227,12 +7258,12 @@ msgstr "כתובת"
 #: model:ir.model.fields,field_description:base.field_res_partner__type
 #: model:ir.model.fields,field_description:base.field_res_users__type
 msgid "Address Type"
-msgstr "סוג הכתובת"
+msgstr "סוג כתובת"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Address format..."
-msgstr "תצורת הכתובת"
+msgstr "תבנית כתובת..."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -7344,7 +7375,7 @@ msgstr "נדרשת גישת מנהל כדי להסיר התקנה של מודו�
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
 msgid "Advanced Address Formatting"
-msgstr "עיצוב כתובת מתקדמת"
+msgstr "עיצוב כתובת מתקדם"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -7417,7 +7448,7 @@ msgstr "אפגניסטן"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__after
 msgid "After Address"
-msgstr ""
+msgstr "אחרי כתובת"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__after
@@ -7502,7 +7533,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_ocn_client
 msgid "Allow push notification to devices"
-msgstr "אפשר לדחוף הודעה להתקנים"
+msgstr "אפשר הודעה בדחיפה למכשירים"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -7758,7 +7789,7 @@ msgstr "אומדנים"
 #: model:ir.module.category,name:base.module_category_human_resources_approvals
 #: model:ir.module.module,shortdesc:base.module_approvals
 msgid "Approvals"
-msgstr ""
+msgstr "אישורים"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree
@@ -7777,7 +7808,7 @@ msgstr "יישומים לייצוא"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade__module_info
 msgid "Apps to Update"
-msgstr "יישומים לעידכון"
+msgstr "יישומים לעדכון"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7817,7 +7848,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 msgid "Archived"
-msgstr "התווסף לארכיון"
+msgstr "בארכיון"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -7863,7 +7894,7 @@ msgstr "ארובה"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
-msgstr "להעריך את העובדים שלך"
+msgstr "הערך את העובדים שלך"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
@@ -7873,12 +7904,12 @@ msgstr "ניהול נכסים"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
 msgid "Associated reports"
-msgstr "דוחות משויכים"
+msgstr "דוחות קשורים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr "ניהול עמותות"
+msgstr "ניהול אגודות וארגונים"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -7930,7 +7961,7 @@ msgstr "נוכחות"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
 msgid "Attract visitors to subscribe to mailing lists"
-msgstr "למשוך מבקרים להירשם לרשימת התפוצה"
+msgstr "משוך מבקרים להירשם לרשימות תפוצה"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -7940,7 +7971,7 @@ msgstr "אוסטרליה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
 msgid "Australian - Accounting"
-msgstr "אוסטרלי - חשבונאות"
+msgstr "אוסטרליה - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -7950,7 +7981,7 @@ msgstr "אוסטריה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at
 msgid "Austria - Accounting"
-msgstr "אוסטריה - חשבונאות"
+msgstr "אוסטריה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at_reports
@@ -8139,7 +8170,7 @@ msgstr "תבנית קובץ גרועה: %s"
 #. module: base
 #: model:res.country,name:base.bs
 msgid "Bahamas"
-msgstr "באהמס"
+msgstr "איי בהאמה"
 
 #. module: base
 #: model:res.country,name:base.bh
@@ -8171,7 +8202,7 @@ msgstr "חשבונות בנק"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank Address"
-msgstr ""
+msgstr "כתובת בנק"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__bic
@@ -8182,7 +8213,7 @@ msgstr "קוד מזהה בנק"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 msgid "Bank Name"
-msgstr "שם הבנק"
+msgstr "שם בנק"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
@@ -8227,7 +8258,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr "ברקוד בסלולרי"
+msgstr "ברקוד בנייד"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
@@ -8263,7 +8294,7 @@ msgstr "שדה בסיס"
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted."
-msgstr "שפת הבסיס 'en_US' לא ניתן למחוק."
+msgstr "שפת הבסיס 'en_US' לא ניתנת למחיקה."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -8341,7 +8372,7 @@ msgstr "תשלום אצווה"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
 msgid "Before Address"
-msgstr "לפני הכתובת"
+msgstr "לפני כתובת"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_currency__position__before
@@ -8378,7 +8409,7 @@ msgstr "בלגיה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be
 msgid "Belgium - Accounting"
-msgstr "בלגיה - חשבונאות"
+msgstr "בלגיה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports
@@ -8438,7 +8469,7 @@ msgstr "בהוטאן"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_ups
 msgid "Bill to your UPS account number"
-msgstr "חיוב למספר החשבון  UPS שלך"
+msgstr "חייב את מספר חשבון  UPS שלך"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__binary
@@ -8479,7 +8510,7 @@ msgstr "סוג מחייב"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_view_types
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "סוגי תצוגה מחייבים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
@@ -8499,7 +8530,7 @@ msgstr "בוליביה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bo
 msgid "Bolivia - Accounting"
-msgstr "בוליביה - חשבונאות"
+msgstr "בוליביה - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.bq
@@ -8534,7 +8565,7 @@ msgstr "בוצואנה"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_bottom
 msgid "Bottom Margin (mm)"
-msgstr "השוליים התחתונים (מ\"מ)"
+msgstr "שוליים תחתונים (מ\"מ)"
 
 #. module: base
 #: model:res.country,name:base.bv
@@ -8631,12 +8662,12 @@ msgstr "בורקינה פאסו"
 #. module: base
 #: model:res.country,name:base.bi
 msgid "Burundi"
-msgstr "Burundi"
+msgstr "בורונדי"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "By"
-msgstr "על פי"
+msgstr "לפי"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -8658,7 +8689,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_crm
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr "CRM"
+msgstr "ניהול קשרי לקוחות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
@@ -8704,7 +8735,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__calendar
 #: model:ir.module.module,shortdesc:base.module_calendar
 msgid "Calendar"
-msgstr "יומן"
+msgstr "לוח שנה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_calendar_sms
@@ -8748,7 +8779,7 @@ msgstr "קנדה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
 msgid "Canada - Accounting"
-msgstr "קנדה - חשבונאות"
+msgstr "קנדה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_check_printing
@@ -8868,23 +8899,23 @@ msgstr "צ'אד"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_my
 msgid "Change My Preferences"
-msgstr "שנה את העדפות שלי"
+msgstr "שנה את ההעדפות שלי"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
 #: model_terms:ir.ui.view,arch_db:base.change_password_wizard_view
 msgid "Change Password"
-msgstr "שנה סיסמא"
+msgstr "שנה סיסמה"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
 msgid "Change Password Wizard"
-msgstr "אשף לשינוי סיסמא"
+msgstr "אשף שינוי סיסמה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Change password"
-msgstr "שנה סיסמא"
+msgstr "שנה סיסמה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -8970,7 +9001,7 @@ msgstr "Checksum/SHA1"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "תתי פעולות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__child_ids
@@ -9004,6 +9035,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"תתי פעולות שרת אשר יבוצעו. שים לב שערך הפעולה האחרון שהוחזר ישמש כערך חוזר "
+"גלובלי."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -9013,7 +9046,7 @@ msgstr "צ'ילה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl
 msgid "Chile - Accounting"
-msgstr "צ'ילה - חשבונאות"
+msgstr "צ'ילה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_reports
@@ -9028,7 +9061,7 @@ msgstr "סין"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "China - Accounting"
-msgstr "סין - חשבונאות"
+msgstr "סין - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -9070,7 +9103,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cx
 msgid "Christmas Island"
-msgstr "Christmas Island"
+msgstr "אי חג המולד"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__city
@@ -9104,7 +9137,7 @@ msgstr "פעולת לקוח"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
 msgid "Client action tag"
-msgstr "תג פעולה של לקוח"
+msgstr "תגית פעולת לקוח"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -9118,7 +9151,7 @@ msgstr "סגור"
 #. module: base
 #: model:res.country,name:base.cc
 msgid "Cocos (Keeling) Islands"
-msgstr "Cocos (Keeling) Islands"
+msgstr "איי קוקוס"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__type__code
@@ -9146,7 +9179,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
 msgid "Collaborative Pads"
-msgstr ""
+msgstr "Collaborative Pads"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -9161,7 +9194,7 @@ msgstr "קולומביה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
 msgid "Colombian - Accounting"
-msgstr "קולומביה - חשבונאות"
+msgstr "קולומביה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_reports
@@ -9184,12 +9217,12 @@ msgstr "לוקליזציה קולומביאני עבור מסמכים EDI"
 #: model:ir.model.fields,field_description:base.field_res_partner_category__color
 #: model:ir.model.fields,field_description:base.field_res_users__color
 msgid "Color Index"
-msgstr "מפתח צבעים"
+msgstr "אינדקס צבעים"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Colors"
-msgstr ""
+msgstr "צבעים"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -9239,7 +9272,7 @@ msgstr "הערות"
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "ישות מסחרית"
+msgstr "יישות מסחרית"
 
 #. module: base
 #: model:res.country,name:base.km
@@ -9260,7 +9293,7 @@ msgstr "חברות"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Companies count"
-msgstr "ספירת חברות"
+msgstr "כמות חברות"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -9299,7 +9332,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
 msgid "Company Favicon"
-msgstr ""
+msgstr "אייקון חברה באתר האינטרנט"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__logo
@@ -9318,7 +9351,7 @@ msgstr "שם החברה"
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_company_name
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_company_name
 msgid "Company Name Entity"
-msgstr "שם ישות החברה "
+msgstr "שם יישות החברה "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -9334,7 +9367,7 @@ msgstr "נכס החברה"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 msgid "Company Registry"
-msgstr "רישום חברה "
+msgstr "מס' ח.פ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__report_header
@@ -9377,7 +9410,7 @@ msgstr "כתובת מלאה"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__complete_name
 msgid "Complete ID"
-msgstr "להשלים את מזהה"
+msgstr "מזהה מלא"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__complete_name
@@ -9392,7 +9425,7 @@ msgstr "חשב"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
-msgstr ""
+msgstr "מחשב ציונים ומשייך לידים באופן אוטומטי"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -9435,18 +9468,18 @@ msgstr "הגדרות"
 #. module: base
 #: model:ir.model,name:base.model_res_config_installer
 msgid "Config Installer"
-msgstr "הגדרת התקנות"
+msgstr "הגדר מתקין"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
 msgid "Config Settings"
-msgstr "הגדרות תצורה"
+msgstr "הגדר הגדרות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Config Wizard Steps"
-msgstr "הגדרת צעדי האשף"
+msgstr "הגדר צעדי האשף"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
@@ -9469,7 +9502,7 @@ msgstr "מתקין תצורה"
 #: model:ir.model,name:base.model_ir_actions_todo
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
 msgid "Configuration Wizards"
-msgstr "אשף קביעת תצורה"
+msgstr "אשפי תצורה"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -9527,7 +9560,7 @@ msgstr ""
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Connection Test Succeeded!"
-msgstr ""
+msgstr "בדיקת החיבור הצליחה!"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_consolidation
@@ -9548,7 +9581,7 @@ msgstr "סוג אילוץ"
 #: code:addons/model.py:0
 #, python-format
 msgid "Constraint:"
-msgstr ""
+msgstr "אילוץ:"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_constraint_module_name_uniq
@@ -9573,7 +9606,7 @@ msgstr "איש קשר"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact / Address"
-msgstr "אנשי קשר/ כתובות"
+msgstr "איש קשר/ כתובת"
 
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
@@ -9593,18 +9626,18 @@ msgstr "שם איש הקשר"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr "תג איש קשר"
+msgstr "תגית איש קשר"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr "תגיות אנשי קשר"
+msgstr "תגיות איש קשר"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 msgid "Contact Titles"
-msgstr "תואר אנשי קשר"
+msgstr "תואר איש קשר"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -9616,7 +9649,7 @@ msgstr "אנשי קשר"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contacts & Addresses"
-msgstr "אנשי קשר & כתובות"
+msgstr "אנשי קשר וכתובות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
@@ -9626,7 +9659,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_check_name
 msgid "Contacts require a name"
-msgstr ""
+msgstr "אנשי קשר דורשים שם"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -9649,7 +9682,7 @@ msgstr "מילון ההקשר כביטוי פייתון, ריק כברירת מ�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_sign
 msgid "Contract - Signature"
-msgstr ""
+msgstr "חוזה - חתימה"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_contracts
@@ -9664,7 +9697,7 @@ msgstr "תורמים"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control
 msgid "Control the quality of your products"
-msgstr "לשלוט על בקרת האיכות של המוצרים שלך "
+msgstr "שלוט באיכות המוצרים שלך"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_iot
@@ -9689,7 +9722,7 @@ msgstr "קוסטה ריקה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cr
 msgid "Costa Rica - Accounting"
-msgstr "קוסטה ריקה - חשבונאות"
+msgstr "קוסטה ריקה - הנהלת חשבונות"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -9706,7 +9739,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_country
 #: model:ir.model.fields,field_description:base.field_res_country_group__country_ids
 msgid "Countries"
-msgstr "מדינות"
+msgstr "ארצות"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -9725,17 +9758,17 @@ msgstr "מדינות"
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Country"
-msgstr "מדינה"
+msgstr "ארץ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__phone_code
 msgid "Country Calling Code"
-msgstr "קידומת חיוג למדינה"
+msgstr "קוד חיוג לארץ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__code
 msgid "Country Code"
-msgstr "קוד מדינה"
+msgstr "קוד ארץ"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_group
@@ -9743,22 +9776,22 @@ msgstr "קוד מדינה"
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr "קבוצת מדינות"
+msgstr "קבוצת ארצות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
 msgid "Country Groups"
-msgstr "קבוצות מדינות"
+msgstr "קבוצות ארצות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
-msgstr "שם מדינה"
+msgstr "שם ארץ"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "מחוז מדינה"
+msgstr "מדינה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_coupon
@@ -9778,7 +9811,7 @@ msgstr "צור גישה"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Create Access Right"
-msgstr "יצירת הרשאות גישה"
+msgstr "צור הרשאות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9790,7 +9823,7 @@ msgstr "צור פעולה מקושרת"
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
 #: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
-msgstr "צור תאריך"
+msgstr "תאריך יצירה"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_lead
@@ -9800,7 +9833,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_lead_website
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "צור לידים / הזדמנויות מהתנועה של האתר שלך"
+msgstr "צור לידים / הזדמנויות מהתנועה באתר האינטרנט שלך"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -9811,7 +9844,7 @@ msgstr "צור תפריט"
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
 msgid "Create Menu Wizard"
-msgstr "יצירת אשף לתפריט"
+msgstr "אשף יצירת תפריט"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_report
@@ -10108,12 +10141,12 @@ msgstr "יצירה"
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Creation Date"
-msgstr "תאריך היווצרות"
+msgstr "תאריך יצירה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Creation details"
-msgstr ""
+msgstr "פרטי יצירה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
@@ -10124,22 +10157,22 @@ msgstr "מגבלת אשראי"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr "תמיכה בכרטיס אשראי עבור נקודת מכירה"
+msgstr "תמיכה בכרטיס אשראי עבור קופה"
 
 #. module: base
 #: model:res.country,name:base.hr
 msgid "Croatia"
-msgstr "Croatia"
+msgstr "קרואטיה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (RRIF 2012)"
-msgstr "קרואטיה - חשבונאות (RRIF 2012)"
+msgstr "קרואטיה - הנהלת חשבונות (RRIF 2012)"
 
 #. module: base
 #: model:res.country,name:base.cu
 msgid "Cuba"
-msgstr "Cuba"
+msgstr "קובה"
 
 #. module: base
 #: model:res.country,name:base.cw
@@ -10182,7 +10215,7 @@ msgstr "שער מטבע"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_search
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_tree
 msgid "Currency Rates"
-msgstr "שער מטבע"
+msgstr "שערי מטבע"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__currency_subunit_label
@@ -10236,12 +10269,12 @@ msgstr "חלון נוכחי"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Custom"
-msgstr "מותאם"
+msgstr "מותאם אישית"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__custom_colors
 msgid "Custom Colors"
-msgstr ""
+msgstr "צבעים בהתאמה אישית"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__manual
@@ -10256,7 +10289,7 @@ msgstr "אובייקט מותאם אישית"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
 msgid "Custom Shortcuts"
-msgstr "קיצורי דרך מותאמים"
+msgstr "קיצורי דרך מותאמים אישית"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -10283,7 +10316,7 @@ msgstr "פורטל לקוח"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
 msgid "Customer Rating"
-msgstr "דירוג לקוחות"
+msgstr "דירוג לקוח"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -10303,7 +10336,7 @@ msgstr "לקוחות"
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "תצוגות מותאמות"
+msgstr "תצוגות מותאמות אישית"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -10317,12 +10350,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
-msgstr "Cyprus"
+msgstr "קפריסין"
 
 #. module: base
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
-msgstr "Czech Republic"
+msgstr "צ'כיה"
 
 #. module: base
 #: model:res.country,name:base.ci
@@ -10388,7 +10421,7 @@ msgstr "שם מסד הנתונים"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_9
 msgid "Database Structure"
-msgstr "מבנה בסיס הנתונים"
+msgstr "מבנה מסד הנתונים"
 
 #. module: base
 #: code:addons/models.py:0
@@ -10413,13 +10446,13 @@ msgstr "תאריך"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__date_format
 msgid "Date Format"
-msgstr "מבנה תאריך"
+msgstr "תבנית תאריך"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date format"
-msgstr "פורמט תאריך"
+msgstr "תבנית תאריך"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10476,7 +10509,7 @@ msgstr "ניפוי שגיאות"
 #: model:ir.actions.act_window,name:base.action_decimal_precision_form
 #: model:ir.ui.menu,name:base.menu_decimal_precision_form
 msgid "Decimal Accuracy"
-msgstr ""
+msgstr "דיוק עשרוני"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__decimal_places
@@ -10508,7 +10541,7 @@ msgstr "העתק אנשי קשר נוספים"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "חברה ברירת מחדל"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -10558,7 +10591,7 @@ msgstr "הוגדרו דוחות"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_map
 msgid "Defines the map view for odoo enterprise"
-msgstr ""
+msgstr "מגדיר את תצוגת המפה עבור ארגון odoo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
@@ -10573,7 +10606,7 @@ msgstr "מחק גישה"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Delete Access Right"
-msgstr "מחק הרשאת גישה"
+msgstr "מחק הרשאות "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_operations_inventory_delivery
@@ -10594,7 +10627,7 @@ msgstr "משלוח סריקת ברקוד "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr "עלויות אספקה"
+msgstr "עלויות משלוח"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -10638,7 +10671,7 @@ msgstr "הרפובליקה הדמוקרטית של קונגו"
 #. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
-msgstr "Denmark"
+msgstr "דנמרק"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -10694,12 +10727,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
 msgid "Design, send and track SMS"
-msgstr ""
+msgstr "עצב, שלח ועקוב אחר SMS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
-msgstr "עיצוב, שליחה ומעקב אחר הודעות דוא\"ל"
+msgstr "עצב, שלח ועקוב אחר הודעות דוא\"ל"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
@@ -10710,7 +10743,7 @@ msgstr "יעד איש קשר"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__res_model
 msgid "Destination Model"
-msgstr "מודל יעדים"
+msgstr "מודל יעד"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -10745,12 +10778,12 @@ msgstr "מוצרים דיגיטליים"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Digital formatting"
-msgstr ""
+msgstr "עיצוב ספרות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__digits
 msgid "Digits"
-msgstr ""
+msgstr "ספרות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__direction
@@ -10900,7 +10933,7 @@ msgstr "הצגת אלמנטים של אתר האינטרנט בסטודיו"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
 msgid "Display a header line"
-msgstr "הצגת שורת כותרת"
+msgstr "הצג שורת כותרת עליונה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -10935,13 +10968,13 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display country image"
-msgstr ""
+msgstr "הצג תמונת ארץ"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display currency"
-msgstr "מטבע תצוגה"
+msgstr "הצג מטבע"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_format
@@ -10966,19 +10999,19 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display only the date"
-msgstr ""
+msgstr "הצג תאריך בלבד"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display only the time"
-msgstr "הצג רק את הזמן"
+msgstr "הצג את הזמן בלבד"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Display phone icons"
-msgstr ""
+msgstr "הצג סמלי טלפון"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11006,12 +11039,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
-msgstr "Djibouti"
+msgstr "ג'יבוטי"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Do you want to remove this configuration panel?"
-msgstr "האם ברצונך להסיר את לוח התצורה הזה?"
+msgstr "האם ברצונך להסיר סרגל תצורה זה?"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_doctor
@@ -11033,13 +11066,13 @@ msgstr "תבנית מסמך"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents
 msgid "Document management"
-msgstr "ניהול מסמכים"
+msgstr "ניהול מסמך"
 
 #. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Document type:"
-msgstr ""
+msgstr "סוג מסמך:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
@@ -11055,12 +11088,12 @@ msgstr "מסמכים"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_account
 msgid "Documents - Accounting"
-msgstr "מסמכים - חשבונאות"
+msgstr "מסמכים - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_contract
 msgid "Documents - Contracts"
-msgstr ""
+msgstr "מסמכים - חוזים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
@@ -11070,12 +11103,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr
 msgid "Documents - HR"
-msgstr ""
+msgstr "מסמכים - משאבי אנוש"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
 msgid "Documents - Payroll"
-msgstr ""
+msgstr "מסמכים - שכר"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
@@ -11090,7 +11123,7 @@ msgstr "מסמכים - פרויקטים"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_recruitment
 msgid "Documents - Recruitment"
-msgstr ""
+msgstr "מסמכים - גיוס"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_sign
@@ -11117,17 +11150,17 @@ msgstr "ערך דומיין"
 #. module: base
 #: model:res.country,name:base.dm
 msgid "Dominica"
-msgstr "Dominica"
+msgstr "דומיניקה"
 
 #. module: base
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
-msgstr "Dominican Republic"
+msgstr "הרפובליקה הדומיניקנית"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do
 msgid "Dominican Republic - Accounting"
-msgstr "הרפובליקה הדומיניקנית - חשבונאות"
+msgstr "הרפובליקה הדומיניקנית - הנהלת חשבונות"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11144,18 +11177,18 @@ msgstr "בוצע"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
-msgstr "ד\"ר."
+msgstr "ד\"ר"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr "השמט משלוח"
+msgstr "דרופשיפינג"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Dropdown menu"
-msgstr "תפריט נשלף"
+msgstr "תפריט נפתח"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
@@ -11213,12 +11246,12 @@ msgstr "משלוח Easypost"
 #. module: base
 #: model:res.country,name:base.ec
 msgid "Ecuador"
-msgstr "Ecuador"
+msgstr "אקוודור"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuador - Accounting"
-msgstr "אקוודור - חשבונאות"
+msgstr "אקוודור - הנהלת חשבונות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -11233,7 +11266,7 @@ msgstr "השכלה"
 #. module: base
 #: model:res.country,name:base.eg
 msgid "Egypt"
-msgstr "Egypt"
+msgstr "מצרים"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
@@ -11249,7 +11282,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sv
 msgid "El Salvador"
-msgstr "El Salvador"
+msgstr "אל סלבדור"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_reports
@@ -11321,7 +11354,7 @@ msgstr "דוא\"ל"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr "כתובות דוא\"ל"
+msgstr "כתובת דוא\"ל"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
@@ -11332,12 +11365,12 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr "שיווק בדוא\"ל"
+msgstr "שיווק בדואר אלקטרוני"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
-msgstr ""
+msgstr "חתימת דוא\"ל"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
@@ -11358,7 +11391,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
 msgid "Employee Presence Control"
-msgstr ""
+msgstr "בקרת נוכחות עובדים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
@@ -11386,7 +11419,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "End of the month"
-msgstr ""
+msgstr "סוף החודש"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -11447,7 +11480,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gq
 msgid "Equatorial Guinea"
-msgstr "Equatorial Guinea"
+msgstr "גינאה המשוונית"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
@@ -11494,17 +11527,17 @@ msgstr "שגיאה! לא ניתן ליצור תפריטים רקורסיביים
 #. module: base
 #: model:res.country,name:base.ee
 msgid "Estonia"
-msgstr "Estonia"
+msgstr "אסטוניה"
 
 #. module: base
 #: model:res.country,name:base.et
 msgid "Ethiopia"
-msgstr "Ethiopia"
+msgstr "אתיופיה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr "אתיופיה - חשבונאות"
+msgstr "אתיופיה - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country.group,name:base.europe
@@ -11566,7 +11599,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Example of Python code"
-msgstr "דוגמה לקוד של פייטון"
+msgstr "דוגמה לקוד פייתון"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification_sale_crm
@@ -11613,12 +11646,12 @@ msgstr "בלעדי"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
 msgid "Execute Every"
-msgstr "לבצע כל"
+msgstr "בצע כל"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__code
 msgid "Execute Python Code"
-msgstr "לבצע קוד Python"
+msgstr "בצע קוד פייתון"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
@@ -11711,12 +11744,12 @@ msgstr "יצוא תשלומים כקובצי העברת אשראי של SEPA"
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "Exports"
-msgstr "יצוא"
+msgstr "ייצוא"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "Exports Line"
-msgstr "קו יצוא"
+msgstr "שורת ייצוא"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_server_object_lines__value
@@ -11832,17 +11865,17 @@ msgstr "התקנת נתוני הדגמה נכשלה עבור מודולים מס
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failures_count
 msgid "Failures Count"
-msgstr "ספירות כשל"
+msgstr "כמות שגיאות"
 
 #. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
-msgstr "Falkland Islands"
+msgstr "איי פוקלנד"
 
 #. module: base
 #: model:res.country,name:base.fo
 msgid "Faroe Islands"
-msgstr "Faroe Islands"
+msgstr "איי פארו"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.contact
@@ -11997,7 +12030,7 @@ msgstr "שדה עזרה"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__field_description
 msgid "Field Label"
-msgstr "תוית שדה"
+msgstr "תווית שדה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12096,7 +12129,7 @@ msgstr "שדות: %s"
 #. module: base
 #: model:res.country,name:base.fj
 msgid "Fiji"
-msgstr "Fiji"
+msgstr "פיג'י"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__data
@@ -12124,7 +12157,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
 msgid "File Content"
-msgstr "תכולת קובץ"
+msgstr "תוכן הקובץ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -12158,7 +12191,7 @@ msgstr "מסנן"
 #: model:ir.model.fields,field_description:base.field_ir_filters__name
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filter Name"
-msgstr "שם הסינון"
+msgstr "שם מסנן"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_name_model_uid_unique
@@ -12187,7 +12220,7 @@ msgstr "מסננים שאני יצרתי"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters shared with all users"
-msgstr "מסננים ששיתפתי עם כל המשתמשים"
+msgstr "מסננים ששותפו עם כל המשתמשים"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -12212,7 +12245,7 @@ msgstr "סיים"
 #. module: base
 #: model:res.country,name:base.fi
 msgid "Finland"
-msgstr "Finland"
+msgstr "פינלנד"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
@@ -12271,13 +12304,13 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "Fomat Address"
-msgstr "פורמט כתובת"
+msgstr "עצב כתובת"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__font
 #: model:ir.model.fields,field_description:base.field_res_company__font
 msgid "Font"
-msgstr ""
+msgstr "גופן"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -12431,22 +12464,22 @@ msgstr "פולינזיה הצרפתית"
 #. module: base
 #: model:res.country,name:base.tf
 msgid "French Southern Territories"
-msgstr "French Southern Territories"
+msgstr "הארצות הדרומיות והאנטרקטיות של צרפת"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
 msgid "Friday"
-msgstr "שישי"
+msgstr "יום שישי"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
 msgid "From"
-msgstr "מאת"
+msgstr "מ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
 msgid "From quotations to invoices"
-msgstr "מתוך הצעות מחיר לחשבוניות"
+msgstr "מהצעות מחיר לחשבוניות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -12456,7 +12489,7 @@ msgstr "גישה מלאה"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Full Access Right"
-msgstr "הרשאות גישה מלאות"
+msgstr "הרשאות מלאות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
@@ -12543,12 +12576,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ga
 msgid "Gabon"
-msgstr "Gabon"
+msgstr "גאבון"
 
 #. module: base
 #: model:res.country,name:base.gm
 msgid "Gambia"
-msgstr "Gambia"
+msgstr "גמביה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification
@@ -12655,12 +12688,12 @@ msgstr "קו אורך גיאוגרפי"
 #. module: base
 #: model:res.country,name:base.ge
 msgid "Georgia"
-msgstr "Georgia"
+msgstr "גיאורגיה"
 
 #. module: base
 #: model:res.country,name:base.de
 msgid "Germany"
-msgstr "Germany"
+msgstr "גרמניה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
@@ -12675,12 +12708,12 @@ msgstr "גרמניה - דוחות כספיים"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr03
 msgid "Germany SKR03 - Accounting"
-msgstr "גרמניה SKR03 - חשבונאות"
+msgstr "גרמניה SKR03 - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_skr04
 msgid "Germany SKR04 - Accounting"
-msgstr "גרמניה SKR04 - חשבונאות"
+msgstr "גרמניה SKR04 - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
@@ -12700,12 +12733,12 @@ msgstr "קבל את המראה והתחושה של הארגון"
 #. module: base
 #: model:res.country,name:base.gh
 msgid "Ghana"
-msgstr "Ghana"
+msgstr "גאנה"
 
 #. module: base
 #: model:res.country,name:base.gi
 msgid "Gibraltar"
-msgstr "Gibraltar"
+msgstr "גיברלטר"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_github
@@ -12835,7 +12868,7 @@ msgstr "תרשים"
 #. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
-msgstr "Greece"
+msgstr "יוון"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
@@ -12845,7 +12878,7 @@ msgstr "יוון - הנהלת חשבונות"
 #. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
-msgstr "Greenland"
+msgstr "גרינלנד"
 
 #. module: base
 #: model:res.country,name:base.gd
@@ -12945,7 +12978,7 @@ msgstr "גואם"
 #. module: base
 #: model:res.country,name:base.gt
 msgid "Guatemala"
-msgstr "Guatemala"
+msgstr "גואטמלה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
@@ -12960,7 +12993,7 @@ msgstr "גרנזי"
 #. module: base
 #: model:res.country,name:base.gn
 msgid "Guinea"
-msgstr "Guinea"
+msgstr "גינאה"
 
 #. module: base
 #: model:res.country,name:base.gw
@@ -12970,7 +13003,7 @@ msgstr "גינאה ביסאו"
 #. module: base
 #: model:res.country,name:base.gy
 msgid "Guyana"
-msgstr "Guyana"
+msgstr "גיאנה"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_H
@@ -13015,7 +13048,7 @@ msgstr "ניתוב HTTP"
 #. module: base
 #: model:res.country,name:base.ht
 msgid "Haiti"
-msgstr "Haiti"
+msgstr "האיטי"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
@@ -13046,7 +13079,7 @@ msgstr "יש את כל הטיעונים הנדרשים"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
 msgid "Header spacing"
-msgstr "ריווח כותרות"
+msgstr "ריווח כותרת עליונה"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -13291,7 +13324,7 @@ msgstr "תפריט הבית"
 #. module: base
 #: model:res.country,name:base.hn
 msgid "Honduras"
-msgstr "Honduras"
+msgstr "הונדורס"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
@@ -13301,7 +13334,7 @@ msgstr "הונדורס - הנהלת חשבונות"
 #. module: base
 #: model:res.country,name:base.hk
 msgid "Hong Kong"
-msgstr "Hong Kong"
+msgstr "הונג קונג"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk
@@ -13321,7 +13354,7 @@ msgstr "שעות"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_T
 msgid "Households"
-msgstr "משק בית"
+msgstr "משקי בית"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__numbercall
@@ -13363,7 +13396,7 @@ msgstr "הונגריה - הנהלת חשבונות"
 #. module: base
 #: model:res.country,name:base.hu
 msgid "Hungary"
-msgstr "Hungary"
+msgstr "הונגריה"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
@@ -13481,13 +13514,13 @@ msgstr "IBAN חשבונות בנק "
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:base.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr ""
+msgstr "מזהה הפעולה אם מוגדר בקובץ XML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -13527,7 +13560,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
-msgstr "Iceland"
+msgstr "איסלנד"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__icon_image
@@ -13544,7 +13577,7 @@ msgstr "קישור סמל"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__aggr_ids
 msgid "Ids"
-msgstr "מזהה"
+msgstr "מזהים"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -13704,28 +13737,28 @@ msgstr "תמונה"
 #: model:ir.model.fields,field_description:base.field_res_partner__image_1024
 #: model:ir.model.fields,field_description:base.field_res_users__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "תמונה 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_128
 #: model:ir.model.fields,field_description:base.field_res_partner__image_128
 #: model:ir.model.fields,field_description:base.field_res_users__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "תמונה 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_256
 #: model:ir.model.fields,field_description:base.field_res_partner__image_256
 #: model:ir.model.fields,field_description:base.field_res_users__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "תמונה 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_512
 #: model:ir.model.fields,field_description:base.field_res_partner__image_512
 #: model:ir.model.fields,field_description:base.field_res_users__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "תמונה 512"
 
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
@@ -13871,7 +13904,7 @@ msgstr "תוכן אינדקס"
 #. module: base
 #: model:res.country,name:base.in
 msgid "India"
-msgstr "India"
+msgstr "הודו"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_purchase_stock
@@ -13886,7 +13919,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "Indian - Accounting"
-msgstr "הודו - חשבונאות"
+msgstr "הודו - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports
@@ -13931,7 +13964,7 @@ msgstr "פרטיים"
 #. module: base
 #: model:res.country,name:base.id
 msgid "Indonesia"
-msgstr "Indonesia"
+msgstr "אינדונזיה"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
@@ -14016,7 +14049,7 @@ msgstr "להתקין"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
 msgid "Install Apps"
-msgstr "התקנת תוספים"
+msgstr "התקן יישומים"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -14323,12 +14356,12 @@ msgstr "כתובת חשבונית"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Invoice Date:"
-msgstr ""
+msgstr "תאריך אסמכתא:"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Invoice INV/2019/0005"
-msgstr ""
+msgstr "חשבונית INV/2019/0005"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -14348,7 +14381,7 @@ msgstr "חיוב"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
 msgid "IoT Box Homepage"
-msgstr ""
+msgstr "דף בית של קופסת IoT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_iot
@@ -14373,12 +14406,12 @@ msgstr "עיראק"
 #. module: base
 #: model:res.country,name:base.ie
 msgid "Ireland"
-msgstr "Ireland"
+msgstr "אירלנד"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie
 msgid "Ireland - Accounting"
-msgstr ""
+msgstr "אירלנד - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
@@ -14414,12 +14447,12 @@ msgstr "ישראל"
 #. module: base
 #: model:res.country,name:base.it
 msgid "Italy"
-msgstr "Italy"
+msgstr "איטליה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
 msgid "Italy - Accounting"
-msgstr "איטליה - חשבונאות"
+msgstr "איטליה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi
@@ -14434,17 +14467,17 @@ msgstr "J מידע ותקשורת"
 #. module: base
 #: model:res.country,name:base.jm
 msgid "Jamaica"
-msgstr "Jamaica"
+msgstr "ג'מייקה"
 
 #. module: base
 #: model:res.country,name:base.jp
 msgid "Japan"
-msgstr "Japan"
+msgstr "יפן"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp
 msgid "Japan - Accounting"
-msgstr "יפן - חשבונאות"
+msgstr "יפן - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.je
@@ -14492,12 +14525,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__kanban
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Kanban"
-msgstr ""
+msgstr "קנבן"
 
 #. module: base
 #: model:res.country,name:base.kz
 msgid "Kazakhstan"
-msgstr "Kazakhstan"
+msgstr "קזחסטן"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
@@ -14508,7 +14541,7 @@ msgstr "השאר ריק אם אינך מעוניין שהמשתמש יוכל ל�
 #. module: base
 #: model:res.country,name:base.ke
 msgid "Kenya"
-msgstr "Kenya"
+msgstr "קניה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__key
@@ -14525,7 +14558,7 @@ msgstr "מפתח חייב להיות ייחודי"
 #. module: base
 #: model:res.country,name:base.ki
 msgid "Kiribati"
-msgstr "Kiribati"
+msgstr "קיריבטי"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_forum
@@ -14545,7 +14578,7 @@ msgstr "קוסובו"
 #. module: base
 #: model:res.country,name:base.kw
 msgid "Kuwait"
-msgstr "Kuwait"
+msgstr "כווית"
 
 #. module: base
 #: model:res.country,name:base.kg
@@ -14590,7 +14623,7 @@ msgstr "עלויות סופיות "
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__landscape
 msgid "Landscape"
-msgstr "נוף"
+msgstr "לרוחב"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__lang
@@ -14648,7 +14681,7 @@ msgstr "שפות"
 #. module: base
 #: model:res.country,name:base.la
 msgid "Laos"
-msgstr "Laos"
+msgstr "לאוס"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__lastcall
@@ -14929,7 +14962,7 @@ msgstr "גרסה אחרונה"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr ""
+msgstr "אימות אחרון"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -14939,7 +14972,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.lv
 msgid "Latvia"
-msgstr "Latvia"
+msgstr "לטביה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -14996,12 +15029,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "למד עוד"
 
 #. module: base
 #: model:res.country,name:base.lb
 msgid "Lebanon"
-msgstr "Lebanon"
+msgstr "לבנון"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
@@ -15011,7 +15044,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_left
 msgid "Left Margin (mm)"
-msgstr ""
+msgstr "שוליים שמאליים (מ\"מ)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__direction__ltr
@@ -15036,7 +15069,7 @@ msgstr "אגדות לתבניות תאריך ושעה הנתמכות"
 #. module: base
 #: model:res.country,name:base.ls
 msgid "Lesotho"
-msgstr "Lesotho"
+msgstr "לסוטו"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_predictive_bills
@@ -15060,7 +15093,7 @@ msgstr "בוא נעשה את זה"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Let's start!"
-msgstr "בואו נתחיל!"
+msgstr "בוא נתחיל!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__letter
@@ -15076,12 +15109,12 @@ msgstr "רמה"
 #. module: base
 #: model:res.country,name:base.lr
 msgid "Liberia"
-msgstr "Liberia"
+msgstr "ליבריה"
 
 #. module: base
 #: model:res.country,name:base.ly
 msgid "Libya"
-msgstr "Libya"
+msgstr "לוב"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__license
@@ -15091,7 +15124,7 @@ msgstr "רשיון"
 #. module: base
 #: model:res.country,name:base.li
 msgid "Liechtenstein"
-msgstr "Liechtenstein"
+msgstr "ליכטנשטיין"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__limit
@@ -15129,7 +15162,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_link_tracker
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
-msgstr ""
+msgstr "מעקב קישורים"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
@@ -15181,7 +15214,7 @@ msgstr "רשימה של מודולים שבהם אובייקט מוגדר או �
 #. module: base
 #: model:res.country,name:base.lt
 msgid "Lithuania"
-msgstr "Lithuania"
+msgstr "ליטא"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
@@ -15278,17 +15311,17 @@ msgstr "לוגו אינטרנט"
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_tree_view
 msgid "Logs"
-msgstr ""
+msgstr "רישומים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
 msgid "Loyalty Program"
-msgstr "תכנית נאמנות"
+msgstr "מועדון לקוחות"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_loyalty
 msgid "Loyalty Program for the Point of Sale "
-msgstr "תוכנית נאמנות לנקודת המכירה"
+msgstr "מועדון לקוחות לקופה"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_lunch
@@ -15299,7 +15332,7 @@ msgstr "ארוחת צהריים"
 #. module: base
 #: model:res.country,name:base.lu
 msgid "Luxembourg"
-msgstr "Luxembourg"
+msgstr "לוקסמבורג"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu
@@ -15330,17 +15363,17 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mo
 msgid "Macau"
-msgstr "Macau"
+msgstr "מקאו"
 
 #. module: base
 #: model:res.country,name:base.mk
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr "מקדוניה, הרפובליקה היוגוסלבית לשעבר"
+msgstr "מקדוניה"
 
 #. module: base
 #: model:res.country,name:base.mg
 msgid "Madagascar"
-msgstr "Madagascar"
+msgstr "מדגסקר"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -15440,27 +15473,27 @@ msgstr "תחזוקה - MRP"
 #. module: base
 #: model:res.country,name:base.mw
 msgid "Malawi"
-msgstr "Malawi"
+msgstr "מלאווי"
 
 #. module: base
 #: model:res.country,name:base.my
 msgid "Malaysia"
-msgstr "Malaysia"
+msgstr "מלזיה"
 
 #. module: base
 #: model:res.country,name:base.mv
 msgid "Maldives"
-msgstr "Maldives"
+msgstr "האיים המלדיביים"
 
 #. module: base
 #: model:res.country,name:base.ml
 msgid "Mali"
-msgstr "Mali"
+msgstr "מאלי"
 
 #. module: base
 #: model:res.country,name:base.mt
 msgid "Malta"
-msgstr "Malta"
+msgstr "מלטה"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -15674,7 +15707,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_map
 msgid "Map View"
-msgstr ""
+msgstr "תצוגת מפה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
@@ -15711,7 +15744,7 @@ msgstr "מרוקו - הנהלת חשבונות"
 #. module: base
 #: model:res.country,name:base.mh
 msgid "Marshall Islands"
-msgstr "Marshall Islands"
+msgstr "איי מרשל"
 
 #. module: base
 #: model:res.country,name:base.mq
@@ -15767,12 +15800,12 @@ msgstr "מאסטר תכנית הייצור"
 #. module: base
 #: model:res.country,name:base.mr
 msgid "Mauritania"
-msgstr "Mauritania"
+msgstr "מאוריטניה"
 
 #. module: base
 #: model:res.country,name:base.mu
 msgid "Mauritius"
-msgstr "Mauritius"
+msgstr "מאוריציוס"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__maximum_group
@@ -15782,7 +15815,7 @@ msgstr "מקסימום קבוצת אנשי קשר"
 #. module: base
 #: model:res.country,name:base.yt
 msgid "Mayotte"
-msgstr "Mayotte"
+msgstr "מאיוט"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
@@ -15899,17 +15932,17 @@ msgstr "לוקליזציה מקסיקנית עבור מסמכים EDI"
 #. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
-msgstr "Mexico"
+msgstr "מקסיקו"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
 msgid "Mexico - Accounting"
-msgstr "מקסיקו - חשבונאות"
+msgstr "מקסיקו - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
-msgstr "Micronesia"
+msgstr "מיקרונזיה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
@@ -16306,22 +16339,22 @@ msgstr "מולדובה"
 #. module: base
 #: model:res.country,name:base.mc
 msgid "Monaco"
-msgstr "Monaco"
+msgstr "מונאקו"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__1
 msgid "Monday"
-msgstr "שני"
+msgstr "יום שני"
 
 #. module: base
 #: model:res.country,name:base.mn
 msgid "Mongolia"
-msgstr "Mongolia"
+msgstr "מונגוליה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mn
 msgid "Mongolia - Accounting"
-msgstr ""
+msgstr "מונגוליה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mn_reports
@@ -16331,7 +16364,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.me
 msgid "Montenegro"
-msgstr "Montenegro"
+msgstr "מונטנגרו"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__months
@@ -16354,12 +16387,12 @@ msgstr "שפות נוספות"
 #. module: base
 #: model:res.country,name:base.ma
 msgid "Morocco"
-msgstr "Morocco"
+msgstr "מרוקו"
 
 #. module: base
 #: model:res.country,name:base.mz
 msgid "Mozambique"
-msgstr "Mozambique"
+msgstr "מוזמביק"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -16400,7 +16433,7 @@ msgstr "המסננים שלי"
 #. module: base
 #: model:res.country,name:base.mm
 msgid "Myanmar"
-msgstr "Myanmar"
+msgstr "מיאנמר"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
@@ -16455,27 +16488,27 @@ msgstr "שם:"
 #. module: base
 #: model:res.country,name:base.na
 msgid "Namibia"
-msgstr "Namibia"
+msgstr "נמיביה"
 
 #. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
-msgstr "Nauru"
+msgstr "נאורו"
 
 #. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
-msgstr "Nepal"
+msgstr "נפאל"
 
 #. module: base
 #: model:res.country,name:base.nl
 msgid "Netherlands"
-msgstr "Netherlands"
+msgstr "הולנד"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl
 msgid "Netherlands - Accounting"
-msgstr "הולנד - חשבונאות"
+msgstr "הולנד - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
@@ -16513,12 +16546,12 @@ msgstr "חלון חדש"
 #. module: base
 #: model:res.country,name:base.nz
 msgid "New Zealand"
-msgstr "New Zealand"
+msgstr "ניו זילנד"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
-msgstr "ניו זילנד - חשבונאות"
+msgstr "ניו זילנד - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing
@@ -16577,7 +16610,7 @@ msgstr "Niger"
 #. module: base
 #: model:res.country,name:base.ng
 msgid "Nigeria"
-msgstr "Nigeria"
+msgstr "ניגריה"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -16641,7 +16674,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No module found!"
-msgstr ""
+msgstr "לא נמצא מודול!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
@@ -16699,7 +16732,7 @@ msgstr "נורמלי "
 #. module: base
 #: model:res.country,name:base.kp
 msgid "North Korea"
-msgstr "North Korea"
+msgstr "צפון קוריאה"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -16709,12 +16742,12 @@ msgstr "Northern Mariana Islands"
 #. module: base
 #: model:res.country,name:base.no
 msgid "Norway"
-msgstr "Norway"
+msgstr "נורבגיה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no
 msgid "Norway - Accounting"
-msgstr "נורבגיה - חשבונאות"
+msgstr "נורבגיה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstalled
@@ -16803,7 +16836,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_syscohada
 msgid "OHADA - Accounting"
-msgstr "OHADA - חשבונאות"
+msgstr "OHADA - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__model_id
@@ -17935,7 +17968,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you easily track all activities related to a customer."
-msgstr "Odoo עוזר לך לעקוב בקלות אחר כל הפעילויות הקשורות ללקוח.."
+msgstr "Odoo עוזר לך לעקוב בקלות אחר כל הפעילויות הקשורות ללקוח."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -17964,7 +17997,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
-msgstr "אישור"
+msgstr "בסדר"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -18365,7 +18398,7 @@ msgstr "ארגן את העבודה שלך עם תזכירים"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
 msgid "Orientation"
-msgstr "התמצאות "
+msgstr "כיוון"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom__ref_id
@@ -18393,7 +18426,7 @@ msgstr "אחר"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "כתובת אחרת"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -18532,7 +18565,7 @@ msgstr "רוחב דף (מ\"מ)"
 #. module: base
 #: model:res.country,name:base.pk
 msgid "Pakistan"
-msgstr "Pakistan"
+msgstr "פקיסטן"
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -18542,12 +18575,12 @@ msgstr "Palau"
 #. module: base
 #: model:res.country,name:base.pa
 msgid "Panama"
-msgstr "Panama"
+msgstr "פנמה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pa
 msgid "Panama - Accounting"
-msgstr "פנמה - חשבונאות"
+msgstr "פנמה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__paperformat_id
@@ -18580,7 +18613,7 @@ msgstr "תצורת פורמט נייר"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__format
 msgid "Paper size"
-msgstr "מידות נייר"
+msgstr "גודל נייר"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -18618,7 +18651,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_id
 msgid "Parent Category"
-msgstr "קטגורית הורה"
+msgstr "קטגורית אב"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -18653,7 +18686,7 @@ msgstr "שותף"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr ""
+msgstr "השלמה אוטומטית של לקוח/ספק"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete_address_extended
@@ -18695,7 +18728,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "נתונים הקשורים ללקוח/ספק של המשתמש"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
@@ -18831,7 +18864,7 @@ msgstr "ניהול מעקב אחר תשלומים"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Payment Terms:"
-msgstr ""
+msgstr "תנאי תשלום:"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -18883,7 +18916,7 @@ msgstr "פרו"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe
 msgid "Peru - Accounting"
-msgstr "פרו - חשבונאות"
+msgstr "פרו - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -18993,22 +19026,22 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 msgid "Point Of Sale"
-msgstr "נקודת מכירה"
+msgstr "קופה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "נקודת מכירה"
+msgstr "קופה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr "הנחות נקודות מכירה"
+msgstr "הנחות קופה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_reprint
 msgid "Point of Sale Receipt Reprinting"
-msgstr "הדפסה חוזרת של קבלה"
+msgstr "הדפסה חוזרת של קבלה בקופה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
@@ -19023,7 +19056,7 @@ msgstr "פולין"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
-msgstr "פולין - חשבונאות"
+msgstr "פולין - הנהלת חשבונות"
 
 #. module: base
 #: model:res.groups,name:base.group_portal
@@ -19042,17 +19075,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__portrait
 msgid "Portrait"
-msgstr "דיוקן"
+msgstr "לאורך"
 
 #. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
-msgstr "Portugal"
+msgstr "פורטוגל"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
 msgid "Portugal - Accounting"
-msgstr "פורטוגל - חשבונאות"
+msgstr "פורטוגל - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -19123,7 +19156,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "ארכיטקטורה תצוגה מקדימה"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__lastcall
@@ -19348,7 +19381,7 @@ msgstr "פרויקט, מרכז התמיכה, גיליון זמנים והזמנ�
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_account
 msgid "Project, Tasks, Account"
-msgstr ""
+msgstr "פרויקט, משימות,חשבון"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
@@ -19842,7 +19875,7 @@ msgstr "אותרה רקורסיה בפועלת בן של השרת"
 #: code:addons/models.py:0
 #, python-format
 msgid "Recursion Detected."
-msgstr ""
+msgstr "התגלתה רקורסיה."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -19950,7 +19983,7 @@ msgstr "הסר 'עוד' פעולה הקשורה בתפריט העליון הקש
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove Configuration Tips"
-msgstr "הסר עצות תצורה"
+msgstr "הסר סרגל תצורה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -20155,7 +20188,7 @@ msgstr "מסעדה"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "הרחבות מסעדה עבור נקודת המכירה"
+msgstr "הרחבות מסעדה עבור קופה"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
@@ -20527,7 +20560,7 @@ msgstr "ערב הסעודיה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa
 msgid "Saudi Arabia - Accounting"
-msgstr "ערב הסעודית - חשבונאות"
+msgstr "ערב הסעודית - הנהלת חשבונות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
@@ -20616,7 +20649,7 @@ msgstr "פעולות חיפוש"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_bank_view_search
 msgid "Search Bank"
-msgstr ""
+msgstr "חפש בנק"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -20988,7 +21021,7 @@ msgstr "הגדר את נתוני החברה שלך"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Set your company's data for documents header/footer."
-msgstr "הגדר את נתוני החברה שלך עבור כותרת / כותרת תחתונה של מסמכים."
+msgstr "הגדר את נתוני החברה שלך עבור כותרות מסמכים."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -21108,7 +21141,7 @@ msgstr "סינגפור"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg
 msgid "Singapore - Accounting"
-msgstr "סינגפור - חשבונאות"
+msgstr "סינגפור - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_reports
@@ -21138,7 +21171,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "ניהול כישורים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_slides
@@ -21168,7 +21201,7 @@ msgstr "סלובניה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_si
 msgid "Slovenian - Accounting"
-msgstr "סלובניה - חשבונאות"
+msgstr "סלובניה - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail
@@ -21199,7 +21232,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr ""
+msgstr "שיווק ברשתות חברתיות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -21324,7 +21357,7 @@ msgstr "מונח מקור"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "Source:"
-msgstr ""
+msgstr "מקור:"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -21334,7 +21367,7 @@ msgstr "דרום אפריקה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_za
 msgid "South Africa - Accounting"
-msgstr ""
+msgstr "דרום אפריקה -הנהלת חשבונות"
 
 #. module: base
 #: model:res.country.group,name:base.south_america
@@ -21364,7 +21397,7 @@ msgstr "ספרד"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spain - Accounting (PGCE 2008)"
-msgstr "ספרד - חשבונאות (PGCE 2008)"
+msgstr "ספרד - הנהלת חשבונות (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
@@ -21620,7 +21653,7 @@ msgstr "להגיש, לאמת ולשלוח מחדש את הוצאות העובד�
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
 msgid "Subscription"
-msgstr ""
+msgstr "מנוי"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_sepa_direct_debit
@@ -21711,7 +21744,7 @@ msgstr "שוויץ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch
 msgid "Switzerland - Accounting"
-msgstr "שוויץ - חשבונאות"
+msgstr "שוויץ - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_reports
@@ -21851,7 +21884,7 @@ msgstr "יומני פעילות"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "מס' עוסק מורשה/ ח.פ"
+msgstr "מס' עוסק מורשה/ איחוד עוסקים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -22002,7 +22035,7 @@ msgstr "תאילנד"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
 msgid "Thailand - Accounting"
-msgstr "תאילנד - חשבונאות"
+msgstr "תאילנד - הנהלת חשבונות"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -22760,7 +22793,7 @@ msgstr "פורמט זמן"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr "חופשה"
+msgstr "חופשות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -22900,7 +22933,7 @@ msgstr "כלים"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_top
 msgid "Top Margin (mm)"
-msgstr "שוליים העליון (מ\"מ)"
+msgstr "שוליים עליונים (מ\"מ)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
@@ -23108,7 +23141,7 @@ msgstr "טורקיה "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Turkey - Accounting"
-msgstr "טורקיה - חשבונאות"
+msgstr "טורקיה - הנהלת חשבונות"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -23167,6 +23200,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"סוג פעולת השרת. הערכים הבאים זמינים:\n"
+"- 'בצע קוד פייתון': בלוק של קוד פייתון שיבוצע\n"
+"- 'צור': צור רשומה חדשה עם ערכים חדשים\n"
+"- 'עדכן רשומה': עדכן את ערכי הרשומה\n"
+"- 'בצע מספר פעולות': הגדר פעולה שמפעילה מספר פעולות שרת אחרות\n"
+"- 'שלח דוא\"ל': שלח דוא\"ל באופן אוטומטי (צ'אט)\n"
+"- 'הוסף עוקבים': הוסף עוקבים לרשומה (צ'אט)\n"
+"- 'צור פעילות הבאה': צור פעילות (צ'אט)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -23274,7 +23315,7 @@ msgstr "אוקראינה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ua
 msgid "Ukraine - Accounting"
-msgstr ""
+msgstr "אוקראינה - הנהלת חשבונות"
 
 #. module: base
 #: code:addons/models.py:0
@@ -23559,12 +23600,12 @@ msgstr "השתמש תוכניות הקופון וקידום בחנות eCommerce
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon
 msgid "Use discount coupons in sales orders"
-msgstr ""
+msgstr "השתמש בקופוני הנחה בהזמנות לקוח"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
 msgid "Use python code to define taxes"
-msgstr ""
+msgstr "השתמש בקוד פייתון כדי להגדיר מיסים"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__use_date_range
@@ -23776,7 +23817,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
 msgid "VOIP"
-msgstr ""
+msgstr "VOIP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_onsip
@@ -23888,7 +23929,7 @@ msgstr "ספקים"
 #. module: base
 #: model:res.country,name:base.ve
 msgid "Venezuela"
-msgstr "Venezuela"
+msgstr "ונצואלה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
@@ -24110,7 +24151,7 @@ msgstr "אינטרנט-רק תרגום"
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "Website"
-msgstr "אתר"
+msgstr "אתר אינטרנט"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_management
@@ -24125,7 +24166,7 @@ msgstr "אתר האינטרנט של הארגון"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
 msgid "Website Form"
-msgstr ""
+msgstr "טופס אתר אינטרנט"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
@@ -24207,7 +24248,7 @@ msgstr "אתר סטודיו"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website
 msgid "Website Test"
-msgstr ""
+msgstr "בדיקת אתר אינטרנט"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_website
@@ -24222,12 +24263,12 @@ msgstr "אתר ערכת נושא התקנה"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
 msgid "Website profile"
-msgstr ""
+msgstr "פרופיל אתר אינטרנט"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
 msgid "Wednesday"
-msgstr "רביעי"
+msgstr "יום רביעי"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__weeks
@@ -24359,7 +24400,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planning, Stock Reports."
-msgstr ""
+msgstr "הוראות עבודה, תכנון, דוחות מלאי."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
@@ -24381,7 +24422,7 @@ msgstr "הרשאות כתיבה"
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "רשום תאריך"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -24550,7 +24591,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "אין לך מספיק הרשאות כדי לבצע פעולה זו."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -24566,7 +24607,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "You should try other search criteria."
-msgstr "נסה עם קריטריון חיפוש אחר"
+msgstr "עליך לנסות קריטריוני חיפוש אחרים."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -24634,7 +24675,7 @@ msgstr "זמביה"
 #. module: base
 #: model:res.country,name:base.zw
 msgid "Zimbabwe"
-msgstr "Zimbabwe"
+msgstr "זימבאבווה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__zip
@@ -24647,12 +24688,12 @@ msgstr "מיקוד"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "[SKU001] Server"
-msgstr ""
+msgstr "[SKU001] שרת"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "[SKU002] Computer"
-msgstr ""
+msgstr "[SKU002] מחשב"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -24684,7 +24725,7 @@ msgstr ""
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "and"
-msgstr "וגם"
+msgstr "ו"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -24747,12 +24788,12 @@ msgstr "בוצע"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 msgid "e.g. BE0477472701"
-msgstr "לדוגמה. BE0477472701"
+msgstr "למשל: BE0477472701"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. English"
-msgstr "לדוג': אנגלית"
+msgstr "למשל: אנגלית"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
@@ -24762,7 +24803,7 @@ msgstr "לדוגמה פתרונות עסקיים גלובליים"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mister"
-msgstr ""
+msgstr "למשל אדון"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -24789,14 +24830,14 @@ msgstr "לדוגמה: עדכון כמות ההזמנה"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. en_US"
-msgstr "לדוג': he_IL"
+msgstr "למשל: en_US"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. https://www.odoo.com"
-msgstr "למשל https://www.odoo.com"
+msgstr "למשל: https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -24816,7 +24857,7 @@ msgstr "משלוח מסחר אלקטרוני "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr ""
+msgstr "למידה אלקטרונית"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -24826,7 +24867,7 @@ msgstr "email@yourcompany.com"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.layout_preview
 msgid "example.com"
-msgstr ""
+msgstr "example.com"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -24838,7 +24879,7 @@ msgstr "מזהה חיצוני"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "false"
-msgstr "שקר"
+msgstr "לא נכון"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
@@ -24857,7 +24898,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "forbidden for groups %s"
-msgstr ""
+msgstr "אסור לקבוצות %s"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -25007,7 +25048,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference
 msgid "reference"
-msgstr "הפניה"
+msgstr "מזהה"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
@@ -25052,7 +25093,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_impex
 msgid "test-import-export"
-msgstr "מבחן-יבוא-יצוא"
+msgstr "בדוק-ייבא-ייצא"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit
@@ -25092,7 +25133,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
-msgstr "מבחן_המרה"
+msgstr "test_convert"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__text

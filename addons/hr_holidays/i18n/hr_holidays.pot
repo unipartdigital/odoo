@@ -110,6 +110,18 @@ msgid "%s on %s: %.2f days"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:643
+#, python-format
+msgid "%s on Time Off : %.2f day(s)"
+msgstr "%s on Time Off : %.2f day(s)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:643
+#, python-format
+msgid "%s on Time Off : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&lt;/td&gt;"
 msgstr ""
@@ -2407,6 +2419,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__valid
 msgid "This indicates if it is still possible to use this type of leave"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "This modification is not allowed in the current state."
 msgstr ""
 
 #. module: hr_holidays
