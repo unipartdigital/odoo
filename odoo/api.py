@@ -947,9 +947,20 @@ class Environments(object):
 
 class Cache(object):
     """ Implementation of the cache of records. """
+    record_field_access_log = defaultdict(lambda: defaultdict(int))
+    field_access_log = defaultdict(int)
+    record_access_log = defaultdict(int)
+    env_access_log = defaultdict(int)
+
     def __init__(self):
         # {field: {record_id: {key: value}}}
         self._data = defaultdict(lambda: defaultdict(dict))
+
+    def logs_clear(self):
+        self.record_field_access_log.clear()
+        self.field_access_log.clear()
+        self.record_access_log.clear()
+        self.env_access_log.clear()
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
@@ -960,6 +971,10 @@ class Cache(object):
         """ Return the value of ``field`` for ``record``. """
         key = field.cache_key(record)
         value = self._data[field][record.id][key]
+        self.field_access_log[field] += 1
+        self.record_field_access_log[record][field] += 1
+        self.record_access_log[record] += 1
+        self.env_access_log[key] += 1
         return value.get() if isinstance(value, SpecialValue) else value
 
     def set(self, record, field, value):
