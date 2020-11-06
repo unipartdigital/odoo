@@ -541,6 +541,32 @@ class StockQuant(TransactionCase):
             self.env['stock.quant']._update_reserved_quantity(product1, stock_location, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
 
+    def test_increase_reserved_quantity_6(self):
+        """ Increase the reserved quantity of quantity x when there's a single quant in a given
+        location which has an available quantity of x.
+        """
+        Quant = self.env['stock.quant']
+
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        q = Quant.create({
+            'product_id': product1.id,
+            'location_id': stock_location.id,
+            'quantity': 10.0,
+        })
+        self.assertEqual(Quant._get_available_quantity(product1, stock_location), 10.0)
+        self.assertEqual(len(Quant._gather(product1, stock_location)), 1)
+        with mock.patch.object(Quant.__class__, '_gather', autospec=True, wraps=True, return_value=q) as mock_gather:
+            Quant._update_reserved_quantity(product1, stock_location, 10.0, a=1, b=2)
+        mock_gather.assert_has_calls([
+            mock.call(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=False, a=1, b=2),
+            mock.call(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=False)])
+        self.assertEqual(Quant._get_available_quantity(product1, stock_location), 0.0)
+        self.assertEqual(len(Quant._gather(product1, stock_location)), 1)
+
     def test_decrease_reserved_quantity_1(self):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
