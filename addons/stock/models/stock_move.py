@@ -917,7 +917,7 @@ class StockMove(models.Model):
 
         try:
             if not float_is_zero(taken_quantity, precision_rounding=self.product_id.uom_id.rounding):
-                quants = self.env['stock.quant']._update_reserved_quantity(
+                quants = self._update_quant_reserved_quantity(
                     self.product_id, location_id, taken_quantity, lot_id=lot_id,
                     package_id=package_id, owner_id=owner_id, strict=strict
                 )
@@ -936,6 +936,10 @@ class StockMove(models.Model):
                 else:
                     self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
         return taken_quantity
+
+    def _update_quant_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
+        Quant = self.env['stock.quant']
+        return Quant._update_reserved_quantity(product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
     def _action_assign(self):
         """ Reserve stock moves by creating their stock move lines. A stock move is
