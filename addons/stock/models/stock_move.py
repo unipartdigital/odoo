@@ -304,7 +304,7 @@ class StockMove(models.Model):
         if self.state == 'done':
             self.availability = self.product_qty
         else:
-            total_availability = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id)
+            total_availability = self._get_quant_available_quantity(self.product_id, self.location_id)
             self.availability = min(self.product_qty, total_availability)
 
     def _compute_string_qty_information(self):
@@ -981,7 +981,7 @@ class StockMove(models.Model):
                         assigned_moves |= move
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id)
+                    available_quantity = self._get_quant_available_quantity(move.product_id, move.location_id)
                     if available_quantity <= 0:
                         continue
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
@@ -1049,7 +1049,7 @@ class StockMove(models.Model):
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
                         strict = True
-                        available_quantity = self.env['stock.quant']._get_available_quantity(
+                        available_quantity = self._get_quant_available_quantity(
                             move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
                         # UDES: If the available qty is 0, and the request has come from the UI
@@ -1060,7 +1060,7 @@ class StockMove(models.Model):
                                                                              precision_rounding=move.product_id.uom_id.rounding) == -1:
                             location_id = move.location_id
                             strict = False
-                            available_quantity = self.env['stock.quant']._get_available_quantity(
+                            available_quantity = self._get_quant_available_quantity(
                                 move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
                         # End UDES change
 
@@ -1102,6 +1102,11 @@ class StockMove(models.Model):
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
         self.write({'state': 'cancel'})
         return True
+
+    @api.model
+    def _get_quant_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False, **kwargs):
+        Quant = self.env['stock.quant']
+        return Quant._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative, **kwargs)
 
     def _prepare_extra_move_vals(self, qty):
         vals = {

@@ -189,6 +189,24 @@ class StockQuant(TransactionCase):
         self.env = self.env(user=self.env.ref('base.user_demo'))
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 1.0)
 
+    def test_get_available_quantity_10(self):
+        """ Check accepts and forwards arbitrary keyword arguments.
+        """
+        Quant = self.env['stock.quant']
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        self.env['stock.quant'].create({
+            'product_id': product1.id,
+            'location_id': stock_location.id,
+            'quantity': 1.0,
+        })
+        with mock.patch.object(Quant.__class__, '_gather', autospec=True, wraps=True) as mock_gather:
+            Quant._get_available_quantity(product1, stock_location, a=1, b=2)
+        mock_gather.assert_called_once_with(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=False, a=1, b=2)
+
     def test_increase_available_quantity_1(self):
         """ Increase the available quantity when no quants are already in a location.
         """
@@ -563,7 +581,7 @@ class StockQuant(TransactionCase):
             Quant._update_reserved_quantity(product1, stock_location, 10.0, a=1, b=2)
         mock_gather.assert_has_calls([
             mock.call(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=False, a=1, b=2),
-            mock.call(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=False)])
+            mock.call(Quant.browse(), product1, stock_location, lot_id=None, package_id=None, owner_id=None, strict=False, a=1, b=2)])
         self.assertEqual(Quant._get_available_quantity(product1, stock_location), 0.0)
         self.assertEqual(len(Quant._gather(product1, stock_location)), 1)
 

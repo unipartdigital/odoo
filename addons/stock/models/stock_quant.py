@@ -165,7 +165,7 @@ class StockQuant(models.Model):
         return self.browse([x[0] for x in res])
 
     @api.model
-    def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
+    def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False, **kwargs):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
         `reserved_quantity`, for the set of quants sharing the combination of `product_id,
         location_id` if `strict` is set to False or sharing the *exact same characteristics*
@@ -184,7 +184,7 @@ class StockQuant(models.Model):
         :return: available quantity as a float
         """
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, **kwargs)
         rounding = product_id.uom_id.rounding
         if product_id.tracking == 'none':
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
@@ -273,7 +273,7 @@ class StockQuant(models.Model):
         if just_update:
             return True
 
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), fields.Datetime.from_string(in_date)
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True, **kwargs), fields.Datetime.from_string(in_date)
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False, **kwargs):
@@ -295,7 +295,7 @@ class StockQuant(models.Model):
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
             # if we want to reserve
-            available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+            available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, **kwargs)
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
                 raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % product_id.display_name)
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:

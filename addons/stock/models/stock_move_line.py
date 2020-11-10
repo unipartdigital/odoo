@@ -193,7 +193,7 @@ class StockMoveLine(models.Model):
                 available_qty, in_date = ml._update_quant_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 if available_qty < 0 and ml.lot_id:
                     # see if we can compensate the negative quants with some untracked quants
-                    untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    untracked_qty = ml._get_quant_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     if untracked_qty:
                         taken_from_untracked_qty = min(untracked_qty, abs(quantity))
                         ml._update_quant_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, just_update=True)
@@ -301,7 +301,7 @@ class StockMoveLine(models.Model):
                     available_qty, in_date = ml._update_quant_available_quantity(product_id, location_id, -quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
                     if available_qty < 0 and lot_id:
                         # see if we can compensate the negative quants with some untracked quants
-                        untracked_qty = Quant._get_available_quantity(product_id, location_id, lot_id=False, package_id=package_id, owner_id=owner_id, strict=True)
+                        untracked_qty = ml._get_quant_available_quantity(product_id, location_id, lot_id=False, package_id=package_id, owner_id=owner_id, strict=True)
                         if untracked_qty:
                             taken_from_untracked_qty = min(untracked_qty, abs(available_qty))
                             ml._update_quant_available_quantity(product_id, location_id, -taken_from_untracked_qty, lot_id=False, package_id=package_id, owner_id=owner_id, just_update=True)
@@ -453,7 +453,7 @@ class StockMoveLine(models.Model):
                 available_qty, in_date = ml._update_quant_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 if available_qty < 0 and ml.lot_id:
                     # see if we can compensate the negative quants with some untracked quants
-                    untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    untracked_qty = ml._get_quant_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
                     if untracked_qty:
                         taken_from_untracked_qty = min(untracked_qty, abs(quantity))
                         ml._update_quant_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, just_update=True)
@@ -477,6 +477,11 @@ class StockMoveLine(models.Model):
         Quant = self.env['stock.quant']
         return Quant._update_reserved_quantity(
             product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+
+    @api.model
+    def _get_quant_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False, **kwargs):
+        Quant = self.env['stock.quant']
+        return Quant._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative, **kwargs)
 
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
@@ -509,7 +514,7 @@ class StockMoveLine(models.Model):
 
         # Check the available quantity, with the `strict` kw set to `True`. If the available
         # quantity is greather than the quantity now unavailable, there is nothing to do.
-        available_quantity = self.env['stock.quant']._get_available_quantity(
+        available_quantity = self._get_quant_available_quantity(
             product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True
         )
         if quantity > available_quantity:
