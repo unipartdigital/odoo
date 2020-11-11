@@ -470,7 +470,7 @@ class StockMoveLine(models.Model):
     def _update_quant_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None, just_update=False):
         Quant = self.env['stock.quant']
         return Quant._update_available_quantity(
-            product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, just_update=just_update)
+            product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, in_date=in_date, just_update=just_update)
 
     @api.model
     def _update_quant_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
