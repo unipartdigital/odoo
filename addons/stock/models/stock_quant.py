@@ -327,7 +327,8 @@ class StockQuant(models.Model):
                 break
         return reserved_quants
 
-    def _get_merge_query(self):
+    def _get_merge_query(self, location_ids=None):
+        
         query = """WITH
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
@@ -337,7 +338,11 @@ class StockQuant(models.Model):
                                 package_id,
                                 lot_id
                             FROM stock_quant
-                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id, in_date
+        """
+        if location_ids:
+            query += """    WHERE location_id IN (%s)
+            """ % (" ,".join(str(l) for l in location_ids))
+        query += """        GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id, in_date
                             HAVING count(id) > 1
                         ),
                         _up AS (
@@ -354,13 +359,13 @@ class StockQuant(models.Model):
         return query
 
     @api.model
-    def _merge_quants(self):
+    def _merge_quants(self, location_ids=None):
         """ In a situation where one transaction is updating a quant via
         `_update_available_quantity` and another concurrent one calls this function with the same
         argument, we’ll create a new quant in order for these transactions to not rollback. This
         method will find and deduplicate these quants.
         """
-        query = self._get_merge_query()
+        query = self._get_merge_query(location_ids)
         try:
             with self.env.cr.savepoint():
                 self.env.cr.execute(query)
