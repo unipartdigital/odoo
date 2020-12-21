@@ -742,7 +742,18 @@ class StockMove(models.Model):
                 ], limit=1)
             if picking:
                 for move in moves:
-                    if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
+                    previous_pickings = move.mapped('move_orig_ids.picking_id')
+                    origin = move.origin
+                    if not origin:
+                        previous_origin = list(set(previous_pickings.mapped('origin')))
+                        if len(previous_origin) == 1:
+                            origin = previous_origin[0]
+                    partner_id = move.partner_id.id
+                    if not partner_id:
+                        previous_partner = previous_pickings.mapped('partner_id')
+                        if len(previous_partner) == 1:
+                            partner_id = previous_partner.id
+                    if picking.partner_id.id != partner_id or picking.origin != origin:
                         # If a picking is found, we'll append `move` to its move list and thus its
                         # `partner_id` and `ref` field will refer to multiple records. In this
                         # case, we chose to  wipe them.
