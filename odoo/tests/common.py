@@ -410,7 +410,7 @@ class HttpCase(TransactionCase):
         for thread in threading.enumerate():
             if thread.name.startswith('odoo.service.http.request.'):
                 join_retry_count = 10
-                while thread.isAlive():
+                while thread.is_alive():
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
                     thread.join(0.05)

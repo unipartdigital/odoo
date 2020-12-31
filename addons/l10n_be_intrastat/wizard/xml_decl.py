@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+try:
+    from base64 import encodestring
+except ImportError:
+    from base64 import encodebytes as encodestring
+
 from xml.etree import ElementTree as ET
 from collections import namedtuple
 
@@ -91,7 +95,7 @@ class XmlDeclaration(models.TransientModel):
 
         #change state of the wizard
         self.write({'name': 'intrastat_%s%s.xml' % (self.year, self.month),
-                    'file_save': base64.encodestring(data_file),
+                    'file_save': encodestring(data_file),
                     'state': 'download'})
         return {
             'name': _('Save'),

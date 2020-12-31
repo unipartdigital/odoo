@@ -2,6 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+
+try:
+    from base64 import encodestring
+except ImportError:
+    from base64 import encodebytes as encodestring
+
+
 import json
 import pytz
 
@@ -210,7 +217,7 @@ class WebsiteForm(http.Controller):
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
                 'name': file.field_name if custom_field else file.filename,
-                'datas': base64.encodestring(file.read()),
+                'datas': encodestring(file.read()),
                 'datas_fname': file.filename,
                 'res_model': model_name,
                 'res_id': record.id,

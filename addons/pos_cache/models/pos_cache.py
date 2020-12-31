@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
+try:
+    from base64 import encodestring, decodestring
+except ImportError:
+    from base64 import encodebytes as encodestring, decodebytes as decodestring
+
 import json
 from ast import literal_eval
 
@@ -29,7 +33,7 @@ class pos_cache(models.Model):
                                          lang=self.compute_user_id.lang)
         res = prod_ctx.read(self.get_product_fields())
         datas = {
-            'cache': base64.encodestring(json.dumps(res).encode('utf-8')),
+            'cache': encodestring(json.dumps(res).encode('utf-8')),
         }
 
         self.write(datas)
@@ -49,7 +53,7 @@ class pos_cache(models.Model):
             self.product_fields = str(fields)
             self.refresh_cache()
 
-        return json.loads(base64.decodestring(self.cache).decode('utf-8'))
+        return json.loads(decodestring(self.cache).decode('utf-8'))
 
 
 class pos_config(models.Model):

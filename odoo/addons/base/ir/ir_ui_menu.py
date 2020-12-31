@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+try:
+    from base64 import encodestring
+except ImportError:
+    from base64 import encodebytes as encodestring
 
-import base64
 import operator
 import re
 
@@ -67,7 +70,7 @@ class IrUiMenu(models.Model):
         icon_image = False
         if icon_path:
             with tools.file_open(icon_path, 'rb') as icon_file:
-                icon_image = base64.encodestring(icon_file.read())
+                icon_image = encodestring(icon_file.read())
         return icon_image
 
     @api.constrains('parent_id')

@@ -49,13 +49,13 @@ class Scanner(Thread):
             7: ("6","^"),
             8: ("7","&"),
             9: ("8","*"),
-            10:("9","("), 
-            11:("0",")"), 
-            12:("-","_"), 
-            13:("=","+"), 
+            10:("9","("),
+            11:("0",")"),
+            12:("-","_"),
+            13:("=","+"),
             # 14 BACKSPACE
-            # 15 TAB 
-            16:("q","Q"), 
+            # 15 TAB
+            16:("q","Q"),
             17:("w","W"),
             18:("e","E"),
             19:("r","R"),
@@ -99,7 +99,7 @@ class Scanner(Thread):
 
     def lockedstart(self):
         with self.lock:
-            if not self.isAlive():
+            if not self.is_alive():
                 self.daemon = True
                 self.start()
 
@@ -162,11 +162,11 @@ class Scanner(Thread):
         while True:
             try:
                 timestamp, barcode = self.barcodes.get(True, 5)
-                if timestamp > time.time() - 5: 
+                if timestamp > time.time() - 5:
                     return barcode
             except Empty:
                 return ''
-    
+
     def get_status(self):
         self.lockedstart()
         return self.status
@@ -179,11 +179,11 @@ class Scanner(Thread):
     def run(self):
         """ This will start a loop that catches all keyboard events, parse barcode
             sequences and put them on a timestamped queue that can be consumed by
-            the point of sale's requests for barcode events 
+            the point of sale's requests for barcode events
         """
-        
+
         self.barcodes = Queue()
-        
+
         barcode  = []
         shift    = False
         devices  = None
