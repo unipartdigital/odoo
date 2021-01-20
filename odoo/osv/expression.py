@@ -1211,11 +1211,21 @@ class expression(object):
                 params = [it for it in right if it != False]
                 check_null = len(params) < len(right)
                 if params:
+                    # Optimise IN for longer lists
+                    # https://postgres.cz/wiki/PostgreSQL_SQL_Tricks_I#Predicate_IN_optimalization
+                    # https://dba.stackexchange.com/questions/91247/optimizing-a-postgres-query-with-a-large-in
+                    has_duplicate_params = len(params) != len(set(params))
                     if left == 'id':
-                        instr = ','.join(['%s'] * len(params))
+                        if len(params) <= 80 or has_duplicate_params:
+                            instr = ','.join(['%s'] * len(params))
+                        else:
+                            instr = 'VALUES {}'.format(','.join(['(%s)'] * len(params)))
                     else:
                         field = model._fields[left]
-                        instr = ','.join([field.column_format] * len(params))
+                        if len(params) <= 80 or has_duplicate_params:
+                            instr = ','.join([field.column_format] * len(params))
+                        else:
+                            instr = 'VALUES {}'.format(','.join(['({})'.format(field.column_format)] * len(params)))
                         params = [field.convert_to_column(p, record=model) for p in params]
                     query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
                 else:
