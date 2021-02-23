@@ -292,7 +292,7 @@ class ThreadedServer(CommonServer):
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
             if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:
-                while thread.isAlive():
+                while thread.is_alive():
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
@@ -373,7 +373,7 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
-        
+
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:

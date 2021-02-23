@@ -3,7 +3,11 @@
 
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
 
-import base64
+try:
+    from base64 import encodestring
+except ImportError:
+    from base64 import encodebytes as encodestring
+
 import io
 from datetime import datetime
 
@@ -339,7 +343,7 @@ class AccountFrFec(models.TransientModel):
             suffix = '-NONOFFICIAL'
         fecvalue = fecfile.getvalue()
         self.write({
-            'fec_data': base64.encodestring(fecvalue),
+            'fec_data': encodestring(fecvalue),
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
             'filename': '%sFEC%s%s.csv' % (siren, end_date, suffix),
             })

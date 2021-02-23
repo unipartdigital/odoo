@@ -3,6 +3,13 @@
 
 import babel.messages.pofile
 import base64
+
+try:
+    from base64 import encodestring
+except ImportError:
+    from base64 import encodebytes as encodestring
+
+
 import datetime
 import functools
 import glob
@@ -1129,7 +1136,7 @@ class Binary(http.Controller):
             try:
                 attachment = Model.create({
                     'name': filename,
-                    'datas': base64.encodestring(ufile.read()),
+                    'datas': encodestring(ufile.read()),
                     'datas_fname': filename,
                     'res_model': model,
                     'res_id': int(id)
