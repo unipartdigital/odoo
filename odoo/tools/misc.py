@@ -41,7 +41,7 @@ except ImportError:
 
 from .config import config
 from .cache import *
-from .parse_version import parse_version 
+from .parse_version import parse_version
 from . import pycompat
 
 import odoo
@@ -142,7 +142,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
-    
+
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
 
@@ -288,7 +288,7 @@ def flatten(list):
 
 def reverse_enumerate(l):
     """Like enumerate but in the other direction
-    
+
     Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
@@ -688,10 +688,10 @@ def posix_to_ldml(fmt, locale):
 def split_every(n, iterable, piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
-       
+
        :param int n: maximum size of each generated chunk
        :param Iterable iterable: iterable to chunk into pieces
-       :param piece_maker: callable taking an iterable and collecting each 
+       :param piece_maker: callable taking an iterable and collecting each
                            chunk from its slice, *must consume the entire slice*.
     """
     iterator = iter(iterable)
@@ -753,7 +753,7 @@ class unquote(str):
         return self
 
 class UnquoteEvalContext(defaultdict):
-    """Defaultdict-based evaluation context that returns 
+    """Defaultdict-based evaluation context that returns
        an ``unquote`` string for any missing name used during
        the evaluation.
        Mostly useful for evaluating OpenERP domains/contexts that
@@ -814,6 +814,64 @@ class mute_logger(object):
             with self:
                 return func(*args, **kwargs)
         return deco
+
+
+class log_debug(object):
+    """Temporarily set one of more loggers to debug level.
+
+    Can be used as context manager or decorator.
+    An Environment must be passed to __init__ to get debug logs from
+    the odoo.sql_db logger when using this class as a context manager.
+
+    This class can be used to decorate model classes as well as
+    methods, but it doesn't work well with old-style `super` calls.
+    """
+
+    def __init__(self, *loggers, env=None):
+        self._loggers = dict.fromkeys(loggers)
+        self._env = env
+        self._original_sql_log = False
+
+    def __enter__(self):
+        for logger in self._loggers:
+            assert isinstance(logger, pycompat.string_types),\
+                "A logger name must be a string, got %s" % type(logger)
+            logger_obj = logging.getLogger(logger)  # noqa: F405
+            self._loggers[logger] = logger_obj.level
+            logger_obj.setLevel(logging.DEBUG)  # noqa: F405
+
+            # Debug logging on Odoo cursors is configured at initialisation
+            # time, so we must apply this configuration to our existing cursor.
+            if self._env and logger == 'odoo.sql_db':
+                cr = self._env.cr
+                self._original_sql_log = cr.sql_log
+                cr.sql_log = True
+
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
+        for logger in self._loggers:
+            logger_obj = logging.getLogger(logger)  # noqa: F405
+            logger_obj.setLevel(self._loggers[logger])
+
+            if self._env and logger == 'odoo.sql_db':
+                cr = self._env.cr
+                cr.sql_log = self._original_sql_log
+
+    def __call__(self, func):
+        @wraps(func)
+        def deco(*args, **kwargs):
+            # The first `arg` should be a model instance or class.
+            self._env = args[0].env
+            with self:
+##                _logger.info('Logging %s', func.__qualname__)
+                t0 = time.time()
+                res = func(*args, **kwargs)
+                _logger.info('%s duration %.6f', func.__qualname__,  time.time() - t0)
+                return res
+        return deco
+
+    def __get__(self, instance, cls):
+        return self if instance is not None else types.MethodType(self, instance, cls)
+
 
 _ph = object()
 class CountingStream(object):
