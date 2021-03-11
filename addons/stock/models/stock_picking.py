@@ -12,6 +12,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from operator import itemgetter
+from odoo.tools.misc import log_debug
 
 
 class PickingType(models.Model):
@@ -125,6 +126,7 @@ class PickingType(models.Model):
         picks = self.search(domain + args, limit=limit)
         return picks.name_get()
 
+    @log_debug('odoo.sql_db')
     @api.onchange('code')
     def onchange_picking_code(self):
         if self.code == 'incoming':
@@ -134,6 +136,7 @@ class PickingType(models.Model):
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
+    @log_debug('odoo.sql_db')
     @api.onchange('show_operations')
     def onchange_show_operations(self):
         if self.show_operations is True:
@@ -328,6 +331,7 @@ class Picking(models.Model):
         for picking in self:
             picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_lines)
 
+    @log_debug('odoo.sql_db')
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
         for picking in self:
@@ -342,6 +346,7 @@ class Picking(models.Model):
             else:
                 picking.show_operations = False
 
+    @log_debug('odoo.sql_db')
     @api.depends('move_line_ids', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_show_lots_text(self):
         group_production_lot_enabled = self.user_has_groups('stock.group_production_lot')
@@ -354,6 +359,7 @@ class Picking(models.Model):
             else:
                 picking.show_lots_text = False
 
+    @log_debug('odoo.sql_db')
     @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
     @api.one
     def _compute_state(self):
@@ -385,6 +391,7 @@ class Picking(models.Model):
                 self.state = relevant_move_state
 
     @api.one
+    @log_debug('odoo.sql_db')
     @api.depends('move_lines.priority')
     def _compute_priority(self):
         if self.mapped('move_lines'):
@@ -398,6 +405,7 @@ class Picking(models.Model):
         self.move_lines.write({'priority': self.priority})
 
     @api.one
+    @log_debug('odoo.sql_db')
     @api.depends('move_lines.date_expected')
     def _compute_scheduled_date(self):
         if self.move_type == 'direct':
@@ -448,6 +456,7 @@ class Picking(models.Model):
             picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting', 'assigned') and has_moves_to_reserve
 
     @api.multi
+    @log_debug('odoo.sql_db')
     @api.depends('state', 'move_lines')
     def _compute_show_mark_as_todo(self):
         for picking in self:
@@ -461,6 +470,7 @@ class Picking(models.Model):
                 picking.show_mark_as_todo = True
 
     @api.multi
+    @log_debug('odoo.sql_db')
     @api.depends('state', 'is_locked')
     def _compute_show_validate(self):
         for picking in self:
@@ -471,6 +481,7 @@ class Picking(models.Model):
             else:
                 picking.show_validate = True
 
+    @log_debug('odoo.sql_db')
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
         if self.picking_type_id:

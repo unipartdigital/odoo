@@ -8,6 +8,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.pycompat import izip
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
+from odoo.tools.misc import log_debug
 
 
 class StockMoveLine(models.Model):
@@ -52,12 +53,14 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', store=True)
     in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
+    @log_debug('odoo.sql_db')
     def _compute_location_description(self):
         for operation, operation_sudo in izip(self, self.sudo()):
             operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
             operation.to_loc = '%s%s' % (operation_sudo.location_dest_id.name, operation_sudo.result_package_id.name or '')
 
     @api.one
+    @log_debug('odoo.sql_db')
     @api.depends('picking_id.picking_type_id', 'product_id.tracking')
     def _compute_lots_visible(self):
         picking = self.picking_id
@@ -67,6 +70,7 @@ class StockMoveLine(models.Model):
             self.lots_visible = self.product_id.tracking != 'none'
 
     @api.one
+    @log_debug('odoo.sql_db')
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_product_qty(self):
         self.product_qty = self.product_uom_id._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -79,6 +83,7 @@ class StockMoveLine(models.Model):
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
+    @log_debug('odoo.sql_db')
     def _compute_in_entire_package(self):
         """ This method check if the move line is in an entire pack shown in the picking."""
         for ml in self:
@@ -92,6 +97,8 @@ class StockMoveLine(models.Model):
             if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
+
+    @log_debug('odoo.sql_db')
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
         if self.product_id:
@@ -106,6 +113,7 @@ class StockMoveLine(models.Model):
             res = {'domain': {'product_uom_id': []}}
         return res
 
+    @log_debug('odoo.sql_db')
     @api.onchange('lot_name', 'lot_id')
     def onchange_serial_number(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to
@@ -134,6 +142,7 @@ class StockMoveLine(models.Model):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
+    @log_debug('odoo.sql_db')
     @api.onchange('qty_done')
     def _onchange_qty_done(self):
         """ When the user is encoding a move line for a tracked product, we apply some logic to

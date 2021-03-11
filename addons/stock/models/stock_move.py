@@ -11,8 +11,13 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
+from odoo.tools.misc import log_debug
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class StockMove(models.Model):
@@ -160,6 +165,7 @@ class StockMove(models.Model):
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
 
+    @log_debug('odoo.sql_db')
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
         for move in self:
@@ -167,6 +173,7 @@ class StockMove(models.Model):
                 move.is_locked = move.picking_id.is_locked
 
 
+    @log_debug('odoo.sql_db')
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
@@ -189,6 +196,7 @@ class StockMove(models.Model):
             else:
                 move.show_details_visible = False
 
+    @log_debug('odoo.sql_db')
     def _compute_show_reserved_availability(self):
         """ This field is only of use in an attrs in the picking view, in order to hide the
         "available" column if the move is coming from a supplier.
@@ -196,6 +204,7 @@ class StockMove(models.Model):
         for move in self:
             move.show_reserved_availability = not move.location_id.usage == 'supplier'
 
+    @log_debug('odoo.sql_db')
     @api.depends('state', 'picking_id')
     def _compute_is_initial_demand_editable(self):
         for move in self:
@@ -207,6 +216,7 @@ class StockMove(models.Model):
                 move.is_initial_demand_editable = False
 
     @api.multi
+    @log_debug('odoo.sql_db')
     @api.depends('state', 'picking_id', 'product_id')
     def _compute_is_quantity_done_editable(self):
         for move in self:
@@ -223,17 +233,20 @@ class StockMove(models.Model):
             else:
                 move.is_quantity_done_editable = True
 
+    @log_debug('odoo.sql_db')
     @api.depends('picking_id', 'name')
     def _compute_reference(self):
         for move in self:
             move.reference = move.picking_id.name if move.picking_id else move.name
 
+    @log_debug('odoo.sql_db')
     @api.depends('move_line_ids')
     def _compute_has_move_lines(self):
         for move in self:
             move.has_move_lines = bool(move.move_line_ids)
 
     @api.one
+    @log_debug('odoo.sql_db')
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
         rounding_method = self._context.get('rounding_method', 'UP')
@@ -245,6 +258,7 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.move_line_ids or self.move_line_nosuggest_ids
 
+    @log_debug('odoo.sql_db')
     @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
@@ -283,6 +297,7 @@ class StockMove(models.Model):
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
     @api.multi
+    @log_debug('odoo.sql_db')
     @api.depends('move_line_ids.product_qty')
     def _compute_reserved_availability(self):
         """ Fill the `availability` field on a stock move, which is the actual reserved quantity
@@ -291,10 +306,12 @@ class StockMove(models.Model):
         """
         result = {data['move_id'][0]: data['product_qty'] for data in
             self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
+        self.mapped('product_id.uom_id')
         for rec in self:
             rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
 
     @api.one
+    @log_debug('odoo.sql_db')
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
         """ Fill the `availability` field on a stock move, which is the quantity to potentially
@@ -674,6 +691,7 @@ class StockMove(models.Model):
             else:
                 return moves_todo[-1].state or 'draft'
 
+    @log_debug('odoo.sql_db')
     @api.onchange('product_id', 'product_qty')
     def onchange_quantity(self):
         if not self.product_id or self.product_qty < 0.0:
@@ -687,6 +705,7 @@ class StockMove(models.Model):
             }
             return {'warning': warning_mess}
 
+    @log_debug('odoo.sql_db')
     @api.onchange('product_id')
     def onchange_product_id(self):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
@@ -699,6 +718,7 @@ class StockMove(models.Model):
         if self.date_expected:
             self.date = self.date_expected
 
+    @log_debug('odoo.sql_db')
     @api.onchange('product_uom')
     def onchange_product_uom(self):
         if self.product_uom.factor > self.product_id.uom_id.factor:
