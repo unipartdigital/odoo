@@ -46,6 +46,8 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 from odoo.service import db
+from pyinstrument import Profiler
+from cProfile import Profile
 
 _logger = logging.getLogger(__name__)
 
@@ -932,6 +934,23 @@ class DataSet(http.Controller):
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user")
     def call_kw(self, model, method, args, kwargs, path=None):
+        _logger.info('Model %s, method %s', model, method)
+        if 0 and model == 'stock.picking' and method == 'onchange':
+            # pyinstrument
+            profiler = Profiler()
+            profiler.start()
+            res = self._call_kw(model, method, args, kwargs)
+            profiler.stop()
+            print(profiler.output_text(unicode=True, color=True))
+            return res
+        if 0 and model == 'stock.picking' and method == 'onchange':
+            # cProfile
+            pr = Profile()
+            pr.enable()
+            res = self._call_kw(model, method, args, kwargs)
+            pr.disable()
+            pr.dump_stats(f'pr_stats-{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.stats')
+            return res
         return self._call_kw(model, method, args, kwargs)
 
     @http.route('/web/dataset/call_button', type='json', auth="user")
