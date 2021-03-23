@@ -713,60 +713,77 @@ class StockMove(models.Model):
             }
 
     def _assign_picking(self):
-        """ Try to assign the moves to an existing picking that has not been
+        """Try to assign the moves to an existing picking that has not been
         reserved yet and has the same procurement group, locations and picking
         type (moves should already have them identical). Otherwise, create a new
-        picking to assign them to. """
-        Move = self.env['stock.move']
-        Picking = self.env['stock.picking']
+        picking to assign them to.
 
-        by_pick_ident = lambda m: (m.group_id.id,
-                                   m.location_id.id,
-                                   m.location_dest_id.id,
-                                   m.picking_type_id.id)
+        To enable branching into multiple picking types we can pass a dictionary
+        picking_type_map: a dictionary to map picking types
+        """
+        Move = self.env["stock.move"]
+        Picking = self.env["stock.picking"]
 
-        moves_by_pick_ident = {ident: Move.union(*moves) for
-                               ident, moves in
-                               groupby(sorted(self, key=by_pick_ident), key=by_pick_ident)}
+        by_pick_ident = lambda m: (
+            m.group_id.id,
+            m.location_id.id,
+            m.location_dest_id.id,
+            m.picking_type_id.id,
+        )
+
+        moves_by_pick_ident = {
+            ident: Move.union(*moves)
+            for ident, moves in groupby(sorted(self, key=by_pick_ident), key=by_pick_ident)
+        }
 
         for ident, moves in moves_by_pick_ident.items():
             recompute = False
+            picking_type = self._picking_type_map(ident[3], moves)
             picking = Picking.search(
                 [
-                    ('group_id', '=', ident[0]),
-                    ('location_id', '=', ident[1]),
-                    ('location_dest_id', '=', ident[2]),
-                    ('picking_type_id', '=', ident[3]),
-                    ('printed', '=', False),
-                    ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])
-                ], limit=1)
+                    ("group_id", "=", ident[0]),
+                    ("location_id", "=", ident[1]),
+                    ("location_dest_id", "=", ident[2]),
+                    ("picking_type_id", "=", picking_type.id),
+                    ("printed", "=", False),
+                    (
+                        "state",
+                        "in",
+                        ["draft", "confirmed", "waiting", "partially_available", "assigned"],
+                    ),
+                ],
+                limit=1,
+            )
             if picking:
                 for move in moves:
-                    previous_pickings = move.mapped('move_orig_ids.picking_id')
+                    previous_pickings = move.mapped("move_orig_ids.picking_id")
                     origin = move.origin
                     if not origin:
-                        previous_origin = list(set(previous_pickings.mapped('origin')))
+                        previous_origin = list(set(previous_pickings.mapped("origin")))
                         if len(previous_origin) == 1:
                             origin = previous_origin[0]
                     partner_id = move.partner_id.id
                     if not partner_id:
-                        previous_partner = previous_pickings.mapped('partner_id')
+                        previous_partner = previous_pickings.mapped("partner_id")
                         if len(previous_partner) == 1:
                             partner_id = previous_partner.id
                     if picking.partner_id.id != partner_id or picking.origin != origin:
                         # If a picking is found, we'll append `move` to its move list and thus its
                         # `partner_id` and `ref` field will refer to multiple records. In this
                         # case, we chose to  wipe them.
-                        picking.write({
-                            'partner_id': False,
-                            'origin': False,
-                        })
+                        picking.write(
+                            {
+                                "partner_id": False,
+                                "origin": False,
+                            }
+                        )
                         break
             else:
                 recompute = True
+                # picking = self._create_picking_from_move(moves[0])
                 picking = Picking.create(moves[0]._get_new_picking_values())
 
-            moves.write({'picking_id': picking.id})
+            moves.write({"picking_id": picking.id})
             for move in moves:
                 move._assign_picking_post_process(new=recompute)
             # If this method is called in batch by a write on a one2many and
@@ -778,8 +795,11 @@ class StockMove(models.Model):
                 moves.recompute()
         return True
 
-    def _assign_picking_post_process(self, new=False):
-        pass
+    def _picking_type_map(self, picking_type, moves):
+        """If there are multiple 'branches' of picking types then
+        overwrite this function to determine by the moves what the picking type should be
+        """
+        return picking_type
 
     def _get_new_picking_values(self):
         """ Prepares a new picking for this move as it could not be assigned to
