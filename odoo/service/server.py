@@ -1,6 +1,7 @@
 #-----------------------------------------------------------
 # Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
+import contextlib
 import datetime
 import errno
 import logging
@@ -245,6 +246,29 @@ class ThreadedServer(CommonServer):
             t.start()
             _logger.debug("cron%d started!" % i)
 
+    def thread_spawn(self):
+        """Launch long-lived threads."""
+        registries = odoo.modules.registry.Registry.registries
+        for db_name, registry in registries.items():
+            if not registry.ready:
+                continue
+            db = odoo.sql_db.db_connect(db_name)
+
+            with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
+                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                IRModule = env["ir.module.module"]
+                launcher_module = IRModule.search([("name", "=", "launcher")])
+                if not launcher_module or launcher_module.state != "installed":
+                    _logger.debug("Launcher module is not installed, no threads will be launched.")
+                    continue
+
+                try:
+                    Launcher = env["launcher.launcher"]
+                    Launcher.launch()
+                except Exception:
+                    _logger.warning("Exception starting launcher", exc_info=True)
+        return
+
     def http_thread(self):
         def app(e, s):
             return self.app(e, s)
@@ -318,6 +342,7 @@ class ThreadedServer(CommonServer):
             return rc
 
         self.cron_spawn()
+        self.thread_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
         # by the signal handler)
@@ -373,7 +398,7 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
-        
+
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
