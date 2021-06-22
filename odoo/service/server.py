@@ -248,6 +248,20 @@ class ThreadedServer(CommonServer):
 
     def thread_spawn(self):
         """Launch long-lived threads."""
+        self._manage_spawned_threads("launch")
+        return
+
+    def notify_spawned_threads_shutdown(self):
+        """
+        Notify threads spawned by thead_spawn that system shutdown is pending.
+
+        The threads should act to make themselves joinable so that Odoo can
+        shutdown cleanly.
+        """
+        self._manage_spawned_threads("notify_shutdown")
+        return
+
+    def _manage_spawned_threads(self, method_name):
         registries = odoo.modules.registry.Registry.registries
         for db_name, registry in registries.items():
             if not registry.ready:
@@ -259,15 +273,14 @@ class ThreadedServer(CommonServer):
                 IRModule = env["ir.module.module"]
                 launcher_module = IRModule.search([("name", "=", "launcher")])
                 if not launcher_module or launcher_module.state != "installed":
-                    _logger.debug("Launcher module is not installed, no threads will be launched.")
+                    _logger.debug("Launcher module is not installed, skipping.")
                     continue
 
                 try:
                     Launcher = env["launcher.launcher"]
-                    Launcher.launch()
+                    getattr(Launcher, method_name)()
                 except Exception:
-                    _logger.warning("Exception starting launcher", exc_info=True)
-        return
+                    _logger.warning("Exception calling launcher", exc_info=True)
 
     def http_thread(self):
         def app(e, s):
@@ -313,6 +326,7 @@ class ThreadedServer(CommonServer):
         # threading.Thread.join() should not mask signals (at least in python 2.5).
         me = threading.currentThread()
         _logger.debug('current thread: %r', me)
+        self.notify_spawned_threads_shutdown()
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
             if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:

@@ -6,6 +6,7 @@ Models can register functions to be run as threads by calling `register_method`
 from their `_register_hook` method.
 """
 
+import functools
 import logging
 import threading
 
@@ -13,6 +14,9 @@ from odoo import models
 
 
 _logger = logging.getLogger(__name__)
+
+# This object is used to notify launched threads of a pending system shutdown
+_sentinel = threading.Event()
 
 
 class Launcher(models.TransientModel):
@@ -37,15 +41,19 @@ class Launcher(models.TransientModel):
     def launch(self):
         """Launches a thread for each registered callable."""
         for i, launchable in enumerate(self._registered):
-            t = threading.Thread(target=launchable)
-            # FIXME?  Non-daemon threads would be nice here so that we could clean up
-            # open database connections etc on shutdown.  However I couldn't
-            # get them to join at shutdown time, so have used daemon threads
-            # instead.
-            # If we can find a way to get threads to join reliably, and without
-            # too much complexity, we should implement it.
-            t.daemon = True
+            t = threading.Thread(target=functools.partial(launchable, _sentinel))
+            # Ensure db name is output in logs.
+            t.dbname = getattr(threading.currentThread(), "dbname", "?")
             t.start()
         # Returning None protects against xmlrpc execute_kw calls launching
         # threads as a DOS.
         return None
+
+    def notify_shutdown(self):
+        """
+        Notify threads of system shutdown.
+
+        Notified threads should act to make themselves joinable.
+        """
+        _sentinel.set()
+        return
