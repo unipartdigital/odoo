@@ -94,13 +94,14 @@ class IrAttachment(models.Model):
     def _file_read(self, fname, bin_size=False):
         full_path = self._full_path(fname)
         r = ''
-        try:
-            if bin_size:
-                r = human_size(os.path.getsize(full_path))
-            else:
-                r = base64.b64encode(open(full_path,'rb').read())
-        except (IOError, OSError):
-            _logger.info("_read_file reading %s", full_path, exc_info=True)
+        if os.path.exists(full_path):
+            try:
+                if bin_size:
+                    r = human_size(os.path.getsize(full_path))
+                else:
+                    r = base64.b64encode(open(full_path,'rb').read())
+            except (IOError, OSError):
+                _logger.info("_read_file reading %s", full_path, exc_info=True)
         return r
 
     @api.model
