@@ -382,20 +382,41 @@ class InventoryLine(models.Model):
         values.pop('product_name', False)
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
-        existings = self.search([
+        # NB(palabaster): Added hook to allow extension of this domain from other modules
+        existings = self.search(self.existing_inventory_line_search_domain(values))
+        res = super(InventoryLine, self).create(values)
+        if existings:
+            # NB(palabaster): Added hook to allow extension of this message from other modules
+            raise UserError(self.existing_inventory_line_search_errormsg())
+        return res
+
+    @api.model
+    def existing_inventory_line_search_errormsg(self):
+        """
+        Error message which should be raised if an existing stock.inventory.line record
+        is found to be violating the constraint defined in existing_inventory_line_search_domain()
+        """
+        return _(
+            "You cannot have two inventory adjustments in state 'in Progress' with the same product "
+            "(%s), same location (%s), same package, "
+            "same owner and same lot. Please first validate the first inventory adjustment "
+            "with this product before creating another one."
+        ) % (self.product_id.display_name, self.location_id.display_name)
+
+    @api.model
+    def existing_inventory_line_search_domain(self, values):
+        """
+        Domain used to set a constraint on which stock.inventory.line records are
+        allowed to be created, based on other existing stock.inventory.line records
+        """
+        return [
             ('product_id', '=', values.get('product_id')),
             ('inventory_id.state', '=', 'confirm'),
             ('location_id', '=', values.get('location_id')),
             ('partner_id', '=', values.get('partner_id')),
             ('package_id', '=', values.get('package_id')),
-            ('prod_lot_id', '=', values.get('prod_lot_id'))])
-        res = super(InventoryLine, self).create(values)
-        if existings:
-            raise UserError(_("You cannot have two inventory adjustements in state 'in Progress' with the same product "
-                              "(%s), same location (%s), same package, same owner and same lot. Please first validate "
-                              "the first inventory adjustement with this product before creating another one.") %
-                            (res.product_id.display_name, res.location_id.display_name))
-        return res
+            ('prod_lot_id', '=', values.get('prod_lot_id')),
+        ]
 
     @api.constrains('product_id')
     def _check_product_id(self):
