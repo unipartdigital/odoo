@@ -937,13 +937,21 @@ class Field(MetaField('DummyField', (object,), {})):
             record.ensure_one()
             try:
                 value = record.env.cache.get(record, self)
+                #print("%s cache hit value: %s" % (record, self))
             except KeyError:
+
                 # cache miss, determine value and retrieve it
                 if record.id:
                     self.determine_value(record)
                 else:
                     self.determine_draft_value(record)
                 value = record.env.cache.get(record, self)
+                try:
+                    v = len(value)
+                except:
+                    v = value
+                print("######## %s cache miss value: %s %s" % (record, self, v))
+
         else:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
@@ -2233,6 +2241,7 @@ class One2many(_RelationalMulti):
 
     def read(self, records):
         # retrieve the lines in the comodel
+
         comodel = records.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
         get_id = (lambda rec: rec.id) if comodel._fields[inverse].type == 'many2one' else int

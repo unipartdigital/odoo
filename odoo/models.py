@@ -1461,7 +1461,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.returns('self',
         upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
         downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def search(self, args, offset=0, limit=None, order=None, count=False, fields=None):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
         Searches for records based on the ``args``
@@ -1477,7 +1477,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
-        res = self._search(args, offset=offset, limit=limit, order=order, count=count)
+        res = self._search(args, offset=offset, limit=limit, order=order, count=count, fields=fields)
         return res if count else self.browse(res)
 
     #
@@ -2573,6 +2573,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.check_access_rights('read')
         fields = self.check_field_access_rights('read', fields)
 
+
+
         # split fields into stored and computed fields
         stored, inherited, computed = [], [], []
         for name in fields:
@@ -2589,6 +2591,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # fetch stored fields from the database to the cache; this should feed
         # the prefetching of secondary records
+        #if str(self) == 'stock.location(7901,)':
+        #    import ipdb;ipdb.set_trace()
+
         self._read_from_database(stored, inherited)
 
         # retrieve results from records; this takes values from the cache and
@@ -2612,8 +2617,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
             instance) for ``self`` in cache.
         """
-        # fetch the records of this model without field_name in their cache
+        # records = self
+        # # fetch the records of this model without field_name in their cache
+        # if self._context.get('prefetch_fields', True):
+        #
+        #     import time
+        #
+        #     start = time.time()
         records = self._in_cache_without(field)
+            # end = time.time()
+            # print(end - start)
 
         # determine which fields can be prefetched
         fs = {field}
@@ -2734,6 +2747,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for name in field_names:
                 field = self._fields[name]
                 if not field.column_type:
+                    # if str(self) == 'stock.location(7901,)':
+                    #     import ipdb;
+                    #     ipdb.set_trace()
                     field.read(fetched)
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
@@ -3801,7 +3817,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None, fields=None):
         """
         Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
@@ -3833,9 +3849,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             res = self._cr.fetchone()
             return res[0]
 
+        if fields is None:
+            fields = []
+        fields.insert(0, 'id')
+        select = ', '.join([f'"{self._table}".{field}' for field in fields])
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
+        query_str = 'SELECT %s FROM ' % select + from_clause + where_str + order_by + limit_str + offset_str
         self._cr.execute(query_str, where_clause_params)
         res = self._cr.fetchall()
 
@@ -3845,6 +3865,21 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         def _uniquify_list(seq):
             seen = set()
             return [x for x in seq if x not in seen and not seen.add(x)]
+
+        ## joe's code
+        # if fields were set we can put the extra fields in cache
+        if len(fields) > 1:
+            # store result in cache
+            cache = self.env.cache
+            for x in res:
+                #print(x)
+                for y, value in enumerate(x):
+                    if fields[y] != 'id':
+                        #print('record: %s    field: %s   value: %s' % (self.browse(x[0]), self._fields[fields[y]], value))
+                        record = self.browse(x[0])
+                        field = self._fields[fields[y]]
+
+                        cache.set(record, field, [value])
 
         return _uniquify_list([x[0] for x in res])
 
@@ -4830,6 +4865,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             Return at most ``limit`` records.
         """
         recs = self.browse(self._prefetch[self._name])
+        #print('records known: %s' % len(recs))
+        #print('missing from cache: %s ' % len(list(self.env.cache.get_missing_ids(recs - self, field))))
         ids = [self.id]
         for record_id in self.env.cache.get_missing_ids(recs - self, field):
             if not record_id:
@@ -4837,6 +4874,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 continue
             ids.append(record_id)
             if limit and limit <= len(ids):
+                print('Trying to prefetch %s rows' % len(ids))
                 break
         return self.browse(ids)
 
