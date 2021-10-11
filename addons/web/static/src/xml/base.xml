@@ -437,11 +437,11 @@
         </button>
     </div>
     <div class="o_form_buttons_edit">
-        <button type="button"
+        <button t-if="widget.is_action_enabled('create') or widget.is_action_enabled('edit')" type="button"
                 class="btn btn-primary btn-sm o_form_button_save" accesskey="s">
             Save
         </button>
-        <button type="button"
+        <button t-if="widget.is_action_enabled('create') or widget.is_action_enabled('edit')" type="button"
                 class="btn btn-default btn-sm o_form_button_cancel" accesskey="j">
             Discard
         </button>
