@@ -1518,13 +1518,15 @@ var StateSelectionWidget = AbstractField.extend({
             .addClass(currentState.state_class)
             .prop('special_click', true);
 
-        // Render "FormSelection.Items" and move it into "FormSelection"
-        var $items = $(qweb.render('FormSelection.items', {
-            states: _.without(states, currentState)
-        }));
-        var $dropdown = this.$('.dropdown-menu');
-        $dropdown.children().remove(); // remove old items
-        $items.appendTo($dropdown);
+        if(!self.attrs.readonly){
+            // Render "FormSelection.Items" and move it into "FormSelection"
+            var $items = $(qweb.render('FormSelection.items', {
+                states: _.without(states, currentState)
+            }));
+            var $dropdown = this.$('.dropdown-menu');
+            $dropdown.children().remove(); // remove old items
+            $items.appendTo($dropdown);
+        }
     },
 
     //--------------------------------------------------------------------------
