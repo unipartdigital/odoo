@@ -1347,7 +1347,7 @@ var PriorityWidget = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Renders a star for each possible value, readonly or edit mode doesn't matter.
+     * Renders a star for each possible value
      *
      * @override
      * @private
@@ -1359,8 +1359,10 @@ var PriorityWidget = AbstractField.extend({
         }) : 0;
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        const tag = isReadonly ? '<span>' : '<a href="#">';
         _.each(this.field.selection.slice(1), function (choice, index) {
-            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1]));
+            self.$el.append(self._renderStar(tag, index_value >= index + 1, index + 1, choice[1], index_value));
         });
     },
 
