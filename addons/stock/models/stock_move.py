@@ -1077,6 +1077,7 @@ class StockMove(models.Model):
                                                                              precision_rounding=move.product_id.uom_id.rounding) == -1:
                             location_id = move.location_id
                             strict = False
+                            package_id = None
                             available_quantity = self._get_quant_available_quantity(
                                 move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
                         # End UDES change
