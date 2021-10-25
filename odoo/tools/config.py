@@ -21,7 +21,6 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
-
     The list of command line options (getopt.Option) is used to create the
     list of the configuration file options. When reading the file, and then
     reading the command line arguments, we don't want optparse.parse results
@@ -30,7 +29,6 @@ class MyOption (optparse.Option, object):
     were really provided by the user or not. A solution is to not use
     optparse's default attribute, but use a custom one (that will be copied
     to create the default values of the configuration file).
-
     """
     def __init__(self, *opts, **attrs):
         self.my_default = attrs.pop('my_default', None)
@@ -65,7 +63,6 @@ def _deduplicate_loggers(loggers):
 class configmanager(object):
     def __init__(self, fname=None):
         """Constructor.
-
         :param fname: a shortcut allowing to instantiate :class:`configmanager`
                       from Python code without resorting to environment
                       variable
@@ -171,6 +168,8 @@ class configmanager(object):
                          The module, class, and method will respectively match the module name, test class name and test method name.
                          examples: :TestClass.test_func,/test_module,external
                          """)
+        group.add_option("--test-xml-file", dest="test_xml_file", my_default=False,
+                         help="Save the unittest results to a XML file.")
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',
@@ -339,16 +338,12 @@ class configmanager(object):
     def parse_config(self, args=None):
         """ Parse the configuration file (if any) and the command-line
         arguments.
-
         This method initializes odoo.tools.config and openerp.conf (the
         former should be removed in the future) with library-wide
         configuration values.
-
         This method must be called before proper usage of this library can be
         made.
-
         Typical usage of this method:
-
             odoo.tools.config.parse_config(sys.argv[1:])
         """
         opt = self._parse_config(args)
@@ -455,7 +450,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_tags',
+            'test_file', 'test_tags', 'test_xml_file',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',

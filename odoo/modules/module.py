@@ -133,11 +133,9 @@ def initialize_sys_path():
 
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
-
     Search the addons paths and return the first path where the given
     module is found. If downloaded is True, return the default addons
     path if nothing else is found.
-
     """
     for adp in odoo.addons.__path__:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
@@ -181,13 +179,10 @@ def get_module_filetree(module, dir='.'):
 
 def get_resource_path(module, *args):
     """Return the full path of a resource of the given module.
-
     :param module: module name
     :param list(str) args: resource path components within module
-
     :rtype: str
     :return: absolute path to the resource
-
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
@@ -205,15 +200,11 @@ get_module_resource = get_resource_path
 def get_resource_from_path(path):
     """Tries to extract the module name and the resource's relative path
     out of an absolute resource path.
-
     If operation is successfull, returns a tuple containing the module name, the relative path
     to the resource using '/' as filesystem seperator[1] and the same relative path using
     os.path.sep seperators.
-
     [1] same convention as the resource path declaration in manifests
-
     :param path: absolute resource path
-
     :rtype: tuple
     :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
     """
@@ -250,21 +241,15 @@ def module_manifest(path):
 def get_module_root(path):
     """
     Get closest module's root beginning from path
-
         # Given:
         # /foo/bar/module_dir/static/src/...
-
         get_module_root('/foo/bar/module_dir/static/')
         # returns '/foo/bar/module_dir'
-
         get_module_root('/foo/bar/module_dir/')
         # returns '/foo/bar/module_dir'
-
         get_module_root('/foo/bar')
         # returns None
-
     @param path: Path from which the lookup should start
-
     @return:  Module root path or None if not found
     """
     while not module_manifest(path):
@@ -344,7 +329,6 @@ def load_information_from_description_file(module, mod_path=None):
 
 def load_openerp_module(module_name):
     """ Load an OpenERP module, if not already loaded.
-
     This loads the module and register all of its models, thanks to either
     the MetaModel metaclass, or the explicit instantiation of the model.
     This is also used to load server-wide module (i.e. it is also used
