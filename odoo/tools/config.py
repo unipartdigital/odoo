@@ -163,23 +163,16 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
-                         "A filter spec has the format: [-][tag][/module][:class][.method] "
-                         "The '-' specifies if we want to include or exclude tests matching this spec. "
-                         "The tag will match tags added on a class with a @tagged decorator "
-                         "(all Test classes have 'standard' and 'at_install' tags "
-                         "until explicitly removed, see the decorator documentation). "
-                         "'*' will match all tags. "
-                         "If tag is omitted on include mode, its value is 'standard'. "
-                         "If tag is omitted on exclude mode, its value is '*'. "
-                         "The module, class, and method will respectively match the module name, test class name and test method name. "
-                         "Example: --test-tags :TestClass.test_func,/test_module,external "
-
-                         "Filtering and executing the tests happens twice: right "
-                         "after each module installation/update and at the end "
-                         "of the modules loading. At each stage tests are filtered "
-                         "by --test-tags specs and additionally by dynamic specs "
-                         "'at_install' and 'post_install' correspondingly.")
+                         help="""Comma-separated list of spec to filter which tests to execute. Enable unit tests if set.
+                         A filter spec has the format: [-][tag][/module][:class][.method]
+                         The '-' specifies if we want to include or exclude tests matching this spec.
+                         The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
+                         given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
+                         The module, class, and method will respectively match the module name, test class name and test method name.
+                         examples: :TestClass.test_func,/test_module,external
+                         """)
+        group.add_option("--test-xml-file", dest="test_xml_file", my_default=False,
+                         help="Save the unittest results to a XML file.")
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',
@@ -464,7 +457,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_tags',
+            'test_file', 'test_tags', 'test_xml_file',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',

@@ -16,6 +16,7 @@ import odoo.modules.db
 import odoo.modules.graph
 import odoo.modules.migration
 import odoo.modules.registry
+from odoo.tools import config
 from .. import SUPERUSER_ID, api, tools
 from .module import adapt_version, initialize_sys_path, load_openerp_module
 
@@ -262,7 +263,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
 
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite, module_name)
+                if config.get('test_xml_file'):
+                    import xmlrunner
+                    xml_output_file_name = '.'.join([config['test_xml_file'], str(time.time()), 'xml'])
+                    _logger.info('saving xml results to %s', xml_output_file_name)
+                    xml_output_file = open(xml_output_file_name, 'wb')
+                    runner = xmlrunner.XMLTestRunner(output=xml_output_file)
+                    test_results = runner.run(suite)
+                else:
+                    test_results = loader.run_suite(suite, module_name)
+
                 report.update(test_results)
                 test_time = time.time() - tests_t0
                 test_queries = odoo.sql_db.sql_counter - tests_q0
