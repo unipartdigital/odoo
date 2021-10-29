@@ -171,6 +171,8 @@ class configmanager(object):
                          The module, class, and method will respectively match the module name, test class name and test method name.
                          examples: :TestClass.test_func,/test_module,external
                          """)
+        group.add_option("--test-xml-file", dest="test_xml_file", my_default=False,
+                         help="Save the unittest results to a XML file.")
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',
@@ -455,7 +457,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_tags',
+            'test_file', 'test_tags', 'test_xml_file',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
