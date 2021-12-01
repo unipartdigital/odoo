@@ -1512,6 +1512,11 @@ class StockMove(models.Model):
                         break
         return extra_move | self
 
+    def _unreserve_initial_demand(self, new_move):
+        """Dummy function called during _action_done() - intended as a hook
+        """
+        pass
+
     def _action_done(self, cancel_backorder=False):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
         moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -1533,7 +1538,7 @@ class StockMove(models.Model):
 
         moves_todo._check_company()
         # Split moves where necessary and move quants
-        backorder_moves_vals = []
+        backorder_moves = self.browse()
         for move in moves_todo:
             # To know whether we need to create a backorder or not, round to the general product's
             # decimal precision and not the product's UOM.
@@ -1542,8 +1547,9 @@ class StockMove(models.Model):
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 new_move_vals = move._split(qty_split)
-                backorder_moves_vals += new_move_vals
-        backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
+                backorder_move = self.create(new_move_vals)
+                move._unreserve_initial_demand(backorder_move)
+                backorder_moves |= backorder_move
         backorder_moves._action_confirm(merge=False)
         if cancel_backorder:
             backorder_moves.with_context(moves_todo=moves_todo)._action_cancel()
