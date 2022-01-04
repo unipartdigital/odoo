@@ -161,7 +161,7 @@ class Route(models.Model):
     _description = "Inventory Routes"
     _order = 'sequence'
 
-    name = fields.Char('Route Name', required=True, translate=True)
+    name = fields.Char('Route Name', required=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
     pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True, 
