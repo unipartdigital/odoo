@@ -23,7 +23,7 @@ class OdooTestResult(unittest.result.TestResult):
         self.queries_start = None
 
     def __str__(self):
-        return f'{len(self.failures)} failed, {len(self.errors)} error(s) of {self.testsRun} tests'
+        return f'{len(self.failures)} failed, {len(self.errors)} error(s), {len(self.skipped)} skipped of {self.testsRun} tests'
 
     def update(self, other):
         """ Merges an other test result into this one, only updates contents
