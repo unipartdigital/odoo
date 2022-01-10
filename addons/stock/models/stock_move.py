@@ -368,25 +368,28 @@ class StockMove(models.Model):
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
-    @api.depends('move_line_ids.product_qty')
+    @api.depends("move_line_ids.product_uom_qty")
     def _compute_reserved_availability(self):
-        """ Fill the `availability` field on a stock move, which is the actual reserved quantity
-        and is represented by the aggregated `product_qty` on the linked move lines. If the move
-        is force assigned, the value will be 0.
-        """
+        """ Compute reserved availability via uom_qty not qty """
         if not any(self._ids):
             # onchange
             for move in self:
-                reserved_availability = sum(move.move_line_ids.mapped('product_qty'))
+                reserved_availability = sum(move.move_line_ids.mapped("product_uom_qty"))
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
-                    reserved_availability, move.product_uom, rounding_method='HALF-UP')
+                    reserved_availability, move.product_uom, rounding_method="HALF-UP"
+                )
         else:
             # compute
-            result = {data['move_id'][0]: data['product_qty'] for data in
-                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'product_qty'], ['move_id'])}
+            result = {
+                data["move_id"][0]: data["product_uom_qty"]
+                for data in self.env["stock.move.line"].read_group(
+                    [("move_id", "in", self.ids)], ["move_id", "product_uom_qty"], ["move_id"]
+                )
+            }
             for move in self:
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
-                    result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
+                    result.get(move.id, 0.0), move.product_uom, rounding_method="HALF-UP"
+                )
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
