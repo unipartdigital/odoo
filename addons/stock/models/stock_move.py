@@ -274,16 +274,11 @@ class StockMove(models.Model):
         for move in self:
             move.has_move_lines = bool(move.move_line_ids)
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends("product_id", "product_uom", "product_uom_qty")
     def _compute_product_qty(self):
-        # DLE FIXME: `stock/tests/test_move2.py`
-        # `product_qty` is a STORED compute field which depends on the context :/
-        # I asked SLE to change this, task: 2041971
-        # In the mean time I cheat and force the rouding to half-up, it seems it works for all tests.
-        rounding_method = 'HALF-UP'
+        """Overwrite this to compute the quantity not the uom_quantity"""
         for move in self:
-            move.product_qty = move.product_uom._compute_quantity(
-                move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
+            move.product_qty = move.product_uom._compute_full_quantity(move.product_uom_qty)
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.

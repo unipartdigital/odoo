@@ -78,11 +78,13 @@ class StockMoveLine(models.Model):
             else:
                 line.lots_visible = line.product_id.tracking != 'none'
 
-    @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
-    def _compute_product_qty(self):
-        for line in self:
-            line.product_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
 
+    @api.depends("product_id", "product_uom_qty", "product_uom_id")
+    def _compute_product_qty(self):
+        """Compute the full quantity not the uom quantity"""
+        for line in self:
+            line.product_qty = line.product_uom_id._compute_full_quantity(line.product_uom_qty)
+            
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
         in the default product UoM. This code has been added to raise an error if a write is made given a value

@@ -156,6 +156,14 @@ class UoM(models.Model):
                 amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
         return amount
 
+    def _compute_full_quantity(self, qty):
+        """ 
+        We want to call this compute_quantity, but that is already taken to compute uom quantity...
+        """
+        self.ensure_one()
+        amount = qty / self.factor
+        return amount
+
     def _compute_price(self, price, to_unit):
         self.ensure_one()
         if not self or not price or not to_unit or self == to_unit:
