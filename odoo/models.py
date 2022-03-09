@@ -4914,6 +4914,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # mark field to be recomputed on target
                     if field.compute_sudo:
                         target = target.sudo()
+                    # store old value of the field before recompute
+                    for record in target.exists():
+                        value = None
+                        # avoid forcing compute the first time
+                        if not target.env.cache.contains(record, field):
+                            res = record.read([field.name], load="_classic_write")
+                            if res:
+                                value = res[0][field.name]
+                        else:
+                            value = record[field.name]
+                        if value is not None:
+                            record.env.cache.old_set(record, field, value)
+
+
                     target._recompute_todo(field)
             # process non-stored fields
             for field in (fields - stored):
@@ -4948,13 +4962,26 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             field, recs = self.env.get_todo()
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]
-            ns = [f.name for f in fs if f.store]
+            ns = [f for f in fs if f.store]
             # evaluate fields, and group record ids by update
             updates = defaultdict(set)
             for rec in recs:
                 try:
-                    vals = {n: rec[n] for n in ns}
+                    vals = {}
+                    for f in ns:
+                        # trigger recompute by accessing the field
+                        # that has been invalidated
+                        field_name = f.name
+                        new_val = rec[field_name]
+                        old_val = self.env.cache.old_get(rec, f)
+                        new_val_normalised = tuple(new_val.ids) if isinstance(new_val, BaseModel) else new_val
+                        old_val_normalised = tuple(old_val.ids) if isinstance(old_val, BaseModel) else old_val
+                        if old_val_normalised == new_val_normalised:
+                            continue
+                        vals[field_name] = new_val
                 except MissingError:
+                    continue
+                if not vals:
                     continue
                 vals = rec._convert_to_write(vals)
                 updates[frozendict(vals)].add(rec.id)
