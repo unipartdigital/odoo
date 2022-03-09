@@ -950,6 +950,7 @@ class Cache(object):
     def __init__(self):
         # {field: {record_id: {key: value}}}
         self._data = defaultdict(lambda: defaultdict(dict))
+        self._old_data = defaultdict(lambda: defaultdict(dict))
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
@@ -961,6 +962,16 @@ class Cache(object):
         key = field.cache_key(record)
         value = self._data[field][record.id][key]
         return value.get() if isinstance(value, SpecialValue) else value
+
+    def old_get(self, record, field):
+        """ Return the old value of ``field`` for ``record`` and remove it. """
+        value = self._old_data[field].pop(record.id, None)
+        return value
+
+    def old_set(self, record, field, value):
+        """ Set the old value of ``field`` for ``record`` if it does not exist already. """
+        if self._old_data[field].get(record.id, None) is None:
+            self._old_data[field][record.id] = value
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
