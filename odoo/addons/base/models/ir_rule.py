@@ -21,6 +21,14 @@ class IrRule(models.Model):
     model_id = fields.Many2one('ir.model', string='Model', index=True, required=True, ondelete="cascade")
     groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', ondelete='restrict')
     domain_force = fields.Text(string='Domain')
+    global_grouping_criteria = fields.Char(
+        string="Global Rule Grouping Criteria",
+        help="""If multiple crossover global rules are needed to be in effect at the same time
+        on the same model, then setting these rules Global Rule Grouping Criteria
+        to the same value for these rules will result in their results from
+        domain_force to be OR'd together instead of AND'ed.
+        """,
+    )
     perm_read = fields.Boolean(string='Apply for Read', default=True)
     perm_write = fields.Boolean(string='Apply for Write', default=True)
     perm_create = fields.Boolean(string='Apply for Create', default=True)
@@ -141,21 +149,36 @@ class IrRule(models.Model):
         # browse user and rules as SUPERUSER_ID to avoid access errors!
         eval_context = self._eval_context()
         user_groups = self.env.user.groups_id
-        global_domains = []                     # list of domains
-        group_domains = []                      # list of domains
-        for rule in rules.sudo():
-            # evaluate the domain for the current user
-            dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
-            dom = expression.normalize_domain(dom)
-            if not rule.groups:
-                global_domains.append(dom)
-            elif rule.groups & user_groups:
-                group_domains.append(dom)
+        global_domains = []  # list of lists of domains grouped by global_grouping_criteria
+        group_domains = []  # list of domains
+        for criteria, grouped_rules in rules.sudo().groupby(
+            lambda r: str(r.global_grouping_criteria)
+        ):
+            criteria = False if criteria == "False" else criteria  # FIXME: Don't str() in the groupby() somehow!
+            grouped_global_domains = []
+            for rule in grouped_rules:
+                # evaluate the domain for the current user
+                dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
+                dom = expression.normalize_domain(dom)
+                if not rule.groups and criteria:
+                    grouped_global_domains.append(dom)
+                elif not rule.groups and criteria:
+                    global_domains.append(dom)
+                elif rule.groups & user_groups:
+                    group_domains.append(dom)
+            if criteria:
+                global_domains.append(grouped_global_domains)
 
-        # combine global domains and group domains
+        # AND together outer global domains, OR ones grouped by global_grouping_criteria
+        global_domains_expression = expression.AND([expression.OR(x) for x in global_domains])
         if not group_domains:
-            return expression.AND(global_domains)
-        return expression.AND(global_domains + [expression.OR(group_domains)])
+            return global_domains_expression
+        # global_domains_expression resolves to [(1, "=", 1)] if global_domains is []
+        # and results in this expression getting messed up, so if global_domains is empty
+        # simply add OR'd group_domains to an empty list
+        return expression.AND(
+            global_domains_expression if global_domains else [] + [expression.OR(group_domains)]
+        )
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():

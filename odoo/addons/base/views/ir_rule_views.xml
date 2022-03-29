@@ -23,6 +23,7 @@
                     <field name="domain_force" colspan="2" nolabel="1"/>
                     <group string="Groups (no group = global)">
                         <field name="global"/>
+                        <field name="global_grouping_criteria" attrs="{'invisible': [('global', '=', False)]}"/>
                         <field name="groups" nolabel="1" colspan="4"/>
                     </group>
                     <i class="fa fa-info fa-3x text-info float-left" role="img" aria-label="Info" title="Info"/>
@@ -36,7 +37,8 @@
                       <p>
                         Detailed algorithm:
                         <ol>
-                          <li>Global rules are combined together with a logical AND operator, and with the result of the following steps</li>
+                          <li>Global rules are combined together with a logical AND operator (unless Global Rule Grouping Criteria matches - then OR),</li>
+                          <li>and with the result of the following steps</li>
                           <li>Group-specific rules are combined together with a logical OR operator</li>
                           <li>If user belongs to several groups, the results from step 2 are combined with logical OR operator</li>
                         </ol>
