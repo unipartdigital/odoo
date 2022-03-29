@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import warnings
+import itertools
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, ValidationError
@@ -151,10 +152,10 @@ class IrRule(models.Model):
         user_groups = self.env.user.groups_id
         global_domains = []  # list of lists of domains grouped by global_grouping_criteria
         group_domains = []  # list of domains
-        for criteria, grouped_rules in rules.sudo().groupby(
-            lambda r: str(r.global_grouping_criteria)
+        for criteria, grouped_rules in itertools.groupby(
+            rules.sudo(),
+            lambda r: r["global_grouping_criteria"]
         ):
-            criteria = False if criteria == "False" else criteria  # FIXME: Don't str() in the groupby() somehow!
             grouped_global_domains = []
             for rule in grouped_rules:
                 # evaluate the domain for the current user
@@ -162,23 +163,18 @@ class IrRule(models.Model):
                 dom = expression.normalize_domain(dom)
                 if not rule.groups and criteria:
                     grouped_global_domains.append(dom)
-                elif not rule.groups and criteria:
-                    global_domains.append(dom)
+                elif not rule.groups and not criteria:
+                    global_domains.append([dom])
                 elif rule.groups & user_groups:
                     group_domains.append(dom)
             if criteria:
                 global_domains.append(grouped_global_domains)
 
-        # AND together outer global domains, OR ones grouped by global_grouping_criteria
-        global_domains_expression = expression.AND([expression.OR(x) for x in global_domains])
-        if not group_domains:
-            return global_domains_expression
-        # global_domains_expression resolves to [(1, "=", 1)] if global_domains is []
-        # and results in this expression getting messed up, so if global_domains is empty
-        # simply add OR'd group_domains to an empty list
-        return expression.AND(
-            global_domains_expression if global_domains else [] + [expression.OR(group_domains)]
-        )
+        if group_domains:
+            # As we OR group_domains together like the inner lists in global_domains,
+            # we can simply append them to global_domains to perform one expression on them
+            global_domains.append(group_domains)
+        return expression.AND([expression.OR(x) for x in global_domains])
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():
