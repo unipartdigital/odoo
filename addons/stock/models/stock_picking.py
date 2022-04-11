@@ -637,13 +637,18 @@ class Picking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
+
+    def get_next_picking_name(self, picking_type=None, **kwargs):
+        """Return the next picking name, core odoo is from the picking type sequence"""
+        return picking_type.sequence_id.next_by_id()
+
     @api.model
     def create(self, vals):
         defaults = self.default_get(['name', 'picking_type_id'])
         picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id')))
         if vals.get('name', '/') == '/' and defaults.get('name', '/') == '/' and vals.get('picking_type_id', defaults.get('picking_type_id')):
             if picking_type.sequence_id:
-                vals['name'] = picking_type.sequence_id.next_by_id()
+                vals['name'] = self.get_next_picking_name(picking_type)
 
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
