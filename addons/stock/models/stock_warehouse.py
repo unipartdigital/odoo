@@ -983,6 +983,9 @@ class Warehouse(models.Model):
             },
         }, max_sequence + 6
 
+    def _get_prefix(self, ):
+        pass
+
     def _get_sequence_values(self):
         """ Each picking type is created with a sequence. This method returns
         the sequence values associated to each picking type.
@@ -990,30 +993,34 @@ class Warehouse(models.Model):
         return {
             'in_type_id': {
                 'name': self.name + ' ' + _('Sequence in'),
-                'prefix': self.code + '/IN/', 'padding': 5,
+                'prefix': self._format_prefixes(self.in_type_id , '/IN/'), 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
                 'name': self.name + ' ' + _('Sequence out'),
-                'prefix': self.code + '/OUT/', 'padding': 5,
+                'prefix': self._format_prefixes(self.out_type_id ,'/OUT/'), 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
                 'name': self.name + ' ' + _('Sequence packing'),
-                'prefix': self.code + '/PACK/', 'padding': 5,
+                'prefix': self._format_prefixes(self.pack_type_id ,'/PACK/'), 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pick_type_id': {
                 'name': self.name + ' ' + _('Sequence picking'),
-                'prefix': self.code + '/PICK/', 'padding': 5,
+                'prefix': self._format_prefixes(self.pick_type_id, '/PICK/'), 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
                 'name': self.name + ' ' + _('Sequence internal'),
-                'prefix': self.code + '/INT/', 'padding': 5,
+                'prefix': self._format_prefixes(self.int_type_id ,'/INT/'), 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }
+
+    def _format_prefixes(self, picking_type, str):
+        """Format the prefix string to append the Wareouse at the start"""
+        return self.code + str
 
     def _format_rulename(self, from_loc, dest_loc, suffix):
         rulename = '%s: %s' % (self.code, from_loc.name)

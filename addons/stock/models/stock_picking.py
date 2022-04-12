@@ -81,25 +81,54 @@ class PickingType(models.Model):
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
 
+    def create_default_sequence_info(self, vals):
+        """Method to create sequence info for picking type if not set"""
+        StockWarhouse = self.env['stock.warehouse']
+        IrSequence = self.env['ir.sequence']
+        if vals['warehouse_id']:
+            wh = StockWarhouse.browse(vals['warehouse_id'])
+            default_sequence = IrSequence.sudo().create({
+                'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
+                'company_id': wh.company_id.id,
+            })
+        else:
+            default_sequence = IrSequence.sudo().create({
+                'name': _('Sequence') + ' ' + vals['sequence_code'],
+                'prefix': vals['sequence_code'], 'padding': 5,
+                'company_id': vals.get('company_id') or self.env.company.id,
+            })
+        return default_sequence
+            
     @api.model
     def create(self, vals):
         if 'sequence_id' not in vals or not vals['sequence_id']:
-            if vals['warehouse_id']:
-                wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
-                vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                    'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
-                    'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
-                    'company_id': wh.company_id.id,
-                }).id
-            else:
-                vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                    'name': _('Sequence') + ' ' + vals['sequence_code'],
-                    'prefix': vals['sequence_code'], 'padding': 5,
-                    'company_id': vals.get('company_id') or self.env.company.id,
-                }).id
+            print("\n\n\n\nCREATING DEFAULTS------\n\n\n\n")
+            sequence = self.create_default_sequence_info(vals)
+            vals['sequence_id'] = sequence.id
 
         picking_type = super(PickingType, self).create(vals)
         return picking_type
+
+    def set_default_sequence_info(self, vals):
+        """Method to update the sequence info based on a Picking Type change"""
+        print("\n\n\n\nUPDATING DEFAULTS")
+        for picking_type in self:
+            print(picking_type.name)
+            if self.warehouse_id:
+                picking_type.sequence_id.sudo().write({
+                            'name': picking_type.warehouse_id.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                            'prefix': picking_type.warehouse_id.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
+                            'company_id': picking_type.warehouse_id.company_id.id,
+                        })
+            else:
+                picking_type.sequence_id.sudo().write({
+                    'name': _('Sequence') + ' ' + vals['sequence_code'],
+                    'prefix': vals['sequence_code'], 'padding': 5,
+                    'company_id': picking_type.env.company.id,
+                })
+        print("END UPDATING DEFAULTS\n\n\n\n")
+        return 
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -107,19 +136,20 @@ class PickingType(models.Model):
                 if picking_type.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'sequence_code' in vals:
-            for picking_type in self:
-                if picking_type.warehouse_id:
-                    picking_type.sequence_id.sudo().write({
-                        'name': picking_type.warehouse_id.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
-                        'prefix': picking_type.warehouse_id.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
-                        'company_id': picking_type.warehouse_id.company_id.id,
-                    })
-                else:
-                    picking_type.sequence_id.sudo().write({
-                        'name': _('Sequence') + ' ' + vals['sequence_code'],
-                        'prefix': vals['sequence_code'], 'padding': 5,
-                        'company_id': picking_type.env.company.id,
-                    })
+            self.set_default_sequence_info(vals)
+            # for picking_type in self:
+                # if picking_type.warehouse_id:
+                #     picking_type.sequence_id.sudo().write({
+                #         'name': picking_type.warehouse_id.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                #         'prefix': picking_type.warehouse_id.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
+                #         'company_id': picking_type.warehouse_id.company_id.id,
+                #     })
+                # else:
+                #     picking_type.sequence_id.sudo().write({
+                #         'name': _('Sequence') + ' ' + vals['sequence_code'],
+                #         'prefix': vals['sequence_code'], 'padding': 5,
+                #         'company_id': picking_type.env.company.id,
+                #     })
         return super(PickingType, self).write(vals)
 
     def _compute_picking_count(self):
