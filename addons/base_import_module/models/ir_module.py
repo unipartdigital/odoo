@@ -56,7 +56,7 @@ class IrModule(models.Model):
                 )
             raise UserError(err)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
-            raise UserError(_("Studio customizations require the Odoo Studio app."))
+            raise UserError(_("Studio customizations require the Studio app."))
 
         mod = known_mods_names.get(module)
         if mod:
