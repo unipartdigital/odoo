@@ -601,7 +601,12 @@ class JsonRequest(WebRequest):
         request_id = args.get('id')
 
         # regular jsonrpc2
-        request = self.httprequest.get_data().decode(self.httprequest.charset)
+        if self.httprequest.method == 'GET':
+            get_args = dict(args)
+            get_args['params'] = json.loads(args.get('params', '{}'))
+            request = json.dumps(get_args)
+        else:
+            request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
