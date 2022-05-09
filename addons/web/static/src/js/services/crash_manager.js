@@ -137,7 +137,7 @@ var CrashManager = AbstractService.extend({
                         return;
                     }
                     self.show_error({
-                        type: _t("Odoo Client Error"),
+                        type: _t("Client Error"),
                         message: _t("Unknown CORS error"),
                         data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin. (Opening your browser console might give you a hint on the error.)")},
                     });
@@ -149,7 +149,7 @@ var CrashManager = AbstractService.extend({
                 }
                 var traceback = error ? error.stack : '';
                 self.show_error({
-                    type: _t("Odoo Client Error"),
+                    type: _t("Client Error"),
                     message: message,
                     data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback},
                 });
@@ -172,7 +172,7 @@ var CrashManager = AbstractService.extend({
                     traceback = `${_t("Error:")} ${ev.reason.message}\n${ev.reason.stack}`;
                 }
                 self.show_error({
-                    type: _t("Odoo Client Error"),
+                    type: _t("Client Error"),
                     message: '',
                     data: {debug: _t('Traceback:') + "\n" + traceback},
                 });
@@ -266,7 +266,7 @@ var CrashManager = AbstractService.extend({
         error.traceback = error.data.debug;
         var dialogClass = error.data.context && ErrorDialogRegistry.get(error.data.context.exception_class) || ErrorDialog;
         var dialog = new dialogClass(this, {
-            title: _.str.capitalize(error.type) || _t("Odoo Error"),
+            title: _.str.capitalize(error.type) || _t("Error"),
         }, error);
 
 
@@ -308,7 +308,7 @@ var CrashManager = AbstractService.extend({
     },
     show_message: function(exception) {
         return this.show_error({
-            type: _t("Odoo Client Error"),
+            type: _t("Client Error"),
             message: exception,
             data: {debug: ""}
         });
@@ -366,7 +366,7 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
         var additional_context = _.extend({}, this.context, error.data.arguments[3]);
 
         new WarningDialog(this, {
-            title: _.str.capitalize(error.type) || _t("Odoo Warning"),
+            title: _.str.capitalize(error.type) || _t("Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
                     self.do_action(
@@ -390,8 +390,8 @@ function session_expired(cm) {
     return {
         display: function () {
             const notif = {
-                type: _t("Odoo Session Expired"),
-                message: _t("Your Odoo session expired. The current page is about to be refreshed."),
+                type: _t("Session Expired"),
+                message: _t("Your session expired. The current page is about to be refreshed."),
             };
             const options = {
                 buttons: [{
