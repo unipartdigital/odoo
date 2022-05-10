@@ -1835,7 +1835,7 @@ class MailThread(models.AbstractModel):
             raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
         # Find the message's author
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
+        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=False)
 
         if subtype_xmlid:
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype_xmlid)
