@@ -310,7 +310,6 @@ class Warehouse(models.Model):
         exist it will be created with a new sequence associated to it.
         """
         self.ensure_one()
-        IrSequenceSudo = self.env['ir.sequence'].sudo()
         PickingType = self.env['stock.picking.type']
 
         # choose the next available color for the operation types of this warehouse
@@ -319,7 +318,6 @@ class Warehouse(models.Model):
         color = available_colors[0] if available_colors else 0
 
         warehouse_data = {}
-        sequence_data = self._get_sequence_values()
 
         # suit for each warehouse: reception, internal, pick, pack, ship
         max_sequence = self.env['stock.picking.type'].search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')
@@ -333,8 +331,7 @@ class Warehouse(models.Model):
                 self[picking_type].update(values)
             else:
                 data[picking_type].update(create_data[picking_type])
-                sequence = IrSequenceSudo.create(sequence_data[picking_type])
-                values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
+                values.update(warehouse_id=self.id, color=color)
                 warehouse_data[picking_type] = PickingType.create(values).id
 
         if 'out_type_id' in warehouse_data:
