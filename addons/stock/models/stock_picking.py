@@ -426,16 +426,38 @@ class Picking(models.Model):
         """ This compute method populate the two one2Many containing all entire packages of the picking.
             An entire package is a package that is entirely reserved to be moved from a location to another one.
         """
+        MoveLine = self.env["stock.move.line"]
+        # self.with_context(prefetch_fields=False).mapped("state")
         for picking in self:
             packages = self.env['stock.quant.package']
-            packages_to_check = picking.move_line_ids\
-                .filtered(lambda ml: ml.result_package_id and ml.package_id.id == ml.result_package_id.id)\
-                .mapped('package_id')
-            for package_to_check in packages_to_check:
-                if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(package_to_check):
-                    packages |= package_to_check
+            s = time.time()
+            # picking.with_context(prefetch_fields=False).mapped("move_line_ids.result_package_id")
+            # picking.with_context(prefetch_fields=False).mapped("move_line_ids.package_id")
+            # mls_to_check = picking.move_line_ids\
+            #     .filtered(lambda ml: ml.result_package_id and ml.package_id.id == ml.result_package_id.id)
+            mls_to_check = MoveLine.search([
+                ("picking_id", "=", picking.id)
+            ], order="id")
+            mls_to_check.read(["result_package_id", "package_id"], load="_classic_write")
+            mls_to_check = mls_to_check.filtered(lambda ml: ml.result_package_id and ml.package_id == ml.result_package_id)
+            m0 = time.time()
+            packages_to_check = mls_to_check.mapped('package_id')
+            m1 = time.time()
+            if picking.state in ('done', 'cancel'):
+                packages = packages_to_check
+            else:
+                for package_to_check in packages_to_check:
+                    if picking._check_move_lines_map_quant_package(package_to_check):
+                        packages |= package_to_check
+            m2 = time.time()
             picking.entire_package_ids = packages
             picking.entire_package_detail_ids = packages
+            e = time.time()
+            print(f"Took {e - s} to read XXX all inner 1 picking")
+            print(f"Took {m0 - s} to read XXX all inner m0 step ")
+            print(f"Took {m1 - m0} to read XXX all inner m1 step ")
+            print(f"Took {m2 - m1} to read XXX all inner m2 step")
+            print(f"Took {e - m2} to read XXX all inner e step")
 
     @api.multi
     def _compute_show_check_availability(self):
@@ -695,7 +717,10 @@ class Picking(models.Model):
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
+        s = time.time()
         pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
+        e = time.time()
+        print(f"    Took {e - s} to filter out move lines")
         keys = ['product_id', 'lot_id']
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 

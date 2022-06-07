@@ -11,6 +11,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
+import time
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -245,20 +246,25 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.move_line_ids or self.move_line_nosuggest_ids
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id',
+                 'move_line_nosuggest_ids.qty_done')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
-
         We take care of rounding this value at the general decimal precision and not the rounding
         of the move's UOM to make sure this value is really close to the real sum, because this
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
+        self.with_context(prefetch_fields=False).mapped("move_line_ids.qty_done")
+        self.with_context(prefetch_fields=False).mapped("move_line_ids.product_uom_id")
+        self.with_context(prefetch_fields=False).mapped("product_uom")
         for move in self:
             quantity_done = 0
             for move_line in move._get_move_lines():
-                quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
+                quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done,
+                                                                            move.product_uom,
+                                                                            round=False)
             move.quantity_done = quantity_done
 
     def _quantity_done_set(self):

@@ -2435,6 +2435,7 @@ class Many2many(_RelationalMulti):
                            tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1',
                            limit=(' LIMIT %d' % self.limit) if self.limit else '',
                            offset=0, order_by=order_by)
+        print(query)
         where_params.append(tuple(records.ids))
 
         # retrieve lines and group them by record

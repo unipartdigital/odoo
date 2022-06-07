@@ -223,9 +223,12 @@ class Cursor(object):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
+        # now = time.time()
         if self.sql_log:
             now = time.time()
             _logger.debug("query: %s", query)
+        # _logger.info("query: %s", query)
+        # _logger.info(params)
 
         try:
             params = params or None
@@ -234,7 +237,7 @@ class Cursor(object):
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
             raise
-
+        # print(f"{(time.time() - now)} time to execute query")
         # simple query count is always computed
         self.sql_log_count += 1
 

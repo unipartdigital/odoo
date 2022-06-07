@@ -129,6 +129,8 @@ class Query(object):
                 pass
             else:
                 # add JOIN
+                print("*"*30)
+                print(alias_statement)
                 self.tables.append(alias_statement)
                 join_tuple = (alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN')
                 self.joins.setdefault(lhs, []).append(join_tuple)

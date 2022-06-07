@@ -568,6 +568,7 @@ class ExtendedLeaf(object):
 
             After adding the join, the model of the current leaf is updated.
         """
+        print(model)
         self.join_context.append((self.model, model, lhs_col, table_col, link))
         self._models.append(model)
         self.model = model
