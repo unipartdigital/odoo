@@ -197,7 +197,7 @@ class StockRule(models.Model):
         if not company_id:
             company_id = self.sudo().warehouse_id and self.sudo().warehouse_id.company_id.id or self.sudo().picking_type_id.warehouse_id.company_id.id
         new_move_vals = {
-            'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
+            'origin': move_to_copy.origin or move_to_copy.picking_id.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
