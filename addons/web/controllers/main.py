@@ -4,6 +4,7 @@
 import babel.messages.pofile
 import base64
 import datetime
+from dateutil.parser import parse
 import functools
 import glob
 import hashlib
@@ -14,6 +15,7 @@ import itertools
 import jinja2
 import json
 import logging
+import pytz
 import operator
 import os
 import re
@@ -1385,7 +1387,7 @@ class ExportFormat(object):
         """
         raise NotImplementedError()
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, timezone, import_compat):
         """ Conversion method from Odoo's export data to whatever the
         current export class outputs
 
@@ -1398,8 +1400,8 @@ class ExportFormat(object):
 
     def base(self, data, token):
         params = json.loads(data)
-        model, fields, ids, domain, import_compat = \
-            operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
+        model, fields, ids, domain, import_compat, timezone = \
+            operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat', 'timezone')(params)
 
         Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         records = Model.browse(ids) or Model.search(domain, offset=0, limit=False, order=False)
@@ -1415,11 +1417,40 @@ class ExportFormat(object):
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-        return request.make_response(self.from_data(columns_headers, import_data),
+        is_local_timezone = True if timezone == "User Local Time" else False
+        columns_headers = self._add_timezone_to_headings(import_data, columns_headers, is_local_timezone) if import_compat == False else columns_headers
+        return request.make_response(self.from_data(columns_headers, import_data, is_local_timezone),
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': token})
+    
+    def _add_timezone_to_headings(self, import_data, columns_headers, is_local_timezone):
+        """
+        Add the timezone to the columns_headers list.
+        Return: list
+        """
+        timezone_string = '(%s)' % (request._context.get('tz')) if is_local_timezone else '(%s)' % ("UTC")
+        data = import_data[0]
+        date_field_index = [index for index, d in enumerate(data) if self._check_date(d)]
+
+        for index in date_field_index:
+            columns_headers[index] = " ".join((columns_headers[index], timezone_string))
+        
+        return columns_headers
+    
+    def _check_date(self, value):
+        """
+        Check whether the value is a date time field.
+        Return: Boolean / datetime.datetime() / string
+        """
+        if isinstance(value, datetime.datetime):
+            return value
+        try:
+            parse_data = parse(value)
+            return parse_data if len(value) > 10 else False
+        except Exception:
+            return False
 
 class CSVExport(ExportFormat, http.Controller):
 
@@ -1434,24 +1465,31 @@ class CSVExport(ExportFormat, http.Controller):
 
     def filename(self, base):
         return base + '.csv'
-
-    def from_data(self, fields, rows):
+    
+    def from_data(self, fields, rows, is_local_timezone):
+        """
+        Export the data to a csv file. 
+        Return: bytes 
+        """
         fp = io.BytesIO()
         writer = pycompat.csv_writer(fp, quoting=1)
-
         writer.writerow(fields)
-
         for data in rows:
             row = []
             for d in data:
-                # Spreadsheet apps tend to detect formulas on leading =, + and -
                 if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
                     d = "'" + d
-
+                if type(d) is str and is_local_timezone:
+                    parse_data = self._check_date(d)
+                    if parse_data and request._context.get('tz'):
+                        tz = pytz.timezone(request._context.get('tz'))
+                        d = (pytz.utc.localize(parse(d)).astimezone(tz)).strftime('%Y-%m-%d %H:%M:%S')
+                    elif parse_data and not request._context.get('tz'): 
+                        raise UserError(_("Unable to export data in local time, no timezone is set against your user record."))
                 row.append(pycompat.to_text(d))
             writer.writerow(row)
-
         return fp.getvalue()
+    
 
 class ExcelExport(ExportFormat, http.Controller):
     # Excel needs raw data to correctly handle numbers and date values
@@ -1469,7 +1507,11 @@ class ExcelExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.xls'
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, is_local_timezone):
+        """
+        Export data to a excel file.
+        Return: bytes
+        """
         if len(rows) > 65535:
             raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
 
@@ -1503,6 +1545,11 @@ class ExcelExport(ExportFormat, http.Controller):
                     # Excel supports a maximum of 32767 characters in each cell:
                     cell_value = cell_value[:32767]
                 elif isinstance(cell_value, datetime.datetime):
+                    if is_local_timezone and request._context.get('tz'):
+                        tz = pytz.timezone(request._context.get('tz'))
+                        cell_value = (pytz.utc.localize(cell_value).astimezone(tz)).strftime('%Y-%m-%d %H:%M:%S')
+                    elif is_local_timezone and not request._context.get('tz'):
+                        raise UserError(_("Unable to export data in local time, no timezone is set against your user record."))
                     cell_style = datetime_style
                 elif isinstance(cell_value, datetime.date):
                     cell_style = date_style

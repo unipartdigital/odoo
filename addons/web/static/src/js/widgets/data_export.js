@@ -194,6 +194,28 @@ var DataExport = Dialog.extend({
                 $select.append(new Option(value, export_list_id));
             });
         },
+        'click .o_import_compat': function(){
+            /* When clicking on the Import-Compatible Export hide the User Local Time button*/
+            
+            // Get the export type, along with the timezone option.
+            var export_type = this.$('.o_import_compat input').filter(':checked').siblings().text();
+            var $local_time = this.$(".o_export_timezone input").filter(function (){
+                return this.nextSibling.innerHTML == "User Local Time";
+            });
+            var $utc_time = this.$(".o_export_timezone input").filter(function (){
+                return this.nextSibling.innerHTML == "UTC";
+            });
+            
+            // If export type is not import-compatible then hide the local time option
+            if (export_type == "Export all Data"){
+                $local_time.show();
+                $local_time.siblings().show();
+            } else{
+                $local_time.hide();
+                $local_time.siblings().hide();
+                $utc_time[0].checked = true;
+            };
+        },
     },
     init: function(parent, record) {
         var options = {
@@ -252,7 +274,7 @@ var DataExport = Dialog.extend({
                     self.on_show_data(records);
                 });
         }).eq(0).change();
-        waitFor.push(got_fields);
+        waitFor.push(got_fields);   
 
         waitFor.push(this.getParent().getActiveDomain().then(function (domain) {
             if (domain === undefined) {
@@ -458,7 +480,6 @@ var DataExport = Dialog.extend({
         exported_fields.unshift({name: 'id', label: _t('External ID')});
 
         var export_format = this.$export_format_inputs.filter(':checked').val();
-
         framework.blockUI();
         this.getSession().get_file({
             url: '/web/export/' + export_format,
@@ -469,6 +490,7 @@ var DataExport = Dialog.extend({
                 domain: this.domain,
                 context: pyeval.eval('contexts', [this.record.getContext()]),
                 import_compat: !!this.$import_compat_radios.filter(':checked').val(),
+                timezone: this.$('.o_export_timezone input').filter(':checked').siblings().text()
             })},
             complete: framework.unblockUI,
             error: crash_manager.rpc_error.bind(crash_manager),
