@@ -5,6 +5,7 @@ import babel.messages.pofile
 import base64
 import copy
 import datetime
+from dateutil.parser import parse
 import functools
 import glob
 import hashlib
@@ -15,6 +16,7 @@ import json
 import logging
 import operator
 import os
+import pytz
 import re
 import sys
 import tempfile
@@ -1885,7 +1887,7 @@ class ExportFormat(object):
         """
         raise NotImplementedError()
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, is_local_timezone):
         """ Conversion method from Odoo's export data to whatever the
         current export class outputs
 
@@ -1901,8 +1903,8 @@ class ExportFormat(object):
 
     def base(self, data, token):
         params = json.loads(data)
-        model, fields, ids, domain, import_compat = \
-            operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
+        model, fields, ids, domain, import_compat, timezone = \
+            operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat', 'timezone')(params)
 
         Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         if not Model._is_an_ordinary_table():
@@ -1931,13 +1933,29 @@ class ExportFormat(object):
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
             export_data = records.export_data(field_names).get('datas',[])
-            response_data = self.from_data(columns_headers, export_data)
+            is_local_timezone = True if timezone == "User Local Time" else False
+            columns_headers = self._add_timezone_to_headings(export_data, columns_headers, is_local_timezone) if import_compat == False else columns_headers
+            response_data = self.from_data(columns_headers, export_data, is_local_timezone)
 
         return request.make_response(response_data,
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': token})
+
+    def _add_timezone_to_headings(self, import_data, columns_headers, is_local_timezone):
+        """
+        Add the timezone to the columns_headers list.
+        Return: list
+        """
+        timezone_string = '(%s)' % (request._context.get('tz')) if is_local_timezone else '(%s)' % ("UTC")
+        data = import_data[0]
+        date_field_index = [index for index, d in enumerate(data) if isinstance(d, datetime.datetime)]
+
+        for index in date_field_index:
+            columns_headers[index] = " ".join((columns_headers[index], timezone_string))
+        
+        return columns_headers
 
 class CSVExport(ExportFormat, http.Controller):
 
@@ -1956,7 +1974,7 @@ class CSVExport(ExportFormat, http.Controller):
     def from_group_data(self, fields, groups):
         raise UserError(_("Exporting grouped data to csv is not supported."))
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, is_local_timezone):
         fp = io.BytesIO()
         writer = pycompat.csv_writer(fp, quoting=1)
 
@@ -1968,6 +1986,22 @@ class CSVExport(ExportFormat, http.Controller):
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
                 if isinstance(d, str) and d.startswith(('=', '-', '+')):
                     d = "'" + d
+                if type(d) is datetime.datetime:
+                    # Convert datetime output to UTC as datetime is converted 
+                    # to local time automatically. Don't convert if no user timezone set and user want UTC time.
+                    user_timezone = request._context.get('tz')
+                    if is_local_timezone and not user_timezone:
+                        raise UserError(_("Unable to export data in local time, no timezone is set against your user record."))
+                    elif user_timezone:
+                        tz_utc = pytz.timezone('UTC')
+                        tz_local = pytz.timezone(user_timezone)
+                        d = tz_local.localize(d).astimezone(tz_utc)
+
+                    # If timezone is needed in local time convert to local time
+                    if is_local_timezone:
+                        d = d.astimezone(tz_local)
+                    
+                    d = d.strftime('%Y-%m-%d %H:%M:%S')
 
                 row.append(pycompat.to_text(d))
             writer.writerow(row)
@@ -1996,12 +2030,28 @@ class ExcelExport(ExportFormat, http.Controller):
 
         return xlsx_writer.value
 
-    def from_data(self, fields, rows):
+    def from_data(self, fields, rows, is_local_timezone):
         with ExportXlsxWriter(fields, len(rows)) as xlsx_writer:
             for row_index, row in enumerate(rows):
                 for cell_index, cell_value in enumerate(row):
                     if isinstance(cell_value, (list, tuple)):
                         cell_value = pycompat.to_text(cell_value)
+                    elif isinstance(cell_value, datetime.datetime):
+                        # Convert datetime output to UTC as datetime is converted 
+                        # to local time automatically. Don't convert if no user timezone set and user want UTC time.
+                        user_timezone = request._context.get('tz')
+                        if is_local_timezone and not user_timezone:
+                            raise UserError(_("Unable to export data in local time, no timezone is set against your user record."))
+                        elif user_timezone:
+                            tz_utc = pytz.timezone('UTC')
+                            tz_local = pytz.timezone(user_timezone)
+                            cell_value = tz_local.localize(cell_value).astimezone(tz_utc)
+
+                        if is_local_timezone:
+                            cell_value = cell_value.astimezone(tz_local)
+                    
+                        cell_value = cell_value.strftime('%Y-%m-%d %H:%M:%S')
+
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value

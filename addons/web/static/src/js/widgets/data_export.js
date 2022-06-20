@@ -23,6 +23,7 @@ var DataExport = Dialog.extend({
         'click .o_save_list .o_save_list_btn': '_onClickSaveListBtn',
         'click .o_save_list .o_cancel_list_btn': '_resetTemplateField',
         'click .o_export_tree_item': '_onClickTreeItem',
+        'click .o_import_compat': '_onClickImportCompat',
         'dblclick .o_export_tree_item:not(.haschild)': '_onDblclickTreeItem',
         'keydown .o_export_tree_item': '_onKeydownTreeItem',
         'keydown .o_save_list_name': '_onKeydownSaveList',
@@ -175,6 +176,7 @@ var DataExport = Dialog.extend({
                     groupby: this.groupby,
                     context: pyUtils.eval('contexts', [this.record.getContext()]),
                     import_compat: this.isCompatibleMode,
+                    timezone: this.$('.o_export_timezone input').filter(':checked').siblings().text(),
                 })
             },
             complete: framework.unblockUI,
@@ -680,6 +682,24 @@ var DataExport = Dialog.extend({
                 text: _t("No match found.")
             }));
         }
+    },
+    _onClickImportCompat: function (){
+        /* When clicking on the Import-Compatible Export hide the User Local Time button*/
+            
+        // Get the export type, along with the timezone option.
+        var $export_type = this.$('.o_import_compat input').filter(':checked');
+        var $local_time = this.$(".o_export_timezone input[id='o_radio_local_time']");
+        var $utc_time = this.$(".o_export_timezone input[id='o_radio_utc']");
+        
+        // If export type is not import-compatible then hide the local time option
+        if ($export_type.length == 0){
+            $local_time.show();
+            $local_time.siblings().show();
+        } else{
+            $local_time.hide();
+            $local_time.siblings().hide();
+            $utc_time[0].checked = true;
+        };
     },
 });
 
