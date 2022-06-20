@@ -1608,6 +1608,17 @@
             <div class="o_export_format">
                 <strong>Export Format:</strong>
             </div>
+            <div class="o_export_timezone">
+                <strong>Timezone:</strong>
+                <div class='radio form-check form-check-inline pl-4'>
+                    <input type="radio" value="yes" name="o_export_timezone_name" class="form-check-input" id="o_radio_utc" checked="checked"/>
+                    <label class="form-check-label" for="o_radio_utc">UTC</label>
+                </div>
+                <div class='radio form-check form-check-inline pl-4'>
+                    <input type="radio" value="yes" name="o_export_timezone_name" class="form-check-input" id="o_radio_local_time"/>
+                    <label class="form-check-label" for="o_radio_local_time">User Local Time</label>
+                </div>
+            </div>
             <div class="mt-3">
                 <h4>Fields to export</h4>
             </div>
