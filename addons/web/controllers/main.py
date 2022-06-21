@@ -2023,6 +2023,10 @@ class ExcelExport(ExportFormat, http.Controller):
                 for cell_index, cell_value in enumerate(row):
                     if isinstance(cell_value, (list, tuple)):
                         cell_value = pycompat.to_text(cell_value)
+                    
+                    # This is needed as odoo seems to think the datetime.datetime object is a string
+                    elif isinstance(cell_value, datetime.datetime):
+                        cell_value = cell_value.strftime('%Y-%m-%d %H:%M:%S')
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value
