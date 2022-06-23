@@ -1176,8 +1176,8 @@
         <div class="col-md-6">
             <label>Export Type :</label>
             <div class="o_import_compat">
-                <div><input type="radio" name="o_import_compat_name" value="yes" checked="checked"/><label>Export all Data</label></div>
-                <div><input type="radio" name="o_import_compat_name" value=""/><label>Import-Compatible Export</label></div>
+                <div><input type="radio" name="o_import_compat_name" value="" checked="checked"/><label>Export all Data</label></div>
+                <div><input type="radio" name="o_import_compat_name" value="yes"/><label>Import-Compatible Export</label></div>
             </div>
         </div>
         <div class="col-md-6">
