@@ -196,6 +196,8 @@ var FormController = BasicController.extend({
         const props = this._super(...arguments);
         const activeField = this.model.getActiveField(state);
         const otherActionItems = [];
+        // UDES change: Actions to be shown at the end of the list
+        const otherActionItemsLast = [];
         if (this.archiveEnabled && activeField in state.data) {
             if (state.data[activeField]) {
                 otherActionItems.push({
@@ -220,13 +222,13 @@ var FormController = BasicController.extend({
             });
         }
         if (this.activeActions.delete) {
-            otherActionItems.push({
+            otherActionItemsLast.push({
                 description: _t("Delete"),
                 callback: () => this._onDeleteRecord(this),
             });
         }
         return Object.assign(props, {
-            items: Object.assign(this.toolbarActions, { other: otherActionItems }),
+            items: Object.assign(this.toolbarActions, { other: otherActionItems, otherLast: otherActionItemsLast }),
         });
     },
     /**

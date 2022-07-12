@@ -85,7 +85,12 @@ odoo.define('web.ActionMenus', function (require) {
                 }
             }
 
-            return [...callbackActions, ...formattedActions, ...registryActions];
+            // UDES change: Additional callback based options to show at the bottom of the list
+            const callbackActionsLast = (props.items.otherLast || []).map(
+                action => Object.assign({ key: `action-${action.description}` }, action)
+            );
+
+            return [...callbackActions, ...formattedActions, ...registryActions, ...callbackActionsLast];
         }
 
         /**
@@ -188,6 +193,7 @@ odoo.define('web.ActionMenus', function (require) {
                 action: { type: Array, optional: 1 },
                 print: { type: Array, optional: 1 },
                 other: { type: Array, optional: 1 },
+                otherLast: { type: Array, optional: 1 }, // UDES change: callback options to be shown at the end
             },
         },
     };
