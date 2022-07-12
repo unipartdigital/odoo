@@ -472,6 +472,8 @@ var ListController = BasicController.extend({
         }
         const props = this._super(...arguments);
         const otherActionItems = [];
+        // UDES change: Actions to be shown at the end of the list
+        const otherActionItemsLast = [];
         if (this.isExportEnable) {
             otherActionItems.push({
                 description: _t("Export"),
@@ -492,13 +494,13 @@ var ListController = BasicController.extend({
             });
         }
         if (this.activeActions.delete) {
-            otherActionItems.push({
+            otherActionItemsLast.push({
                 description: _t("Delete"),
                 callback: () => this._onDeleteSelectedRecords()
             });
         }
         return Object.assign(props, {
-            items: Object.assign({}, this.toolbarActions, { other: otherActionItems }),
+            items: Object.assign({}, this.toolbarActions, { other: otherActionItems, otherLast: otherActionItemsLast }),
             context: state.getContext(),
             domain: state.getDomain(),
             isDomainSelected: this.isDomainSelected,
