@@ -187,7 +187,7 @@ odoo.define('web.DatePickerOwl', function (require) {
             up: 'fa fa-chevron-up',
         },
         get locale() {return moment.locale();},
-        maxDate: moment({ y: 9999, M: 11, d: 31 }),
+        maxDate: moment({ y: 9999, M: 11, d: 31, H: 23, m: 59, s: 59, SSS: 999}),
         minDate: moment({ y: 1000 }),
         useCurrent: false,
         widgetParent: 'body',

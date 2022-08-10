@@ -40,7 +40,7 @@ odoo.define('website_form.s_website_form', function (require) {
             // Initialize datetimepickers
             var datepickers_options = {
                 minDate: moment({ y: 1000 }),
-                maxDate: moment({y: 9999, M: 11, d: 31}),
+                maxDate: moment({ y: 9999, M: 11, d: 31, H: 23, m: 59, s: 59, SSS: 999}),
                 calendarWeeks: true,
                 icons: {
                     time: 'fa fa-clock-o',
