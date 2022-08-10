@@ -377,7 +377,7 @@ function parseDate(value, field, options) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
-        if (date.year() >= 1900) {
+        if (date.year() >= 1000) {
             date.toJSON = function () {
                 return this.clone().locale('en').format('YYYY-MM-DD');
             };
@@ -424,7 +424,7 @@ function parseDateTime(value, field, options) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
-        if (datetime.year() >= 1900) {
+        if (datetime.year() >= 1000) {
             datetime.toJSON = function () {
                 return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
             };
