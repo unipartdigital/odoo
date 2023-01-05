@@ -18,12 +18,12 @@ import logging
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
+from contextvars import ContextVar
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
 from decorator import decorate
-from werkzeug.local import Local, release_local
 
 from .exceptions import CacheMiss
 from .tools import frozendict, classproperty, lazy_property, StackMap
@@ -413,31 +413,33 @@ class Environment(Mapping):
         names to new api models. It also holds a cache for records, and a data
         structure to manage recomputations.
     """
-    _local = Local()
+    _local = ContextVar("odoo.environments", default=())
 
     @classproperty
     def envs(cls):
-        return getattr(cls._local, 'environments', ())
+        return cls._local.get()
 
     @classmethod
     @contextmanager
     def manage(cls):
         """ Context manager for a set of environments. """
-        if hasattr(cls._local, 'environments'):
+        if cls._local.get():
             yield
         else:
             try:
-                cls._local.environments = Environments()
+                cls._local.set(Environments())
                 yield
             finally:
-                release_local(cls._local)
+                # In the PR, nothing is passed to set, but this is illegal.
+                # Guessing that Environments() is right.
+                cls._local.set(Environments())
 
     @classmethod
     def reset(cls):
         """ Clear the set of environments.
             This may be useful when recreating a registry inside a transaction.
         """
-        cls._local.environments = Environments()
+        cls._local.set(Environments())
 
     def __new__(cls, cr, uid, context, su=False):
         if uid == SUPERUSER_ID:
@@ -456,6 +458,12 @@ class Environment(Mapping):
         args = (cr, uid, frozendict(context), su)
         self.cr, self.uid, self.context, self.su = self.args = args
         self.registry = Registry(cr.dbname)
+        # FIXME when trying to use FastAPI we end up here, and get an
+        # AttributeError because envs is an empty tuple. Don't really see how
+        # this code could work?
+        # Perhaps we should create an empty Environments in this case?
+        if isinstance(envs, tuple):
+            envs = Environments()
         self.cache = envs.cache
         self._cache_key = {}                    # memo {field: cache_key}
         self._protected = envs.protected        # proxy to shared data structure
