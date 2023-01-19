@@ -1207,7 +1207,7 @@ class GroupsView(models.Model):
                     user_type_field_name = field_name
                     user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
-                    attrs['groups'] = 'base.group_no_one'
+                    attrs['groups'] = self._authorisation_for_user_type_fields()
                     xml1.append(E.field(name=field_name, **attrs))
                     xml1.append(E.newline())
 
@@ -1257,6 +1257,13 @@ class GroupsView(models.Model):
             new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
             new_context['lang'] = None
             view.with_context(new_context).write({'arch': xml_content})
+    
+    def _authorisation_for_user_type_fields(self):
+        """
+        Group that can view the user type. This has been put in a
+        method so it can overridden.
+        """
+        return "base.group_no_one"
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """
