@@ -1006,6 +1006,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         trans = self.env['ir.translation']
         errors = []
         for func, msg, names in self._constraints:
+            if self._name == "stock.location":
+                _logger.info(f"func {func} msg {msg} names {set(names)}")
             try:
                 # validation must be context-independent; call ``func`` without context
                 valid = names and not (set(names) & field_names)
