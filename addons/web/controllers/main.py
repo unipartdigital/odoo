@@ -866,16 +866,26 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
+        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
+
+            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
+            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
-            if field.get('type') == 'monetary':
-                self.header_bold_style.set_num_format(self.monetary_format)
-            elif field.get('type') == 'float':
-                self.header_bold_style.set_num_format(self.float_format)
-            else:
-                aggregated_value = str(aggregated_value if aggregated_value is not None else '')
-            self.write(row, column, aggregated_value, self.header_bold_style)
+            # Float fields may not be displayed properly because of float
+            # representation issue with non stored fields or with values
+            # that, even stored, cannot be rounded properly and it is not
+            # acceptable to display useless digits (i.e. monetary)
+            #
+            # non stored field ->  we force 2 digits
+            # stored monetary -> we force max digits of installed currencies
+            if isinstance(aggregated_value, float):
+                if field.get('type') == 'monetary':
+                    aggregated_value = float_repr(aggregated_value, decimal_places)
+                elif not field.get('store'):
+                    aggregated_value = float_repr(aggregated_value, 2)
+            self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
 
@@ -1090,6 +1100,23 @@ class WebClient(http.Controller):
     def benchmarks(self, mod=None, **kwargs):
         return request.render('web.benchmark_suite')
 
+
+class Proxy(http.Controller):
+
+    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
+    def post(self, path):
+        """Effectively execute a POST request that was hooked through user login"""
+        with request.session.load_request_data() as data:
+            if not data:
+                raise werkzeug.exceptions.BadRequest()
+            from werkzeug.test import Client
+            from werkzeug.wrappers import Response
+            base_url = request.httprequest.base_url
+            query_string = request.httprequest.query_string
+            client = Client(http.root, Response)
+            headers = {'X-Openerp-Session-Id': request.session.sid}
+            return client.post('/' + path, base_url=base_url, query_string=query_string,
+                               headers=headers, data=data)
 
 class Database(http.Controller):
 

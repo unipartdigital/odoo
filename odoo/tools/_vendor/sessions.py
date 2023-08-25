@@ -197,7 +197,7 @@ class FilesystemSessionStore(SessionStore):
         finally:
             f.close()
         try:
-            rename(tmp, fn)
+            os.rename(tmp, fn)
             os.chmod(fn, self.mode)
         except (IOError, OSError):
             pass
