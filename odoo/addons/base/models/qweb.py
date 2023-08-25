@@ -310,7 +310,11 @@ class QWeb(object):
         try:
             # noinspection PyBroadException
             ns = {}
-            unsafe_eval(compile(astmod, '<template>', 'exec'), ns)
+            # Python 3.11 validates ast.AST nodes on compile(), so unparse them
+            if hasattr(ast, 'unparse'):
+                unsafe_eval(compile(ast.unparse(astmod), '<template>', 'exec'), ns)
+            else:   # Python 3.7
+                unsafe_eval(compile(astmod, '<template>', 'exec'), ns)
             compiled = ns[def_name]
         except QWebException as e:
             raise e
