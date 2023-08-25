@@ -653,10 +653,10 @@ class Proxy(http.Controller):
             if not data:
                 raise werkzeug.exceptions.BadRequest()
             from werkzeug.test import Client
-            from werkzeug.wrappers import BaseResponse
+            from werkzeug.wrappers import Response
             base_url = request.httprequest.base_url
             query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
+            client = Client(http.root, Response)
             headers = {'X-Openerp-Session-Id': request.session.sid}
             return client.post('/' + path, base_url=base_url, query_string=query_string,
                                headers=headers, data=data)
@@ -1424,7 +1424,7 @@ class ExportFormat(object):
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': token})
-    
+
     def _add_timezone_to_headings(self, import_data, columns_headers, is_local_timezone):
         """
         Add the timezone to the columns_headers list.
@@ -1436,9 +1436,9 @@ class ExportFormat(object):
 
         for index in date_field_index:
             columns_headers[index] = " ".join((columns_headers[index], timezone_string))
-        
+
         return columns_headers
-    
+
     def _check_date(self, value):
         """
         Check whether the value is a date time field.
@@ -1465,11 +1465,11 @@ class CSVExport(ExportFormat, http.Controller):
 
     def filename(self, base):
         return base + '.csv'
-    
+
     def from_data(self, fields, rows, is_local_timezone):
         """
-        Export the data to a csv file. 
-        Return: bytes 
+        Export the data to a csv file.
+        Return: bytes
         """
         fp = io.BytesIO()
         writer = pycompat.csv_writer(fp, quoting=1)
@@ -1484,12 +1484,12 @@ class CSVExport(ExportFormat, http.Controller):
                     if parse_data and request._context.get('tz'):
                         tz = pytz.timezone(request._context.get('tz'))
                         d = (pytz.utc.localize(parse(d)).astimezone(tz)).strftime('%Y-%m-%d %H:%M:%S')
-                    elif parse_data and not request._context.get('tz'): 
+                    elif parse_data and not request._context.get('tz'):
                         raise UserError(_("Unable to export data in local time, no timezone is set against your user record."))
                 row.append(pycompat.to_text(d))
             writer.writerow(row)
         return fp.getvalue()
-    
+
 
 class ExcelExport(ExportFormat, http.Controller):
     # Excel needs raw data to correctly handle numbers and date values
