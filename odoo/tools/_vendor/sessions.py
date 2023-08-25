@@ -69,7 +69,6 @@ from werkzeug.datastructures import CallbackDict
 from werkzeug.filesystem import get_filesystem_encoding
 from werkzeug.http import dump_cookie
 from werkzeug.http import parse_cookie
-from werkzeug.posixemulation import rename
 from werkzeug.wsgi import ClosingIterator
 
 warnings.warn(
@@ -260,7 +259,7 @@ class FilesystemSessionStore(SessionStore):
         finally:
             f.close()
         try:
-            rename(tmp, fn)
+            os.rename(tmp, fn)
             os.chmod(fn, self.mode)
         except (IOError, OSError):
             pass
