@@ -304,6 +304,7 @@ class StockQuant(models.Model):
         # Copy code of _search for special NULLS FIRST/LAST order
         self.check_access_rights('read')
         query = self._where_calc(domain)
+        query = self._update_query(query, removal_strategy)
         self._apply_ir_rules(query, 'read')
         from_clause, where_clause, where_clause_params = query.get_sql()
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
@@ -314,6 +315,13 @@ class StockQuant(models.Model):
         quants = self.browse([x[0] for x in res])
         quants = quants.sorted(lambda q: not q.lot_id)
         return quants
+
+    def _update_query(self, query, removal_strategy):
+        """
+        Updating query inside a method which will make easier to extend it without needing to
+        override whole method
+        """
+        return query
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
