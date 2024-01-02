@@ -45,6 +45,7 @@ try:
     import psutil
 except ImportError:
     psutil = None
+import urllib
 
 import odoo
 from .service.server import memory_info
@@ -1692,7 +1693,8 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urls.url_quote(filename, safe='')
+    # werkzeug.urls.url_quote 2.x doesn't escape parentheses correctly
+    escaped = urllib.parse.quote(filename, safe='')
 
     return "attachment; filename*=UTF-8''%s" % escaped
 
