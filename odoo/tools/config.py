@@ -183,7 +183,8 @@ class configmanager(object):
         # quite close.
         levels = [
             'info', 'debug_rpc', 'warn', 'test', 'critical',
-            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset'
+            'debug_sql', 'error', 'debug', 'debug_rpc_answer',
+            'notset', 'rpc_debug_request_response'
         ]
         group.add_option('--log-level', dest='log_level', type='choice',
                          choices=levels, my_default='info',

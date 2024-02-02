@@ -185,6 +185,11 @@ DEFAULT_LOG_CONFIGURATION = [
 PSEUDOCONFIG_MAPPER = {
     'debug_rpc_answer': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc:DEBUG'],
     'debug_rpc': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc.request:DEBUG'],
+    'rpc_debug_request_response': [
+        'odoo:INFO', 'odoo.sql_db:INFO',
+        'odoo.http.rpc.request:DEBUG',
+        'odoo.http.rpc.response:DEBUG'
+    ],
     'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
