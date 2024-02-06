@@ -14,6 +14,7 @@ import odoo
 from os.path import expandvars, expanduser, abspath, realpath
 from .. import release, conf, loglevels
 from . import appdirs
+from .misc import str2bool
 
 from passlib.context import CryptContext
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
@@ -599,22 +600,14 @@ class configmanager(object):
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
                 name = outdated_options_map.get(name, name)
-                if str(value).lower() in ('true', 't', '1'):
-                    value = True
-                if str(value).lower() in ('false', 'f', '0'):
-                    value = False
-                self.options[name] = value
+                self.options[name] = str2bool(value)
             #parse the other sections, as well
             for sec in p.sections():
                 if sec == 'options':
                     continue
                 self.misc.setdefault(sec, {})
                 for (name, value) in p.items(sec):
-                    if str(value).lower() in ('true', 't', '1'):
-                        value = True
-                    if str(value).lower() in ('false', 'f', '0'):
-                        value = False
-                    self.misc[sec][name] = value
+                   self.options[name] = str2bool(value)
         except IOError:
             pass
         except ConfigParser.NoSectionError:
