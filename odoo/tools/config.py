@@ -607,7 +607,7 @@ class configmanager(object):
                     continue
                 self.misc.setdefault(sec, {})
                 for (name, value) in p.items(sec):
-                   self.options[name] = str2bool(value)
+                    self.misc[sec][name] = str2bool(value)
         except IOError:
             pass
         except ConfigParser.NoSectionError:
