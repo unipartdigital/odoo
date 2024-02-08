@@ -531,9 +531,9 @@ class configmanager(object):
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
                 name = outdated_options_map.get(name, name)
-                if value=='True' or value=='true':
+                if str(value).lower() in ('true', 't', '1'):
                     value = True
-                if value=='False' or value=='false':
+                if str(value).lower() in ('false', 'f', '0'):
                     value = False
                 self.options[name] = value
             #parse the other sections, as well
@@ -542,9 +542,9 @@ class configmanager(object):
                     continue
                 self.misc.setdefault(sec, {})
                 for (name, value) in p.items(sec):
-                    if value=='True' or value=='true':
+                    if str(value).lower() in ('true', 't', '1'):
                         value = True
-                    if value=='False' or value=='false':
+                    if str(value).lower() in ('false', 'f', '0'):
                         value = False
                     self.misc[sec][name] = value
         except IOError:
