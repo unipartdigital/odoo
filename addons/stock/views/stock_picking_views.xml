@@ -400,7 +400,7 @@
                                             role="img" title="Assign Serial Numbers"
                                             attrs="{'invisible': ['|', ('display_assign_serial', '=', False), ('show_operations', '=', False)]}"/>
                                 </tree>
-                                <form string="Stock Moves">
+                                <form string="Stock Moves" name="stock_moves_form">
                                     <header>
                                         <field name="state" widget="statusbar"/>
                                     </header>
