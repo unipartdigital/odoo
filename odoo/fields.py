@@ -996,7 +996,9 @@ class Field(MetaField('DummyField', (object,), {})):
         cache = records.env.cache
         for field in fields:
             for record in records:
-                cache.set(record, field, field.convert_to_cache(False, record, validate=False))
+                value = record.read([field.name], load="_classic_write")
+                value = value[0][field.name] if value else False
+                cache.set(record, field, field.convert_to_cache(value, record, validate=False))
         if isinstance(self.compute, pycompat.string_types):
             getattr(records, self.compute)()
         else:
