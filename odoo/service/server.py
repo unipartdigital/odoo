@@ -152,6 +152,53 @@ class FSWatcher(object):
         self.observer.join()
 
 #----------------------------------------------------------
+# Launcher
+#----------------------------------------------------------
+class Launcher(object):
+
+    def __init__(self, preload):
+        """
+        :param: preload list of db names
+        """
+        self.preload = preload
+
+    def _manage_spawned_threads(self, method_name):
+        import gevent
+        for db_name in self.preload:
+            db = odoo.sql_db.db_connect(db_name)
+
+            with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
+                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                IRModule = env["ir.module.module"]
+                launcher_module = IRModule.search([("name", "=", "launcher")])
+                if not launcher_module or launcher_module.state != "installed":
+                    _logger.debug("Launcher module is not installed, skipping.")
+                    continue
+                try:
+                    Launcher = env["launcher.launcher"]
+                    # TODO(palabaster): This works if we just do the else block, always
+                    # so the check and gevent call can probably be removed.
+                    if odoo.evented:
+                        gevent.spawn(getattr(Launcher, method_name)())
+                    else:
+                        getattr(Launcher, method_name)()
+                except Exception:
+                    _logger.warning("Exception calling launcher", exc_info=True)
+
+    def start(self):
+        """Launch long-lived threads."""
+        self._manage_spawned_threads("launch")
+
+    def stop(self):
+        """
+        Notify threads spawned by thead_spawn that system shutdown is pending.
+
+        The threads should act to make themselves joinable so that Odoo can
+        shutdown cleanly.
+        """
+        self._manage_spawned_threads("notify_shutdown")
+
+#----------------------------------------------------------
 # Servers: Threaded, Gevented and Prefork
 #----------------------------------------------------------
 
@@ -163,6 +210,7 @@ class CommonServer(object):
         self.port = config['http_port']
         # runtime
         self.pid = os.getpid()
+        self.launcher = None
 
     def close_socket(self, sock):
         """ Closes a socket instance cleanly
@@ -246,42 +294,6 @@ class ThreadedServer(CommonServer):
             t.start()
             _logger.debug("cron%d started!" % i)
 
-    def thread_spawn(self):
-        """Launch long-lived threads."""
-        self._manage_spawned_threads("launch")
-        return
-
-    def notify_spawned_threads_shutdown(self):
-        """
-        Notify threads spawned by thead_spawn that system shutdown is pending.
-
-        The threads should act to make themselves joinable so that Odoo can
-        shutdown cleanly.
-        """
-        self._manage_spawned_threads("notify_shutdown")
-        return
-
-    def _manage_spawned_threads(self, method_name):
-        registries = odoo.modules.registry.Registry.registries
-        for db_name, registry in registries.items():
-            if not registry.ready:
-                continue
-            db = odoo.sql_db.db_connect(db_name)
-
-            with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
-                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                IRModule = env["ir.module.module"]
-                launcher_module = IRModule.search([("name", "=", "launcher")])
-                if not launcher_module or launcher_module.state != "installed":
-                    _logger.debug("Launcher module is not installed, skipping.")
-                    continue
-
-                try:
-                    Launcher = env["launcher.launcher"]
-                    getattr(Launcher, method_name)()
-                except Exception:
-                    _logger.warning("Exception calling launcher", exc_info=True)
-
     def http_thread(self):
         def app(e, s):
             return self.app(e, s)
@@ -310,6 +322,7 @@ class ThreadedServer(CommonServer):
         if test_mode or (config['http_enable'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
+        self.launcher.start()
 
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
@@ -321,12 +334,13 @@ class ThreadedServer(CommonServer):
             self.httpd.shutdown()
             self.close_socket(self.httpd.socket)
 
+        self.launcher.stop()
+
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
         # threading.Thread.join() should not mask signals (at least in python 2.5).
         me = threading.currentThread()
         _logger.debug('current thread: %r', me)
-        self.notify_spawned_threads_shutdown()
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
             if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:
@@ -356,7 +370,6 @@ class ThreadedServer(CommonServer):
             return rc
 
         self.cron_spawn()
-        self.thread_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
         # by the signal handler)
@@ -404,6 +417,7 @@ class GeventServer(CommonServer):
         except ImportError:
             from gevent.wsgi import WSGIServer
 
+        self.launcher.start()
 
         if os.name == 'posix':
             # Set process memory limit as an extra safeguard
@@ -423,6 +437,7 @@ class GeventServer(CommonServer):
 
     def stop(self):
         import gevent
+        self.launcher.stop()
         self.httpd.stop()
         gevent.shutdown()
 
@@ -1034,6 +1049,8 @@ def start(preload=None, stop=False):
             werkzeug.serving.WSGIRequestHandler.wbufsize = -1
     else:
         server = ThreadedServer(odoo.service.wsgi_server.application)
+
+    server.launcher = Launcher(preload)
 
     watcher = None
     if 'reload' in config['dev_mode']:
