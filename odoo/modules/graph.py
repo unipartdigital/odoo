@@ -178,7 +178,19 @@ class Node(object):
         return s
 
     def should_have_demo(self):
-        return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)
+        demo_enabled_addons = tools.config.get("demo_enabled_addons", "").split(",")
+        if demo_enabled_addons:
+            # Allow us to enable demo data for specific addons.
+            # For this to be called, ~/.odoorc will need e.g:
+            #
+            # [options]
+            # demo_enabled_addons = stock,sale
+            #
+            # This configuration option should _only_ ever be set in local dev or UAT instances.
+            return self.name in demo_enabled_addons
+        else:
+            # Default (old) Odoo behaviour
+            return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)
 
     @property
     def parents(self):
