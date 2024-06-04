@@ -248,7 +248,7 @@ class ThreadedServer(CommonServer):
 
     def thread_spawn(self):
         """Launch long-lived threads."""
-        self._manage_spawned_threads("launch")
+        _manage_spawned_threads("launch")
         return
 
     def notify_spawned_threads_shutdown(self):
@@ -258,29 +258,8 @@ class ThreadedServer(CommonServer):
         The threads should act to make themselves joinable so that Odoo can
         shutdown cleanly.
         """
-        self._manage_spawned_threads("notify_shutdown")
+        _manage_spawned_threads("notify_shutdown")
         return
-
-    def _manage_spawned_threads(self, method_name):
-        registries = odoo.modules.registry.Registry.registries
-        for db_name, registry in registries.items():
-            if not registry.ready:
-                continue
-            db = odoo.sql_db.db_connect(db_name)
-
-            with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
-                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                IRModule = env["ir.module.module"]
-                launcher_module = IRModule.search([("name", "=", "launcher")])
-                if not launcher_module or launcher_module.state != "installed":
-                    _logger.debug("Launcher module is not installed, skipping.")
-                    continue
-
-                try:
-                    Launcher = env["launcher.launcher"]
-                    getattr(Launcher, method_name)()
-                except Exception:
-                    _logger.warning("Exception calling launcher", exc_info=True)
 
     def http_thread(self):
         def app(e, s):
@@ -911,7 +890,7 @@ class WorkerLauncher(Worker):
     def start(self):
         """Launch long-lived threads."""
         res = super().start()
-        self._manage_spawned_threads("launch")
+        _manage_spawned_threads("launch")
         return res
 
     def stop(self):
@@ -921,29 +900,32 @@ class WorkerLauncher(Worker):
         The threads should act to make themselves joinable so that Odoo can
         shutdown cleanly.
         """
-        self._manage_spawned_threads("notify_shutdown")
+        _manage_spawned_threads("notify_shutdown")
         return super().stop()
 
-    def _manage_spawned_threads(self, method_name):
-        registries = odoo.modules.registry.Registry.registries
-        for db_name, registry in registries.items():
-            if not registry.ready:
+
+def _manage_spawned_threads(method_name):
+    """Start threads for methods registered with the launcher."""
+    registries = odoo.modules.registry.Registry.registries
+    for db_name, registry in registries.items():
+        if not registry.ready:
+            continue
+        db = odoo.sql_db.db_connect(db_name)
+
+        with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
+            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+            IRModule = env["ir.module.module"]
+            launcher_module = IRModule.search([("name", "=", "launcher")])
+            if not launcher_module or launcher_module.state != "installed":
+                _logger.debug("Launcher module is not installed, skipping.")
                 continue
-            db = odoo.sql_db.db_connect(db_name)
 
-            with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
-                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                IRModule = env["ir.module.module"]
-                launcher_module = IRModule.search([("name", "=", "launcher")])
-                if not launcher_module or launcher_module.state != "installed":
-                    _logger.debug("Launcher module is not installed, skipping.")
-                    continue
+            try:
+                Launcher = env["launcher.launcher"]
+                getattr(Launcher, method_name)()
+            except Exception:
+                _logger.warning("Exception calling launcher", exc_info=True)
 
-                try:
-                    Launcher = env["launcher.launcher"]
-                    getattr(Launcher, method_name)()
-                except Exception:
-                    _logger.warning("Exception calling launcher", exc_info=True)
 
 #----------------------------------------------------------
 # start/stop public api
