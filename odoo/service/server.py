@@ -458,6 +458,9 @@ class PreforkServer(CommonServer):
         self.queue = []
         self.long_polling_pid = None
 
+        # Launcher variables.
+        self.workers_launcher = {}
+
     def pipe_new(self):
         pipe = os.pipe()
         for fd in pipe:
@@ -510,6 +513,7 @@ class PreforkServer(CommonServer):
             try:
                 self.workers_http.pop(pid, None)
                 self.workers_cron.pop(pid, None)
+                self.workers_launcher.pop(pid, None)
                 u = self.workers.pop(pid)
                 u.close()
             except OSError:
@@ -580,6 +584,8 @@ class PreforkServer(CommonServer):
                 self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
+        if len(self.workers_launcher) == 0:
+            self.worker_spawn(WorkerLauncher, self.workers_launcher)
 
     def sleep(self):
         try:
@@ -892,6 +898,52 @@ class WorkerCron(Worker):
         Worker.start(self)
         if self.multi.socket:
             self.multi.socket.close()
+
+
+class WorkerLauncher(Worker):
+    """
+    Container for Launcher threads.
+
+    We use a separate Worker class because we only want to run a single
+    thread for each "launchable".
+    """
+
+    def start(self):
+        """Launch long-lived threads."""
+        res = super().start()
+        self._manage_spawned_threads("launch")
+        return res
+
+    def stop(self):
+        """
+        Notify spawned threads that system shutdown is pending.
+
+        The threads should act to make themselves joinable so that Odoo can
+        shutdown cleanly.
+        """
+        self._manage_spawned_threads("notify_shutdown")
+        return super().stop()
+
+    def _manage_spawned_threads(self, method_name):
+        registries = odoo.modules.registry.Registry.registries
+        for db_name, registry in registries.items():
+            if not registry.ready:
+                continue
+            db = odoo.sql_db.db_connect(db_name)
+
+            with odoo.api.Environment.manage(), contextlib.closing(db.cursor()) as cr:
+                env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                IRModule = env["ir.module.module"]
+                launcher_module = IRModule.search([("name", "=", "launcher")])
+                if not launcher_module or launcher_module.state != "installed":
+                    _logger.debug("Launcher module is not installed, skipping.")
+                    continue
+
+                try:
+                    Launcher = env["launcher.launcher"]
+                    getattr(Launcher, method_name)()
+                except Exception:
+                    _logger.warning("Exception calling launcher", exc_info=True)
 
 #----------------------------------------------------------
 # start/stop public api
