@@ -205,7 +205,7 @@ def json_default(obj):
     """
     from odoo import fields
     if isinstance(obj, datetime):
-        return fields.Datetime.to_string(obj)
+        return fields.Datetime.to_precise_string(obj)
     if isinstance(obj, date):
         return fields.Date.to_string(obj)
     if isinstance(obj, lazy):

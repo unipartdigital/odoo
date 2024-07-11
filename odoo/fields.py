@@ -28,6 +28,7 @@ from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+PRECISE_DATETIME_FORMAT = DATETIME_FORMAT + ".%f"
 
 # hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
 NO_ACCESS='.'
@@ -1931,6 +1932,19 @@ class Datetime(Field):
         :rtype: str
         """
         return value.strftime(DATETIME_FORMAT) if value else False
+
+    @staticmethod
+    def to_precise_string(value):
+        """Convert a :class:`datetime` or :class:`date` object to a string.
+
+        :param value: value to convert.
+        :type value: datetime or date
+        :return: a string representing ``value`` in the server's datetime format,
+            if ``value`` is of type :class:`date`,
+            the time portion will be midnight (00:00:00).
+        :rtype: str
+        """
+        return value.strftime(PRECISE_DATETIME_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         return self.to_datetime(value)
