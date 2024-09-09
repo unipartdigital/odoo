@@ -168,7 +168,7 @@ class AccountPayment(models.Model):
                     self.journal_id.payment_credit_account_id,
             ):
                 liquidity_lines += line
-            elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
+            elif line.account_id.internal_type in ('receivable', 'payable') or line.account_id == line.company_id.transfer_account_id:
                 counterpart_lines += line
             else:
                 writeoff_lines += line
@@ -349,7 +349,8 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+            if pay.partner_bank_id not in pay.available_partner_bank_ids._origin:
+                pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
 
     @api.depends('partner_id', 'destination_account_id', 'journal_id')
     def _compute_is_internal_transfer(self):
@@ -471,9 +472,11 @@ class AccountPayment(models.Model):
             self.reconciled_statements_count = 0
             return
 
-        self.env['account.move'].flush()
-        self.env['account.move.line'].flush()
-        self.env['account.partial.reconcile'].flush()
+        self.env['account.journal'].flush(fnames=['payment_debit_account_id', 'payment_credit_account_id'])
+        self.env['account.payment'].flush(fnames=['move_id'])
+        self.env['account.move'].flush(fnames=['move_type', 'payment_id', 'statement_line_id', 'journal_id'])
+        self.env['account.move.line'].flush(fnames=['move_id', 'account_id', 'statement_line_id'])
+        self.env['account.partial.reconcile'].flush(fnames=['debit_move_id', 'credit_move_id'])
 
         self._cr.execute('''
             SELECT
@@ -722,10 +725,11 @@ class AccountPayment(models.Model):
                         "To be consistent, the journal items must share the same partner."
                     ) % move.display_name)
 
-                if counterpart_lines.account_id.user_type_id.type == 'receivable':
-                    partner_type = 'customer'
-                else:
-                    partner_type = 'supplier'
+                if not pay.is_internal_transfer:
+                    if counterpart_lines.account_id.user_type_id.type == 'receivable':
+                        payment_vals_to_write['partner_type'] = 'customer'
+                    else:
+                        payment_vals_to_write['partner_type'] = 'supplier'
 
                 liquidity_amount = liquidity_lines.amount_currency
 
@@ -735,7 +739,6 @@ class AccountPayment(models.Model):
                 })
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
-                    'partner_type': partner_type,
                     'currency_id': liquidity_lines.currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
@@ -792,13 +795,18 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
             line_ids_commands = []
-            if liquidity_lines:
+            if len(liquidity_lines) == 1:
                 line_ids_commands.append((1, liquidity_lines.id, line_vals_list[0]))
             else:
+                for line in liquidity_lines:
+                    line_ids_commands.append((2, line.id, 0))
                 line_ids_commands.append((0, 0, line_vals_list[0]))
-            if counterpart_lines:
+
+            if len(counterpart_lines) == 1:
                 line_ids_commands.append((1, counterpart_lines.id, line_vals_list[1]))
             else:
+                for line in counterpart_lines:
+                    line_ids_commands.append((2, line.id, 0))
                 line_ids_commands.append((0, 0, line_vals_list[1]))
 
             for line in writeoff_lines:

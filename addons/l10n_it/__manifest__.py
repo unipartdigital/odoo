@@ -3,7 +3,7 @@
 
 {
     'name': 'Italy - Accounting',
-    'version': '0.2',
+    'version': '0.3',
     'depends': [
         'account',
         'base_iban',
@@ -26,7 +26,9 @@ Italian accounting chart and localization.
         'data/account_tax_template.xml',
         'data/account.fiscal.position.template.csv',
         'data/account.chart.template.csv',
+        'data/account_fiscal_position_tax_template_data.xml',
         'data/account_chart_template_data.xml',
+        'data/report_invoice.xml'
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -100,7 +100,7 @@ class LinkTracker(models.Model):
             utms = {}
             for key, field_name, cook in self.env['utm.mixin'].tracking_fields():
                 field = self._fields[field_name]
-                attr = getattr(tracker, field_name)
+                attr = tracker[field_name]
                 if field.type == 'many2one':
                     attr = attr.name
                 if attr:
@@ -112,7 +112,7 @@ class LinkTracker(models.Model):
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
-            head = requests.head(url, timeout=5)
+            head = requests.head(url, allow_redirects=True, timeout=5)
             if (
                     int(head.headers.get('Content-Length', 0)) > URL_MAX_SIZE
                     or

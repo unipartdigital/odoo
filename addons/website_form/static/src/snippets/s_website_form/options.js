@@ -59,7 +59,7 @@ const FormEditor = options.Class.extend({
      * @returns {string} The new ID
      */
     _generateUniqueID() {
-        return Math.random().toString(36).substring(2, 15);
+        return `o${Math.random().toString(36).substring(2, 15)}`;
     },
     /**
      * Returns a field object
@@ -165,6 +165,7 @@ const FieldEditor = FormEditor.extend({
         } else {
             field = Object.assign({}, this.fields[this._getFieldName()]);
             field.string = labelText;
+            field.type = this._getFieldType();
         }
         field.records = this._getListItems();
         this._setActiveProperties(field);
@@ -1341,6 +1342,7 @@ const DisableOverlayButtonOption = options.Class.extend({
         this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
         const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
         $button.attr('title', message).tooltip({delay: 0});
+        // TODO In master: add `o_disabled` but keep actual class.
         $button.removeClass(className); // Disable the functionnality
     },
 

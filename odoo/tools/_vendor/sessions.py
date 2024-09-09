@@ -19,7 +19,7 @@ import os
 import re
 import tempfile
 from hashlib import sha1
-from os import path
+from os import path, replace as rename
 from pickle import dump
 from pickle import HIGHEST_PROTOCOL
 from pickle import load

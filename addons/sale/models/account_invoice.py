@@ -49,13 +49,7 @@ class AccountMove(models.Model):
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
 
-        res = super(AccountMove, self)._onchange_partner_id()
-
-        # Recompute 'narration' based on 'company.invoice_terms'.
-        if self.move_type == 'out_invoice':
-            self.narration = self.company_id.with_context(lang=self.partner_id.lang or self.env.lang).invoice_terms
-
-        return res
+        return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
@@ -103,3 +97,8 @@ class AccountMove(models.Model):
         # OVERRIDE
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
+
+    def _is_downpayment(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
