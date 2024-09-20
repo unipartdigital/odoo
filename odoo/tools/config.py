@@ -111,6 +111,9 @@ class configmanager(object):
         group.add_option("--without-demo", dest="without_demo",
                           help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
                           my_default=False)
+        group.add_option("-n", "--no-demo-enabled-addons", dest="no_demo_enabled_addons", action="store_true",
+                          help="This option pairs with the odoorc key `demo_enabled_addons`. If provided, the demo_enabled_addons will be ignored.",
+                          my_default=False)
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
@@ -455,7 +458,7 @@ class configmanager(object):
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
-            'stop_after_init', 'without_demo', 'http_enable', 'syslog',
+            'stop_after_init', 'without_demo', 'no_demo_enabled_addons', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags', 'test_xml_file',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
