@@ -179,7 +179,13 @@ class Node(object):
 
     def should_have_demo(self):
         demo_enabled_addons = tools.config.get("demo_enabled_addons", "").split(",")
-        if demo_enabled_addons:
+        # Allow bypassing demo_enabled_addons, for instance - for test databases.
+        explicit_ignore = tools.config.get("no_demo_enabled_addons")
+        # This is a safeguard. We will never want demo data on a test db, as tests set up their own data.
+        # This safeguard will only come into effect if we -sti an addon that isn't installed already,
+        # which won't happen often.
+        implicit_ignore = tools.config.get("test_enable")
+        if demo_enabled_addons and not (explicit_ignore or implicit_ignore):
             # Allow us to enable demo data for specific addons.
             # For this to be called, ~/.odoorc will need e.g:
             #
