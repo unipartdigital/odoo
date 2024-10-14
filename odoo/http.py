@@ -607,7 +607,7 @@ class JsonRequest(WebRequest):
             get_args['params'] = json.loads(args.get('params', '{}'))
             request = json.dumps(get_args)
         else:
-            request = self.httprequest.get_data().decode(self.httprequest.charset)
+            request = self.httprequest.get_data(as_text=True)
 
         # Read POST content or POST Form Data named "request"
         try:
