@@ -13,7 +13,7 @@ import time
 
 from email.utils import getaddresses
 from lxml import etree
-from werkzeug import urls
+import urllib.parse
 import idna
 
 import odoo
@@ -261,7 +261,7 @@ HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
 
 
 def validate_url(url):
-    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+    if urllib.parse.urlsplit(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
         return 'http://' + url
 
     return url

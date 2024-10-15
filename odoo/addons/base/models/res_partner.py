@@ -12,7 +12,7 @@ import re
 import requests
 from lxml import etree
 from random import randint
-from werkzeug import urls
+import urllib.parse
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
@@ -504,7 +504,7 @@ class Partner(models.Model):
             parent.update_address(addr_vals)
 
     def _clean_website(self, website):
-        url = urls.url_parse(website)
+        url = urllib.parse.urlsplit(website)
         if not url.scheme:
             if not url.netloc:
                 url = url.replace(netloc=url.path, path='')

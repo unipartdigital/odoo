@@ -9,7 +9,7 @@ from time import time
 
 from lxml import html
 from lxml import etree
-from werkzeug import urls
+from urllib.parse import urlsplit
 
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
@@ -311,7 +311,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         IrQweb = self.env['ir.qweb'].with_context(options)
 
         def can_aggregate(url):
-            return not urls.url_parse(url).scheme and not urls.url_parse(url).netloc and not url.startswith('/web/content')
+            return not urlsplit(url).scheme and not urlsplit(url).netloc and not url.startswith('/web/content')
 
         # TODO: This helper can be used by any template that wants to embedd the backend.
         #       It is currently necessary because the ir.ui.view bundle inheritance does not

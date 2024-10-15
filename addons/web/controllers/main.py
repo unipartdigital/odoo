@@ -27,7 +27,8 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 from collections import OrderedDict, defaultdict, Counter
-from werkzeug.urls import url_encode, url_decode, iri_to_uri
+from werkzeug.urls import iri_to_uri
+import urllib.parse
 from lxml import etree
 import unicodedata
 
@@ -130,6 +131,8 @@ def redirect_with_hash(*args, **kw):
     return http.redirect_with_hash(*args, **kw)
 
 def abort_and_redirect(url):
+    if type(url) is urllib.parse.SplitResult:
+        url = urllib.parse.urlunsplit(url)
     response = werkzeug.utils.redirect(url, 302)
     response = http.root.get_response(request.httprequest, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
@@ -156,11 +159,11 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        url_redirect = werkzeug.urls.url_parse(r.base_url)
+        url_redirect = urllib.parse.urlsplit(r.base_url)
         if r.query_string:
             # in P3, request.query_string is bytes, the rest is text, can't mix them
             query_string = iri_to_uri(r.query_string)
-            url_redirect = url_redirect.replace(query=query_string)
+            url_redirect = url_redirect._replace(query=query_string)
         request.session.db = db
         abort_and_redirect(url_redirect)
 
@@ -310,10 +313,10 @@ def _get_login_redirect_url(uid, redirect=None):
     if not redirect:
         return url
 
-    parsed = werkzeug.urls.url_parse(url)
+    parsed = urllib.parse.urlsplit(url)
     qs = parsed.decode_query()
     qs['redirect'] = redirect
-    return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+    return parsed._replace(query=urllib.parse.urlencode(qs)).to_url()
 
 def login_and_redirect(db, login, key, redirect_url='/web'):
     uid = request.session.authenticate(db, login, key)
@@ -1333,7 +1336,7 @@ class Session(http.Controller):
             'state': json.dumps({'d': request.db, 'u': ICP.get_param('web.base.url')}),
             'scope': 'userinfo',
         }
-        return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
+        return 'https://accounts.odoo.com/oauth2/auth?' + urllib.parse.urlencode(params)
 
     @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):
@@ -2174,7 +2177,7 @@ class ReportController(http.Controller):
                     response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
-                    data = dict(url_decode(url.split('?')[1]).items())  # decoding the args represented in JSON
+                    data = urllib.parse.parse_qs(url.split('?')[1])  # decoding the args represented in JSON
                     if 'context' in data:
                         context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
                         context = json.dumps({**context, **data_context})

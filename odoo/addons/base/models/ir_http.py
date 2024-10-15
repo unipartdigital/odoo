@@ -14,7 +14,7 @@ import traceback
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
-import werkzeug.urls
+import urllib.parse
 import werkzeug.utils
 
 import odoo
