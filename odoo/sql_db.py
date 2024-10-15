@@ -22,7 +22,7 @@ import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
-from werkzeug import urls
+import urllib.parse
 
 from odoo.api import Environment
 
@@ -695,7 +695,7 @@ def connection_info_for(db_or_uri):
     """
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urls.url_parse(db_or_uri)
+        us = urllib.parse.urlsplit(db_or_uri)
         if len(us.path) > 1:
             db_name = us.path[1:]
         elif us.username:

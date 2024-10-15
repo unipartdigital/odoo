@@ -35,7 +35,7 @@ from unittest.mock import patch
 from xmlrpc import client as xmlrpclib
 
 import requests
-import werkzeug.urls
+import urllib.parse
 from decorator import decorator
 from lxml import etree, html
 
@@ -841,7 +841,7 @@ class ChromeBrowser():
             protocol : get the full protocol
         """
         command = os.path.join('json', command).strip('/')
-        url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
+        url = urllib.parse.urljoin('http://%s:%s/' % (HOST, self.devtools_port), command)
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
         tries = 0

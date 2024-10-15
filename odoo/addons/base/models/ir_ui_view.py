@@ -15,7 +15,7 @@ import uuid
 
 from dateutil.relativedelta import relativedelta
 
-import werkzeug, werkzeug.urls
+import werkzeug, urllib.parse
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
@@ -118,7 +118,7 @@ def keep_query(*keep_params, **additional_params):
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
                 params[param] = request.httprequest.args.getlist(param)
-    return werkzeug.urls.url_encode(params)
+    return urllib.parse.urlencode(params)
 
 
 class ViewCustom(models.Model):
@@ -1729,7 +1729,7 @@ actual arch.
             debug=request.session.debug if request else '',
             test_mode_enabled=bool(config['test_enable'] or config['test_file']),
             json=json_scriptsafe,
-            quote_plus=werkzeug.urls.url_quote_plus,
+            quote_plus=urllib.parse.quote_plus,
             time=safe_eval.time,
             datetime=safe_eval.datetime,
             relativedelta=relativedelta,
