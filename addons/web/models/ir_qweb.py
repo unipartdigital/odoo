@@ -3,6 +3,7 @@
 
 import hashlib
 from collections import OrderedDict
+from urllib.parse import quote as url_quote
 
 from odoo import api, models
 from odoo.tools import pycompat

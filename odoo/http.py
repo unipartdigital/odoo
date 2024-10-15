@@ -33,7 +33,7 @@ import werkzeug.exceptions
 import werkzeug.local
 import werkzeug.routing
 import werkzeug.wrappers
-from werkzeug import urls
+import urllib.parse
 from werkzeug.wsgi import wrap_file
 try:
     from werkzeug.middleware.shared_data import SharedDataMiddleware
@@ -153,7 +153,7 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
         else:
             query['debug'] = None
     if query:
-        url += '?' + werkzeug.url_encode(query)
+        url += '?' + urllib.parse.urlencode(query)
     if keep_hash:
         return redirect_with_hash(url, code)
     else:
@@ -789,7 +789,7 @@ class HttpRequest(WebRequest):
             elif not request.params.get('noredirect'):
                 redirect = req.path
             if redirect:
-                query = werkzeug.urls.url_encode({
+                query = urllib.parse.urlencode({
                     'redirect': redirect,
                 })
                 return werkzeug.utils.redirect('/web/login?%s' % query)
