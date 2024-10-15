@@ -6,10 +6,11 @@ import time
 from hashlib import sha1
 from pprint import pformat
 from unicodedata import normalize
+from urllib.parse import urlencode
 
 import requests
 from lxml import etree, objectify
-from werkzeug import urls, url_encode
+from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -170,7 +171,7 @@ class PaymentAcquirerOgone(models.Model):
             'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
             'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
-            'PARAMPLUS': url_encode(param_plus),
+            'PARAMPLUS': urlencode(param_plus),
         }
         if self.save_token in ['ask', 'always']:
             temp_ogone_tx_values.update({
@@ -360,7 +361,7 @@ class PaymentTxOgone(models.Model):
             'ECI': 2,   # Recurring (from MOTO)
             'ALIAS': self.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
-            'PARAMPLUS' : url_encode(param_plus)
+            'PARAMPLUS' : urlencode(param_plus)
         }
 
         if kwargs.get('3d_secure'):
