@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlencode
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from werkzeug import url_encode
 
 class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
@@ -80,7 +81,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         payment.post()
 
         # Log the payment in the chatter
-        body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, expense_sheet.name))
+        body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, urlencode({'model': 'account.payment', 'res_id': payment.id}), payment.name, expense_sheet.name))
         expense_sheet.message_post(body=body)
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines

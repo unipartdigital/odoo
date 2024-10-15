@@ -5,6 +5,9 @@ import os
 import re
 import unicodedata
 import werkzeug
+import werkzeug.exceptions
+import werkzeug.routing
+import urllib.parse
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -129,7 +132,7 @@ def url_for(path_or_uri, lang=None):
     current_path = request.httprequest.path     # should already be text
     location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang is not None
-    url = werkzeug.urls.url_parse(location)
+    url = urllib.parse.urlsplit(location)
 
     if not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(current_path, location)
@@ -426,8 +429,8 @@ class IrHttp(models.AbstractModel):
             return cls._handle_exception(e)
 
         if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
-            generated_path = werkzeug.url_unquote_plus(path)
-            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            generated_path = urllib.parse.unquote_plus(path)
+            current_path = urllib.parse.unquote_plus(request.httprequest.path)
             if generated_path != current_path:
                 if request.lang != cls._get_default_lang().code:
                     path = '/' + request.lang + path
