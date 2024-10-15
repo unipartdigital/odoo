@@ -29,8 +29,9 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 from collections import OrderedDict
-from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
+from werkzeug.urls import iri_to_uri
+import urllib.parse
 import unicodedata
 
 
@@ -100,6 +101,8 @@ def redirect_with_hash(*args, **kw):
 
 def abort_and_redirect(url):
     r = request.httprequest
+    if type(url) is urllib.parse.SplitResult:
+        url = urllib.parse.urlunsplit(url)
     response = werkzeug.utils.redirect(url, 302)
     response = r.app.get_response(r, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
@@ -126,11 +129,11 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        url_redirect = werkzeug.urls.url_parse(r.base_url)
+        url_redirect = urllib.parse.urlsplit(r.base_url)
         if r.query_string:
             # in P3, request.query_string is bytes, the rest is text, can't mix them
             query_string = iri_to_uri(r.query_string)
-            url_redirect = url_redirect.replace(query=query_string)
+            url_redirect = url_redirect._replace(query=query_string)
         request.session.db = db
         abort_and_redirect(url_redirect)
 
@@ -297,6 +300,23 @@ def make_conditional(response, last_modified=None, etag=None, max_age=0):
     if etag:
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
+
+def _get_login_redirect_url(uid, redirect=None):
+    """ Decide if user requires a specific post-login redirect, e.g. for 2FA, or if they are
+    fully logged and can proceed to the requested URL
+    """
+    if request.session.uid: # fully logged
+        return redirect or '/web'
+
+    # partial session (MFA)
+    url = request.env(user=uid)['res.users'].browse(uid)._mfa_url()
+    if not redirect:
+        return url
+
+    parsed = urllib.parse.urlsplit(url)
+    qs = parsed.query
+    qs['redirect'] = redirect
+    return parsed._replace(query=urllib.parse.urlencode(qs)).to_url()
 
 def login_and_redirect(db, login, key, redirect_url='/web'):
     request.session.authenticate(db, login, key)
@@ -860,7 +880,7 @@ class Session(http.Controller):
             'state': json.dumps({'d': request.db, 'u': ICP.get_param('web.base.url')}),
             'scope': 'userinfo',
         }
-        return 'https://accounts.odoo.com/oauth2/auth?' + werkzeug.url_encode(params)
+        return 'https://accounts.odoo.com/oauth2/auth?' + urllib.parse.urlencode(params)
 
     @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):
@@ -1668,7 +1688,7 @@ class ReportController(http.Controller):
                     response = self.report_routes(reportname, docids=docids, converter='pdf')
                 else:
                     # Particular report:
-                    data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
+                    data = urllib.parse.parse_qs(url.split('?')[1])  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
 
                 report = request.env['ir.actions.report']._get_report_from_name(reportname)

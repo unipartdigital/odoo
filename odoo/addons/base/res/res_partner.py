@@ -11,7 +11,7 @@ from email.utils import formataddr
 
 import requests
 from lxml import etree
-from werkzeug import urls
+import urllib.parse
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
@@ -19,7 +19,7 @@ from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
 
 # Global variables used for the warning fields declared on the res.partner
-# in the following modules : sale, purchase, account, stock 
+# in the following modules : sale, purchase, account, stock
 WARNING_MESSAGE = [
                    ('no-message','No Message'),
                    ('warning','Warning'),
@@ -473,7 +473,7 @@ class Partner(models.Model):
             # 1a. Commercial fields: sync if parent changed
             if values.get('parent_id'):
                 self._commercial_sync_from_company()
-            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
+            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if self.parent_id and self.type == 'contact':
                 onchange_vals = self.onchange_parent_id().get('value', {})
                 self.update_address(onchange_vals)
@@ -507,7 +507,7 @@ class Partner(models.Model):
             parent.update_address(addr_vals)
 
     def _clean_website(self, website):
-        url = urls.url_parse(website)
+        url = urllib.parse.urlsplit(website)
         if not url.scheme:
             if not url.netloc:
                 url = url.replace(netloc=url.path, path='')
