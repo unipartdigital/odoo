@@ -853,7 +853,10 @@ class Picking(models.Model):
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
-            origin_packages = picking.move_line_ids.mapped("package_id")
+            mls_to_check = picking.move_line_ids
+            if self._context.get("check_mls"):
+                mls_to_check = mls_to_check.filtered(lambda ml: ml.id in self._context.get("check_mls"))
+            origin_packages = mls_to_check.mapped("package_id")
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
                     package_level_ids = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
