@@ -141,7 +141,9 @@ class StockPickingBatch(models.Model):
         return res
 
     def unlink(self):
-        if any(batch.state != 'draft' for batch in self):
+        if not self._context.get("bypass_state_check") and any(
+                batch.state != "draft" for batch in self
+        ):
             raise UserError(_("You can only delete draft batch transfers."))
         return super().unlink()
 
