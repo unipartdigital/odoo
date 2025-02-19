@@ -176,7 +176,8 @@ var DataExport = Dialog.extend({
                     groupby: this.groupby,
                     context: pyUtils.eval('contexts', [this.record.getContext()]),
                     import_compat: this.isCompatibleMode,
-                    timezone: this.$('.o_export_timezone input').filter(':checked').siblings().text(),
+                    // Fallback to UTC in cases where the o_export_timezone input cannot be found (e.g when 'Export All' button is pressed)
+                    timezone: this.$el === undefined ? 'UTC' : this.$('.o_export_timezone input').filter(':checked').siblings().text()
                 })
             },
             complete: framework.unblockUI,
