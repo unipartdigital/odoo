@@ -1316,8 +1316,8 @@ class StockMove(models.Model):
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
-                    for i in range(0, int(missing_reserved_quantity)):
-                        move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
+                    missing_reserved_quantity = int(missing_reserved_quantity)
+                    move_line_vals_list += move._prepare_serial_tracking_move_line_vals(missing_reserved_quantity)
                 else:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
@@ -1428,6 +1428,14 @@ class StockMove(models.Model):
         StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
         StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
+
+    def _prepare_serial_tracking_move_line_vals(self, quantity):
+        """Wrapping into a method, so can be easily inherited in custom modules."""
+        self.ensure_one()
+        move_line_vals_list = []
+        for i in range(0, quantity):
+            move_line_vals_list.append(self._prepare_move_line_vals(quantity=1))
+        return move_line_vals_list
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
