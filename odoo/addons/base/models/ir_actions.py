@@ -637,11 +637,17 @@ class IrActionsServer(models.Model):
                     if not active_id:  # onchange on new record
                         res = runner(action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
-                for active_id in active_ids:
-                    # run context dedicated to a particular active_id
-                    run_self = action.with_context(active_ids=[active_id], active_id=active_id)
+                multiple_ids = self._context.get('multiple_ids', False)
+                if multiple_ids and active_ids:
+                    run_self = action.with_context(active_ids=active_ids, active_id=active_ids[0])
                     eval_context["env"].context = run_self._context
                     res = runner(run_self, eval_context=eval_context)
+                else:
+                    for active_id in active_ids:
+                        # run context dedicated to a particular active_id
+                        run_self = action.with_context(active_ids=[active_id], active_id=active_id)
+                        eval_context["env"].context = run_self._context
+                        res = runner(run_self, eval_context=eval_context)
             else:
                 _logger.warning(
                     "Found no way to execute server action %r of type %r, ignoring it. "
