@@ -888,7 +888,9 @@ class Picking(models.Model):
                             'package_level_id': package_level_ids[0].id,
                         })
                         for pl in package_level_ids:
-                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+                            loc_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+                            if not pl.location_dest_id or pl.location_dest_id.id != loc_dest_id:
+                                pl.location_dest_id = loc_dest_id
 
     def do_unreserve(self):
         self.move_lines._do_unreserve()
