@@ -95,7 +95,7 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     origin_mode = image.mode
     if image.mode != 'RGBA':
         image = image.convert('RGBA')
-    image.thumbnail(size, Image.ANTIALIAS)
+    image.thumbnail(size, Image.LANCZOS)
     if preserve_aspect_ratio:
         size = image.size
     sharpener = ImageEnhance.Sharpness(image)
@@ -203,7 +203,7 @@ def crop_image(data, type='top', ratio=False, size=None, image_format="PNG"):
         thumbnail = Image.open(io.BytesIO(output_stream.getvalue()))
         output_stream.truncate(0)
         output_stream.seek(0)
-        thumbnail.thumbnail(size, Image.ANTIALIAS)
+        thumbnail.thumbnail(size, Image.LANCZOS)
         thumbnail.save(output_stream, image_format)
     return base64.b64encode(output_stream.getvalue())
 
