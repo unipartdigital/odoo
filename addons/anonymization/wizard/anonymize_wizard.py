@@ -226,7 +226,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
         with open(abs_filepath, 'rb') as fn:
             self.write({
                 'msg': msg,
-                'file_export': base64.encodestring(fn.read()),
+                'file_export': base64.encodebytes(fn.read()),
             })
 
         # update the history record:
@@ -267,7 +267,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
 
         # reverse the anonymization:
         # load the json/pickle file content into a data structure:
-        content = base64.decodestring(self.file_import)
+        content = base64.decodebytes(self.file_import)
         try:
             data = json.loads(content.decode('utf8'))
         except Exception:
