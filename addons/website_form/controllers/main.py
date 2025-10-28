@@ -210,7 +210,7 @@ class WebsiteForm(http.Controller):
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
                 'name': file.field_name if custom_field else file.filename,
-                'datas': base64.encodestring(file.read()),
+                'datas': base64.encodebytes(file.read()),
                 'datas_fname': file.filename,
                 'res_model': model_name,
                 'res_id': record.id,

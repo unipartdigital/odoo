@@ -91,7 +91,7 @@ class XmlDeclaration(models.TransientModel):
 
         #change state of the wizard
         self.write({'name': 'intrastat_%s%s.xml' % (self.year, self.month),
-                    'file_save': base64.encodestring(data_file),
+                    'file_save': base64.encodebytes(data_file),
                     'state': 'download'})
         return {
             'name': _('Save'),
