@@ -63,14 +63,14 @@ from pickle import load
 from random import random
 from time import time
 
-from .._compat import PY2
-from .._compat import text_type
-from ..datastructures import CallbackDict
-from ..filesystem import get_filesystem_encoding
-from ..http import dump_cookie
-from ..http import parse_cookie
-from ..posixemulation import rename
-from ..wsgi import ClosingIterator
+from ..pycompat import PY2
+from ..pycompat import text_type
+from werkzeug.datastructures import CallbackDict
+from werkzeug.filesystem import get_filesystem_encoding
+from werkzeug.http import dump_cookie
+from werkzeug.http import parse_cookie
+from werkzeug.posixemulation import rename
+from werkzeug.wsgi import ClosingIterator
 
 warnings.warn(
     "'werkzeug.contrib.sessions' is deprecated as of version 0.15 and"
