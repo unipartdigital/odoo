@@ -509,9 +509,12 @@ class Partner(models.Model):
     def _clean_website(self, website):
         url = urllib.parse.urlsplit(website)
         if not url.scheme:
+            parts = list(url)
             if not url.netloc:
-                url = url.replace(netloc=url.path, path='')
-            website = url.replace(scheme='http').to_url()
+                parts[1] = parts[2]
+                parts[2] = ''
+            parts[0] = 'http'
+            website = urllib.parse.urlunsplit(parts)
         return website
 
     @api.multi
