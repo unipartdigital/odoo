@@ -13,9 +13,12 @@ import sys
 
 import werkzeug
 import werkzeug.exceptions
-import werkzeug.routing
 import werkzeug.urls
 import werkzeug.utils
+try:
+    from werkzeug.routing.converters import BaseConverter, NumberConverter
+except ImportError:
+    from werkzeug.routing import BaseConverter, NumberConverter
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
@@ -33,7 +36,7 @@ class RequestUID(object):
         self.__dict__.update(kw)
 
 
-class ModelConverter(werkzeug.routing.BaseConverter):
+class ModelConverter(BaseConverter):
 
     def __init__(self, url_map, model=False):
         super(ModelConverter, self).__init__(url_map)
@@ -49,7 +52,7 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         return value.id
 
 
-class ModelsConverter(werkzeug.routing.BaseConverter):
+class ModelsConverter(BaseConverter):
 
     def __init__(self, url_map, model=False):
         super(ModelsConverter, self).__init__(url_map)
@@ -66,7 +69,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         return ",".join(value.ids)
 
 
-class SignedIntConverter(werkzeug.routing.NumberConverter):
+class SignedIntConverter(NumberConverter):
     regex = r'-?\d+'
     num_convert = int
 
