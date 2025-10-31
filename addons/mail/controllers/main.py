@@ -6,7 +6,7 @@ import logging
 import psycopg2
 import werkzeug
 
-from werkzeug import url_encode
+from urllib.parse  import urlencode
 
 from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import binary_content
@@ -23,7 +23,7 @@ class MailController(http.Controller):
     @classmethod
     def _redirect_to_messaging(cls):
         messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web#%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % urlencode({'action': messaging_action})
         return werkzeug.utils.redirect(url)
 
     @classmethod
@@ -95,7 +95,7 @@ class MailController(http.Controller):
             'view_id': record_sudo.get_formview_id(),
             'action': record_action.get('id'),
         }
-        url = '/web?#%s' % url_encode(url_params)
+        url = '/web?#%s' % urlencode(url_params)
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/receive', type='json', auth='none')
@@ -219,7 +219,7 @@ class MailController(http.Controller):
         if action_id:
             # Probably something to do
             params['action'] = action_id
-        return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
+        return werkzeug.utils.redirect('/web?#%s' % urlencode(params))
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
     def mail_action_assign(self, model, res_id, token=None):
