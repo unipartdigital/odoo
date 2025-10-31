@@ -66,7 +66,6 @@ from time import time
 from ..pycompat import PY2
 from ..pycompat import text_type
 from werkzeug.datastructures import CallbackDict
-from werkzeug.filesystem import get_filesystem_encoding
 from werkzeug.http import dump_cookie
 from werkzeug.http import parse_cookie
 from werkzeug.wsgi import ClosingIterator
@@ -234,7 +233,7 @@ class FilesystemSessionStore(SessionStore):
             path = tempfile.gettempdir()
         self.path = path
         if isinstance(filename_template, text_type) and PY2:
-            filename_template = filename_template.encode(get_filesystem_encoding())
+            filename_template = os.fsencode(filename_template)
         assert not filename_template.endswith(_fs_transaction_suffix), (
             "filename templates may not end with %s" % _fs_transaction_suffix
         )
@@ -247,7 +246,7 @@ class FilesystemSessionStore(SessionStore):
         # you might reconfigure the session object to have a more
         # arbitrary string.
         if isinstance(sid, text_type) and PY2:
-            sid = sid.encode(get_filesystem_encoding())
+            sid = os.fsencode(sid)
         return path.join(self.path, self.filename_template % sid)
 
     def save(self, session):
