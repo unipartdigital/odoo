@@ -21,8 +21,8 @@ except ImportError:
 from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
+from urllib.parse import urlencode
 from lxml import etree
-from werkzeug import url_encode
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.tools import pycompat
@@ -610,7 +610,7 @@ class MailThread(models.AbstractModel):
             token = self._generate_notification_token(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, url_encode(params))
+        link = '%s?%s' % (base_link, urlencode(params))
         return link
 
     @api.multi
