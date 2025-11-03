@@ -29,9 +29,9 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 from collections import OrderedDict
+from xml.etree import ElementTree
 from werkzeug.urls import iri_to_uri
 import urllib.parse
-from lxml import etree
 import unicodedata
 
 
