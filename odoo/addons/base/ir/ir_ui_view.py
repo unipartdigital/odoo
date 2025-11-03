@@ -14,6 +14,7 @@ import itertools
 from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import itemgetter
+from urllib.parse import quote_plus
 
 import json
 import werkzeug
@@ -1222,7 +1223,7 @@ actual arch.
             request=request,  # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,
             json=json,
-            quote_plus=werkzeug.url_quote_plus,
+            quote_plus=quote_plus,
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,
