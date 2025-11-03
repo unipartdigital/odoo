@@ -11,7 +11,7 @@ from operator import itemgetter
 
 import dateutil
 
-from odoo import api, fields, models, tools, _
+from odoo import SUPERUSER_ID, api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat
