@@ -170,7 +170,7 @@ def redirect_with_hash(url, code=303):
     # addons/website/controllers/main.py:91 calls this with a bytes url
     # but addons/web/controllers/main.py:481 uses text... (blows up on login)
     url = pycompat.to_text(url).strip()
-    if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
+    if urllib.parse.urlparse(url, scheme='http').scheme not in ('http', 'https'):
         url = u'http://' + url
     url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
@@ -358,7 +358,7 @@ class WebRequest(object):
             debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
 
         if not debug and self.httprequest.referrer:
-            debug = 'debug' in urls.url_parse(self.httprequest.referrer).decode_query()
+            debug = 'debug' in urllib.parse.urlparse(self.httprequest.referrer).decode_query()
         return debug
 
     @contextlib.contextmanager
@@ -1299,7 +1299,7 @@ class DisableCacheMiddleware(object):
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
             referer = environ.get('HTTP_REFERER', '')
-            parsed = urls.url_parse(referer)
+            parsed = urllib.parse.urlparse(referer)
             debug = parsed.query.count('debug') >= 1
 
             new_headers = []
@@ -1672,7 +1672,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urls.url_quote(filename)
+    escaped = urllib.parse.quote(filename)
 
     return "attachment; filename*=UTF-8''%s" % escaped
 
