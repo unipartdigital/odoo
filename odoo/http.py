@@ -358,7 +358,7 @@ class WebRequest(object):
             debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
 
         if not debug and self.httprequest.referrer:
-            debug = 'debug' in urllib.parse.urlparse(self.httprequest.referrer).decode_query()
+            debug = 'debug' in urllib.parse.urlparse(self.httprequest.referrer).query
         return debug
 
     @contextlib.contextmanager

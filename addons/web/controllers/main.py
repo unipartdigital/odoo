@@ -310,7 +310,7 @@ def _get_login_redirect_url(uid, redirect=None):
         return url
 
     parsed = urllib.parse.urlsplit(url)
-    qs = parsed.decode_query()
+    qs = parsed.query
     qs['redirect'] = redirect
     return parsed._replace(query=urllib.parse.urlencode(qs)).to_url()
 
