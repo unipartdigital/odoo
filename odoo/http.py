@@ -25,7 +25,6 @@ from os.path import join as opj
 from zlib import adler32
 
 import babel.core
-import passlib.utils
 import psycopg2
 import json
 import werkzeug.datastructures
@@ -50,7 +49,6 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique
-from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
 from .modules.module import module_manifest
 
