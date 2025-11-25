@@ -689,3 +689,7 @@ class StockMoveLine(models.Model):
     def _compute_sale_price(self):
         # To Override
         pass
+
+    def reset_product_uom_qty(self):
+        """Method can be override in other modules with inheritance"""
+        self.write({'product_uom_qty': 0})
