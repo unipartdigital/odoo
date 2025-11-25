@@ -718,7 +718,8 @@ class StockMove(models.Model):
         ml_to_update, ml_to_unlink = self.env['stock.move.line'].browse(ml_to_update), self.env['stock.move.line'].browse(ml_to_unlink)
         moves_not_to_recompute = self.env['stock.move'].browse(moves_not_to_recompute)
 
-        ml_to_update.write({'product_uom_qty': 0})
+        # Wrapping into a method so can inherit the method in other modules.
+        ml_to_update.reset_product_uom_qty()
         ml_to_unlink.unlink()
         # `write` on `stock.move.line` doesn't call `_recompute_state` (unlike to `unlink`),
         # so it must be called for each move where no move line has been deleted.
