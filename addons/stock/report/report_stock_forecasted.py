@@ -40,22 +40,18 @@ class ReplenishmentReport(models.AbstractModel):
                     ('company_id', '=', self.env.company.id)
                 ], limit=1)
                 self.env.context = dict(self.env.context, warehouse=warehouse.id)
-            wh_view_loc_parent_path = warehouse.view_location_id.parent_path
-            wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-                [('parent_path', 'not like', f'{wh_view_loc_parent_path}%')],
-                ['id'],
-            )]
+            wh_view_location_id = warehouse.view_location_id
             print(f'{wh_location_ids = }')
             out_domain = move_domain + [
                 '&',
-                ('location_id', 'not in', wh_location_ids),
-                ('location_dest_id', 'in', wh_location_ids),
+                ('location_id', 'child_of', wh_view_location_id.id),
+                '!', ('location_dest_id', 'child_of', wh_view_location_id.id),
             ]
             print(f'{out_domain = }')
             in_domain = move_domain + [
                 '&',
-                ('location_id', 'in', wh_location_ids),
-                ('location_dest_id', 'not in', wh_location_ids),
+                '!', ('location_id', 'child_of', wh_view_location_id.id),
+                ('location_dest_id', 'child_of', wh_view_location_id.id),
             ]
         return in_domain, out_domain
 
