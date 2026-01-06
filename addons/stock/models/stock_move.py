@@ -434,10 +434,11 @@ class StockMove(models.Model):
             if not warehouse:  # No prediction possible if no warehouse.
                 continue
             product_variant_ids = moves.product_id.ids
-            wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-                [('id', 'child_of', warehouse.view_location_id.id)],
-                ['id'],
-            )]
+##            wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+##                [('id', 'child_of', warehouse.view_location_id.id)],
+##                ['id'],
+##            )]
+            wh_location_ids = None
             ForecastedReport = self.env['report.stock.report_product_product_replenishment']
             forecast_lines = ForecastedReport.with_context(warehouse=warehouse.id)._get_report_lines(None, product_variant_ids, wh_location_ids)
             for move in moves:

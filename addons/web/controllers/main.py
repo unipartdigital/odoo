@@ -1386,6 +1386,14 @@ class DataSet(http.Controller):
 
     def _call_kw(self, model, method, args, kwargs):
         check_method_name(method)
+        if model == 'sale.order.line':
+            import cProfile
+            with cProfile.Profile() as pr:
+                res = call_kw(request.env[model], method, args, kwargs)
+            now = datetime.datetime.now()
+            ts = now.strftime('%Y%m%d_%H%M.stats')
+            pr.dump_stats(f'/home/kdwyer/story/run_{ts}')
+            return res
         return call_kw(request.env[model], method, args, kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")

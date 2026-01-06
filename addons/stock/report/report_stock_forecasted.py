@@ -19,16 +19,44 @@ class ReplenishmentReport(models.AbstractModel):
     def _move_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
         move_domain = self._product_domain(product_template_ids, product_variant_ids)
         move_domain += [('product_uom_qty', '!=', 0)]
-        out_domain = move_domain + [
-            '&',
-            ('location_id', 'in', wh_location_ids),
-            ('location_dest_id', 'not in', wh_location_ids),
-        ]
-        in_domain = move_domain + [
-            '&',
-            ('location_id', 'not in', wh_location_ids),
-            ('location_dest_id', 'in', wh_location_ids),
-        ]
+        if wh_location_ids is not None:
+            out_domain = move_domain + [
+                '&',
+                ('location_id', 'in', wh_location_ids),
+                ('location_dest_id', 'not in', wh_location_ids),
+            ]
+            in_domain = move_domain + [
+                '&',
+                ('location_id', 'not in', wh_location_ids),
+                ('location_dest_id', 'in', wh_location_ids),
+            ]
+        else:
+
+            # Get the warehouse we're working on as well as its locations.
+            if self.env.context.get('warehouse'):
+                warehouse = self.env['stock.warehouse'].browse(self.env.context['warehouse'])
+            else:
+                warehouse = self.env['stock.warehouse'].search([
+                    ('company_id', '=', self.env.company.id)
+                ], limit=1)
+                self.env.context = dict(self.env.context, warehouse=warehouse.id)
+            wh_view_loc_parent_path = warehouse.view_location_id.parent_path
+            wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+                [('parent_path', 'not like', f'{wh_view_loc_parent_path}%')],
+                ['id'],
+            )]
+            print(f'{wh_location_ids = }')
+            out_domain = move_domain + [
+                '&',
+                ('location_id', 'not in', wh_location_ids),
+                ('location_dest_id', 'in', wh_location_ids),
+            ]
+            print(f'{out_domain = }')
+            in_domain = move_domain + [
+                '&',
+                ('location_id', 'in', wh_location_ids),
+                ('location_dest_id', 'not in', wh_location_ids),
+            ]
         return in_domain, out_domain
 
     def _move_draft_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
@@ -162,10 +190,12 @@ class ReplenishmentReport(models.AbstractModel):
             product_template_ids, product_variant_ids, wh_location_ids
         )
         outs = self.env['stock.move'].search(out_domain, order='priority desc, date, id')
+        print(f'{len(outs) = }')
         outs_per_product = defaultdict(lambda: [])
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        print(f'{len(ins) = }')
         ins_per_product = defaultdict(lambda: [])
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
