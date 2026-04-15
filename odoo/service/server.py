@@ -1191,7 +1191,10 @@ class WorkerLauncher(Worker):
 def _manage_spawned_threads(method_name):
     """Start threads for methods registered with the launcher."""
     registries = odoo.modules.registry.Registry.registries
-    for db_name, registry in registries.d.items():
+    # NB PA: List to avoid OrderedDict mutation during some tests. Unknown cause (as we don't mutate..)
+    # https://github.com/odoo/odoo/issues/79823
+    # Similar fix to https://github.com/unipartdigital/odoo/pull/138/changes/67fc7013c316c592f9043d24f4300653066ad527
+    for db_name, registry in list(registries.d.items()):
         if not registry.ready:
             continue
         db = odoo.sql_db.db_connect(db_name)
