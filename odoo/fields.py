@@ -1913,6 +1913,8 @@ class Datetime(Field):
                 return value
             return datetime.combine(value, time.min)
 
+        # Remove fractional if exists, by splitting with "."
+        value = value.split(".")[0]
         # TODO: fix data files
         return datetime.strptime(value, DATETIME_FORMAT[:len(value)-2])
 
