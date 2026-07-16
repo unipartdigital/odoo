@@ -11,6 +11,7 @@ import sys
 import tempfile
 import warnings
 import odoo
+import subprocess
 from os.path import expandvars, expanduser, abspath, realpath
 from .. import release, conf, loglevels
 from . import appdirs
@@ -359,6 +360,7 @@ class configmanager(object):
         opt = self._parse_config(args)
         odoo.netsvc.init_logger()
         self._warn_deprecated_options()
+        self.log_head_commit()
         odoo.modules.module.initialize_sys_path()
         return opt
 
@@ -543,6 +545,25 @@ class configmanager(object):
                 "the transient-age-limit option, please use the latter.",
                 DeprecationWarning)
             self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
+
+    def log_head_commit(self):
+        git_id = ""
+        try:
+            git_id = (
+                subprocess.check_output(["git", "describe", "--tags", "--abbrev=0"])
+                .decode("utf-8")
+                .strip()
+            )
+         
+            if not git_id:
+                git_id = subprocess.check_output(
+                    ["git", "rev-parse", "--short", "HEAD"], 
+                    stderr=subprocess.DEVNULL
+                ).decode("utf-8").strip()
+
+            logging.getLogger("odoo").info('Current git tag version: %s', git_id)
+        except Exception:
+            logging.getLogger("odoo").info("Could not find the latest tag or commit", exc_info=True)
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
