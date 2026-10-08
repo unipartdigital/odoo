@@ -109,6 +109,16 @@ class StockMove(models.Model):
     order_finished_lot_ids = fields.Many2many('stock.production.lot', string="Finished Lot/Serial Number", compute='_compute_order_finished_lot_ids')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
 
+    @api.model
+    def init(self):
+        """Partial index for stock_move.bom_line_id cascades"""
+        super().init()
+        self._cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_stock_move_bom_line_id 
+            ON stock_move (bom_line_id) 
+            WHERE bom_line_id IS NOT NULL;
+        """)
+
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
         super()._compute_priority()
