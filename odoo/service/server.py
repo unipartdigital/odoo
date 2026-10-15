@@ -1298,7 +1298,21 @@ def preload_registries(dbnames):
                 tests_before = registry._assertion_report.testsRun
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = loader.run_suite(loader.make_suite(module_name, 'post_install'), module_name)
+                        suite = loader.make_suite(module_name, 'post_install')
+                        if config.get('test_xml_file'):
+                            import xmlrunner
+                            xml_file_name = '.'.join([config['test_xml_file'], str(time.time()), 'xml'])
+                            _logger.info('saving xml results to %s', xml_file_name)
+                            odoo.modules.module.current_test = module_name
+                            threading.currentThread().testing = True
+                            try:
+                                with open(xml_file_name, 'wb') as xml_file:
+                                    result = xmlrunner.XMLTestRunner(output=xml_file).run(suite)
+                            finally:
+                                threading.currentThread().testing = False
+                                odoo.modules.module.current_test = None
+                        else:
+                            result = loader.run_suite(suite, module_name)
                         registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
