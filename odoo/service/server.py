@@ -1259,7 +1259,15 @@ def load_test_file_py(registry, test_file):
                         unittest.TestLoader().loadTestsFromModule(mod_mod))
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    suite(registry._assertion_report)
+                    if config.get('test_xml_file'):
+                        import xmlrunner
+                        xml_file_name = '.'.join([config['test_xml_file'], str(time.time()), 'xml'])
+                        _logger.info('saving xml results to %s', xml_file_name)
+                        with open(xml_file_name, 'wb') as xml_file:
+                            result = xmlrunner.XMLTestRunner(output=xml_file).run(suite)
+                        registry._assertion_report.update(result)
+                    else:
+                        suite(registry._assertion_report)
                     if not registry._assertion_report.wasSuccessful():
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
